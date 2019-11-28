@@ -9,6 +9,8 @@ Capstone project: A robot that can draw images on a surface
 
 **webcolors**: `pip3 install webcolors`
 
+**numpy**: `pip3 install numpy`
+
 ### Syntax
 `python3 img_info.py [image_file]` where _image_file_ can be any image
 
