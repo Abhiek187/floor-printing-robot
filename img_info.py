@@ -5,9 +5,8 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 
 # List of avaiable colors (use color name from CSS)
-COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),\
-	name_to_rgb('green'),name_to_rgb('blue'),name_to_rgb('purple'),\
-	name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]
+COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
+	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]
 
 def closestColor(color):
 	# Find the color a pixel closely matches to
@@ -38,44 +37,46 @@ width, height = image.size
 rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int array
 x = y = 0
 state = 'right' # robot starts at top left moving right; possible state: left, right, down
+print("Starting print job...")
 
 while x < width and y < height:
 	# Print color at current pixel
 	color = closestColor(pix[x,y])
 	rgb_arr[y][x] = list(name_to_rgb(color))
-	print(f'({x},{y}): Print {color}')
+	#print(f'({x},{y}): Print {color}')
 
 	# Check state of robot
 	if (state == 'left'):
 		# Robot is moving left; if at the edge, need to turn left and move down
 		if (x == 0):
-			print('Turn left, move down')
+			#print('Turn left, move down')
 			state = 'down'
 			y += 1
 		else:
-			print('Continue left')
+			#print('Continue left')
 			x -= 1
 	elif (state == 'right'):
 		# Robot is moving right; if at the edge, need to turn right and move down
 		if (x == width - 1):
-			print('Turn right, move down')
+			#print('Turn right, move down')
 			state = 'down'
 			y += 1
 		else:
-			print('Continue right')
+			#print('Continue right')
 			x += 1
 	else:
 		# Robot moved down, need to turn in the right direction
 		if (x == 0):
-			print('Turn left, move right')
+			#print('Turn left, move right')
 			state = 'right'
 			x += 1
 		else:
-			print('Turn right, move left')
+			#print('Turn right, move left')
 			state = 'left'
 			x -= 1
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
-new_img.save('new_img.png')
-print('Done! Preview printed image at new_img.png')
+img_name = f"new_{file.split('/')[-1]}"
+new_img.save(img_name)
+print(f'Done! Preview print job at {img_name}')
