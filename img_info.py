@@ -77,5 +77,5 @@ while x < width and y < height:
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
-new_img.save(f'new_img.png')
-print('Done! Preview at new_img.png')
+new_img.save('new_img.png')
+print('Done! Preview printed image at new_img.png')
