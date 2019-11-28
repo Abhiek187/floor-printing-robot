@@ -12,7 +12,7 @@ def closestColor(color):
 	# Find the color a pixel closely matches to
 	res = '???'
 	min_dist = sys.maxsize
-	r1, g1, b1, *a1 = color
+	r1, g1, b1, *a1 = color # might get rgba values, in that case extract the *a* values
 
 	for ref_c in COLORS:
 		r2, g2, b2, *a2 = ref_c
@@ -34,8 +34,41 @@ file = sys.argv[1]
 image = Image.open(file) # will throw an error if image file is invalid
 pix = image.load()
 width, height = image.size
+x = y = 0
+state = 'right' # robot starts at top left moving right; possible state: left, right, down
 
-for y in range(height):
-	for x in range(width):
-		# Tell robot to print this color
-		print(f'({x},{y}): {closestColor(pix[x,y])}')
+while x < width and y < height:
+	# Print color at current pixel
+	print(f'({x},{y}): Print {closestColor(pix[x,y])}')
+
+	# Check state of robot
+	if (state == 'left'):
+		# Robot is moving left; if at the edge, need to turn left and move down
+		if (x == 0):
+			print('Turn left, move down')
+			state = 'down'
+			y += 1
+		else:
+			print('Continue left')
+			x -= 1
+	elif (state == 'right'):
+		# Robot is moving right; if at the edge, need to turn right and move down
+		if (x == width - 1):
+			print('Turn right, move down')
+			state = 'down'
+			y += 1
+		else:
+			print('Continue right')
+			x += 1
+	else:
+		# Robot moved down, need to turn in the right direction
+		if (x == 0):
+			print('Turn left, move right')
+			state = 'right'
+			x += 1
+		else:
+			print('Turn right, move left')
+			state = 'left'
+			x -= 1
+
+print('Done!')
