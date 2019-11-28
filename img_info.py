@@ -1,5 +1,6 @@
-from PIL import Image
 import sys
+import numpy as np
+from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 
@@ -34,12 +35,15 @@ file = sys.argv[1]
 image = Image.open(file) # will throw an error if image file is invalid
 pix = image.load()
 width, height = image.size
+rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int array
 x = y = 0
 state = 'right' # robot starts at top left moving right; possible state: left, right, down
 
 while x < width and y < height:
 	# Print color at current pixel
-	print(f'({x},{y}): Print {closestColor(pix[x,y])}')
+	color = closestColor(pix[x,y])
+	rgb_arr[y][x] = list(name_to_rgb(color))
+	print(f'({x},{y}): Print {color}')
 
 	# Check state of robot
 	if (state == 'left'):
@@ -71,4 +75,7 @@ while x < width and y < height:
 			state = 'left'
 			x -= 1
 
-print('Done!')
+# See how the image looks with basic colors
+new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
+new_img.save(f'new_img.png')
+print('Done! Preview at new_img.png')
