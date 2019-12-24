@@ -11,6 +11,7 @@ import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.Session
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.concurrent.thread
@@ -22,9 +23,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val buttonRunCommand = findViewById<Button>(R.id.buttonRunCommand)
-        val username = "pi"
-        val password = "wth729" // uhh...should be private
-        val hostname = "192.168.1.11" // change if static IP address changes
+        val json = JSONObject(assets.open("google-services.json").bufferedReader()
+            .readText())
+        val username = json.getString("username")
+        val password = json.getString("password")
+        val hostname = json.getString("hostname") // change if static IP address changes
 
         buttonRunCommand.setOnClickListener {
             if (!isOnline()) {
