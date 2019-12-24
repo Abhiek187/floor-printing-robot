@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Linux Test</string>
+    <string name="run_command">Run Command</string>
+</resources>
