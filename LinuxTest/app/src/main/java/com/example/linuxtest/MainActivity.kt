@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.jcraft.jsch.ChannelExec
-import com.jcraft.jsch.JSch
-import com.jcraft.jsch.JSchException
-import com.jcraft.jsch.Session
+import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -67,9 +64,11 @@ class MainActivity : AppCompatActivity() {
             println("Connecting to $hostname...")
             session.connect()
 
-            execute(session, command = "echo \"Greetings from the pi!\"")
-            execute(session, command = "hostname -I")
+            val image = "'King Dinga.jpg'" // 60.3 KB = 13:11 (~76 bytes/s)
+            /*sftp(session, src = "${this.filesDir.path}/NewTextFile.txt",
+                dest = "./floor*") // /data/user/0/com.example.linuxtest/files*/
             execute(session, command = "python3 lol.py")
+            execute(session, command = "cd floor* && python3 img_info.py $image")
 
             println("Disconnecting from $hostname...")
             session.disconnect()
@@ -79,20 +78,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun sftp(session: Session, src: String, dest: String) {
+        // Transfer files through sftp (similar to scp)
+        val sftpChannel = session.openChannel("sftp") as ChannelSftp
+        sftpChannel.connect()
+        sftpChannel.put(src, dest) // or sftpChannel.get(dest, src)
+        println("Transferred file from $src to $dest")
+        sftpChannel.disconnect()
+    }
+
     private fun execute(session: Session, command: String) {
         // Create an SSH Channel
         val sshChannel = session.openChannel("exec") as ChannelExec
         val outputStream = ByteArrayOutputStream()
+        val errStream = ByteArrayOutputStream()
         sshChannel.outputStream = outputStream
+        sshChannel.setExtOutputStream(errStream)
 
         // Execute Linux command
         sshChannel.setCommand(command)
         sshChannel.connect()
         println("Output from $command:")
 
-        // Sleep needed in order to wait long enough to get result back
-        Thread.sleep(1_000)
+        // Wait for command to finish
+        while (!sshChannel.isClosed) {
+            println("Waiting for response...")
+            Thread.sleep(1_000)
+        }
+
+        // Check if program succeeded or failed
+        if (sshChannel.exitStatus == 0) {
+            println(outputStream.toString()) // success: print stdout
+        } else {
+            println(errStream.toString()) // error: print stderr
+        }
+
         sshChannel.disconnect()
-        println(outputStream.toString()) // only gets stdout, not stderr
     }
 }
