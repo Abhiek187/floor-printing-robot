@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Linux Test</string>
-    <string name="run_command">Run Command</string>
+    <string name="upload">Upload</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="print">Print</string>
 </resources>

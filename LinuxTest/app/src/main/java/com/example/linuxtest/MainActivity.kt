@@ -1,6 +1,7 @@
 package com.example.linuxtest
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -19,14 +20,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val buttonRunCommand = findViewById<Button>(R.id.buttonRunCommand)
+        // UI elements
+        val buttonUpload = findViewById<Button>(R.id.buttonUpload)
+        val buttonSave = findViewById<Button>(R.id.buttonSave)
+        val buttonLoad = findViewById<Button>(R.id.buttonLoad)
+        val buttonPrint = findViewById<Button>(R.id.buttonPrint)
+
+        // Load content from JSON
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
             .readText())
         val username = json.getString("username")
         val password = json.getString("password")
         val hostname = json.getString("hostname") // change if static IP address changes
 
-        buttonRunCommand.setOnClickListener {
+        buttonUpload.setOnClickListener {
+            // Get photo from library
+            println("Uploading...")
+        }
+
+        buttonSave.setOnClickListener {
+            // Save image to database
+            println("Saving...")
+        }
+
+        buttonLoad.setOnClickListener {
+            // Load saved image
+            val intent = Intent(this, SavesActivity::class.java)
+            startActivity(intent)
+        }
+
+        buttonPrint.setOnClickListener {
+            // Send image for printing on the pi
             if (!isOnline()) {
                 Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
