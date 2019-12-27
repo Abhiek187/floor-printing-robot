@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         val password = json.getString("password")
         val hostname = json.getString("hostname") // change if static IP address changes
 
+        val imagesDB = ImagesDBHelper(this)
+
         buttonUpload.setOnClickListener {
             // Get photo from library
             println("Uploading...")
@@ -40,7 +42,9 @@ class MainActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             // Save image to database
-            println("Saving...")
+            val randNum = (0..100).random()
+            imagesDB.addImage("Name #$randNum", "Image #$randNum")
+            Toast.makeText(this, "Saved Image #$randNum", Toast.LENGTH_SHORT).show()
         }
 
         buttonLoad.setOnClickListener {

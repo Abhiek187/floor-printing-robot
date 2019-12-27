@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_saves.view.*
 
-class SavesAdapter(private var context: Context, private var saves: ArrayList<String>)
-    : RecyclerView.Adapter<ViewHolder>() {
+class SavesAdapter(private var context: Context, private var saves: ArrayList<Image>):
+    RecyclerView.Adapter<ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context).inflate(R.layout.adapter_saves, parent,
             false)
@@ -18,8 +19,8 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textViewName.text = saves[position]
-        holder.textViewImage.text = saves[position]
+        holder.textViewName.text = saves[position].name
+        holder.textViewImage.text = saves[position].image
     }
 
     override fun getItemCount(): Int {
