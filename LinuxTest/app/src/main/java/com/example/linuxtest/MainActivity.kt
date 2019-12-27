@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // UI elements
+        val pageLayout = findViewById<ConstraintLayout>(R.id.pageLayout)
         val buttonUpload = findViewById<Button>(R.id.buttonUpload)
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         val buttonLoad = findViewById<Button>(R.id.buttonLoad)
@@ -63,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                 ssh(username, password, hostname)
             }
         }
+
+        pageLayout.addView(CustomDraw(this))
     }
 
     private fun isOnline(): Boolean {
