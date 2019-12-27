@@ -12,13 +12,14 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.concurrent.thread
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val buttonRunCommand = findViewById<Button>(R.id.buttonRunCommand)
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
             .readText())
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
                 ssh(username, password, hostname)
             }
         }
+        pageLayout.addView(CustomDraw(this))
     }
 
     private fun isOnline(): Boolean {
