@@ -14,6 +14,7 @@ class CustomDraw (context: Context) : View(context){
     private var path = arrayListOf(Path(),Path(),Path(),Path(),Path())
     private var xCoord = 0f
     private var yCoord = 0f
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         //return super.onTouchEvent(event)
         when(event.action and MotionEvent.ACTION_MASK){
@@ -37,6 +38,13 @@ class CustomDraw (context: Context) : View(context){
                 invalidate()
             }
         }
+
+        performClick()
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
         return true
     }
 
