@@ -1,5 +1,6 @@
 package com.example.linuxtest
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -38,8 +39,13 @@ class MainActivity : AppCompatActivity() {
         val imagesDB = ImagesDBHelper(this)
 
         buttonUpload.setOnClickListener {
-            // Get photo from library
-            println("Uploading...")
+            // Get photo from gallery
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*" // access gallery or photos
+
+            intent.resolveActivity(packageManager)?.let {
+                startActivityForResult(intent, 0)
+            }
         }
 
         buttonSave.setOnClickListener {
@@ -67,6 +73,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         pageLayout.addView(CustomDraw(this))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            println(data?.data) // image URI (not to be confused with URL)
+        }
     }
 
     private fun isOnline(): Boolean {
