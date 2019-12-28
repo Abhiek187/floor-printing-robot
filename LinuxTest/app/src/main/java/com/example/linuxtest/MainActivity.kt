@@ -94,9 +94,9 @@ class MainActivity : AppCompatActivity() {
 
         buttonLoad.setOnClickListener {
             // Load saved image
-            //drawView.loadDrawing("${this.filesDir.path}/drawing.png")
-            val intent = Intent(this, SavesActivity::class.java)
-            startActivity(intent)
+            drawView.loadDrawing("${this.filesDir.path}/LionMaker.png")
+            /*val intent = Intent(this, SavesActivity::class.java)
+            startActivity(intent)*/
         }
 
         buttonPrint.setOnClickListener {
