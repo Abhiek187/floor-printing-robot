@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        println("isTaskRoot? $isTaskRoot")
 
         // UI elements
         val pageLayout = findViewById<ConstraintLayout>(R.id.pageLayout)
