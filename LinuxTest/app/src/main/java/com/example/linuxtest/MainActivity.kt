@@ -6,8 +6,8 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
+import android.view.Gravity
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jcraft.jsch.*
@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         val hostname = json.getString("hostname") // change if static IP address changes
 
         val imagesDB = ImagesDBHelper(this)
+        val drawView = CustomDraw(this)
+        pageLayout.addView(drawView)
+        pageLayout.foreground = getDrawable(R.drawable.shape_window_dim)
+        pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
 
         buttonUpload.setOnClickListener {
             // Get photo from gallery
@@ -50,13 +54,35 @@ class MainActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             // Save image to database
-            val randNum = (0..100).random()
-            imagesDB.addImage("Name #$randNum", "Image #$randNum")
-            Toast.makeText(this, "Saved Image #$randNum", Toast.LENGTH_SHORT).show()
+            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+            val focusable = true // can dismiss by tapping outside the popup
+            pageLayout.foreground.alpha = 220 // dim background when popup appears
+
+            val popupView = layoutInflater.inflate(R.layout.popup_save, pageLayout,
+                false)
+            val popupWindow = PopupWindow(popupView, width, height, focusable)
+            popupWindow.showAtLocation(pageLayout, Gravity.CENTER, 0, 0)
+
+            val editTextName = popupView.findViewById<EditText>(R.id.editTextName)
+            val buttonSaveName = popupView.findViewById<Button>(R.id.buttonSaveName)
+
+            // Restore background when popup disappears
+            popupWindow.setOnDismissListener { pageLayout.foreground.alpha = 0 }
+
+            buttonSaveName.setOnClickListener {
+                val name = editTextName.text.toString()
+                val image = "$name.png"
+                imagesDB.addImage(name, image)
+                drawView.saveDrawing(image)
+                Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show()
+                popupWindow.dismiss()
+            }
         }
 
         buttonLoad.setOnClickListener {
             // Load saved image
+            //drawView.loadDrawing("${this.filesDir.path}/drawing.png")
             val intent = Intent(this, SavesActivity::class.java)
             startActivity(intent)
         }
@@ -71,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                 ssh(username, password, hostname)
             }
         }
-
-        pageLayout.addView(CustomDraw(this))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
