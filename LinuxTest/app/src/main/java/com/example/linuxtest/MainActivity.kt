@@ -17,6 +17,8 @@ import java.util.*
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
+    private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
+        '<', '>', '|', '\"', ':') // illegal file name characters
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +72,18 @@ class MainActivity : AppCompatActivity() {
             // Restore background when popup disappears
             popupWindow.setOnDismissListener { pageLayout.foreground.alpha = 0 }
 
-            buttonSaveName.setOnClickListener {
+            buttonSaveName.setOnClickListener inner@{
                 val name = editTextName.text.toString()
+
+                if (name.isEmpty()) {
+                    Toast.makeText(this, "A name is required.", Toast.LENGTH_SHORT)
+                        .show()
+                    return@inner
+                } else if (name.indexOfAny(illegalChars) >= 0) {
+                    Toast.makeText(this, "Invalid file name", Toast.LENGTH_SHORT).show()
+                    return@inner
+                }
+
                 val image = "$name.png"
                 imagesDB.addImage(name, image)
                 drawView.saveDrawing(image)
@@ -134,11 +146,10 @@ class MainActivity : AppCompatActivity() {
             println("Connecting to $hostname...")
             session.connect()
 
-            val image = "'King Dinga.jpg'" // 60.3 KB = 13:11 (~76 bytes/s)
-            /*sftp(session, src = "${this.filesDir.path}/NewTextFile.txt",
-                dest = "./floor*") // /data/user/0/com.example.linuxtest/files*/
+            val image = "King Dinga.png" // 60.3 KB = 13:11 (~76 bytes/s)
+            sftp(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
             execute(session, command = "python3 lol.py")
-            execute(session, command = "cd floor* && python3 img_info.py $image")
+            execute(session, command = "cd floor* && python3 img_info.py '$image'")
 
             println("Disconnecting from $hostname...")
             session.disconnect()

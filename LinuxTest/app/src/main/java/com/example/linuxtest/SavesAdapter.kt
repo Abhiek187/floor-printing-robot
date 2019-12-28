@@ -21,6 +21,10 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewName.text = saves[position].name
         holder.textViewImage.text = saves[position].image
+
+        holder.itemView.setOnClickListener {
+            println("Trying to open ${saves[position].image}...")
+        }
     }
 
     override fun getItemCount(): Int {
