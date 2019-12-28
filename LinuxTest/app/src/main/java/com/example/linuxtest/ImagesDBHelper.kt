@@ -30,6 +30,12 @@ class ImagesDBHelper(context: Context):
         onCreate(db)
     }
 
+    fun getTable(): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT $COLUMN_NAME, $COLUMN_IMAGE FROM $TABLE_NAME",
+            null)
+    }
+
     fun addImage(name: String, image: String) {
         val cv = ContentValues()
         cv.put(COLUMN_NAME, name)
@@ -40,9 +46,20 @@ class ImagesDBHelper(context: Context):
         db.close()
     }
 
-    fun getTable(): Cursor? {
+    fun updateImage(name: String, image: String) {
         val db = this.readableDatabase
-        return db.rawQuery("SELECT $COLUMN_NAME, $COLUMN_IMAGE FROM $TABLE_NAME",
-            null)
+        val cursor = db.rawQuery("SELECT $COLUMN_IMAGE FROM $TABLE_NAME " +
+                "WHERE $COLUMN_NAME = '$name'", null)
+
+        if (cursor.moveToFirst()) {
+            // Should only be one result
+            val oldImg = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE))
+            val cv = ContentValues()
+            cv.put(COLUMN_IMAGE, image)
+            db.update(TABLE_NAME, cv, "$COLUMN_IMAGE =?", arrayOf(oldImg))
+        }
+
+        cursor.close()
+        db.close()
     }
 }

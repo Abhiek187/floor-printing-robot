@@ -19,10 +19,12 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
         '<', '>', '|', '\"', ':') // illegal file name characters
+    private var currentImgName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        println("isTaskRoot? $isTaskRoot")
 
         // UI elements
         val pageLayout = findViewById<ConstraintLayout>(R.id.pageLayout)
@@ -40,6 +42,13 @@ class MainActivity : AppCompatActivity() {
 
         val imagesDB = ImagesDBHelper(this)
         val drawView = CustomDraw(this)
+        currentImgName = intent.getStringExtra("imageName") // current saved image
+        title = currentImgName ?: "Untitled" // show which file is being edited at the top
+
+        currentImgName?.let {
+            drawView.loadDrawing("${this.filesDir.path}/$it.png")
+        }
+
         pageLayout.addView(drawView)
         pageLayout.foreground = getDrawable(R.drawable.shape_window_dim)
         pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
@@ -56,6 +65,13 @@ class MainActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             // Save image to database
+            currentImgName?.let {
+                // Image already saved before, don't ask for name
+                drawView.saveDrawing("$it.png")
+                Toast.makeText(this, "Saved $it", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true // can dismiss by tapping outside the popup
@@ -84,23 +100,28 @@ class MainActivity : AppCompatActivity() {
                     return@inner
                 }
 
+                currentImgName = name
                 val image = "$name.png"
                 imagesDB.addImage(name, image)
                 drawView.saveDrawing(image)
-                Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Saved new image!", Toast.LENGTH_SHORT).show()
                 popupWindow.dismiss()
             }
         }
 
         buttonLoad.setOnClickListener {
-            // Load saved image
-            drawView.loadDrawing("${this.filesDir.path}/LionMaker.png")
-            /*val intent = Intent(this, SavesActivity::class.java)
-            startActivity(intent)*/
+            // Select saved image, then load it when activity is recreated
+            val intent = Intent(this, SavesActivity::class.java)
+            startActivity(intent)
         }
 
         buttonPrint.setOnClickListener {
             // Send image for printing on the pi
+            if (currentImgName == null) {
+                Toast.makeText(this, "Please save before printing.", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
             if (!isOnline()) {
                 Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -146,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             println("Connecting to $hostname...")
             session.connect()
 
-            val image = "King Dinga.png" // 60.3 KB = 13:11 (~76 bytes/s)
+            val image = "$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
             sftp(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
             execute(session, command = "python3 lol.py")
             execute(session, command = "cd floor* && python3 img_info.py '$image'")

@@ -1,5 +1,6 @@
 package com.example.linuxtest
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -37,5 +38,12 @@ class SavesActivity : AppCompatActivity() {
         }
 
         return saves
+    }
+
+    fun finishActivity(name: String) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("imageName", name)
+        startActivity(intent)
+        finish() // can only finish() inside activity
     }
 }

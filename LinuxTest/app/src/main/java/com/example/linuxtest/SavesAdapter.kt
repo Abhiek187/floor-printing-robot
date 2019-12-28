@@ -23,7 +23,7 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
         holder.textViewImage.text = saves[position].image
 
         holder.itemView.setOnClickListener {
-            println("Trying to open ${saves[position].image}...")
+            (context as SavesActivity).finishActivity(saves[position].name)
         }
     }
 
