@@ -2,6 +2,7 @@ package com.example.linuxtest
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
@@ -73,16 +74,17 @@ class CustomDraw (context: Context) : View(context) {
             finalPath.clear()
             paints.clear()
             sizePaint=-1
-            upDatePaint(access.curWidth)
+            upDatePaint(access.curWidth,access.curColor)
             invalidate()
         }
     }
 
-    fun upDatePaint(width: Float){
+    fun upDatePaint(width: Float, color: Int){
         val painted = Paint()
         painted.style=Paint.Style.STROKE
         painted.isAntiAlias=true
         painted.strokeWidth=width
+        painted.color=color
         paints.add(painted)
         sizePaint += 1
         val paths = arrayOf(Path(),Path(),Path(),Path(),Path())

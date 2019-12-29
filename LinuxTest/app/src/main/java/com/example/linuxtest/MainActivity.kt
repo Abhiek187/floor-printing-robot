@@ -2,6 +2,7 @@ package com.example.linuxtest
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -18,7 +19,10 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
+    private val colors = arrayListOf(Color.BLACK,Color.RED,Color.rgb(255,165,0),Color.YELLOW,Color.GREEN,Color.BLUE,Color.rgb(128,0,128),Color.rgb(165,42,42),Color.WHITE)
+    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple","Brown","White")
     var curWidth = 8f
+    var curColor = Color.BLACK
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         val line1 = findViewById<View>(R.id.line1)
         val line2 = findViewById<View>(R.id.line2)
         val spin1 = findViewById<Spinner>(R.id.brushWidth)
+        val spin2 = findViewById<Spinner>(R.id.colors)
 
         // Load content from JSON
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
@@ -46,19 +51,30 @@ class MainActivity : AppCompatActivity() {
         val  limits = ConstraintSet()
         val newView = CustomDraw(this)
 
+
         val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
         infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spin1.adapter=infoWidth
 
         spin1.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 curWidth=widths[pos]
-                newView.upDatePaint(curWidth)
+                newView.upDatePaint(curWidth,curColor)
+            }
+        }
+
+        val infoColors = ArrayAdapter(this,android.R.layout.simple_list_item_1,colNames)
+        infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spin2.adapter=infoColors
+
+        spin2.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                curColor=colors[pos]
+                newView.upDatePaint(curWidth,curColor)
             }
         }
         buttonUpload.setOnClickListener {
