@@ -6,9 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -19,7 +17,8 @@ import java.util.*
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
-
+    private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
+    var curWidth = 8f
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         val clear = findViewById<Button >(R.id.clear)
         val line1 = findViewById<View>(R.id.line1)
         val line2 = findViewById<View>(R.id.line2)
+        val spin1 = findViewById<Spinner>(R.id.brushWidth)
 
         // Load content from JSON
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
@@ -45,9 +45,22 @@ class MainActivity : AppCompatActivity() {
 
         val  limits = ConstraintSet()
         val newView = CustomDraw(this)
-        //newView.layoutParams.height=0
 
+        val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
+        infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spin1.adapter=infoWidth
 
+        spin1.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                curWidth=widths[pos]
+                newView.upDatePaint(curWidth)
+            }
+        }
         buttonUpload.setOnClickListener {
             // Get photo from library
             println("Uploading...")

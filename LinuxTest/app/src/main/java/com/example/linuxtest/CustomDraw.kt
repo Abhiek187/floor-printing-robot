@@ -8,17 +8,24 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import kotlinx.android.synthetic.main.activity_main.*
 
-class CustomDraw (context: Context) : View(context), AdapterView.OnItemSelectedListener {
+class CustomDraw (context: Context) : View(context) {
     private val access =context as MainActivity
     private val paint = Paint()
-    private var path = arrayListOf(Path(),Path(),Path(),Path(),Path())
+    private var path = arrayOf(Path(),Path(),Path(),Path(),Path())
     private var xCoord = 0f
     private var yCoord = 0f
-    private var curWidth = 8f
-    private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
-    private val infoWidth = ArrayAdapter(context,android.R.layout.simple_list_item_1,widths)
+    private var paints = arrayListOf<Paint>()
+    private var finalPath = arrayListOf<Array<Path>>()
+    private var sizePaint=-1
+    /*init{
+        paint.isAntiAlias=true
+        paint.style=Paint.Style.STROKE
+        paint.strokeWidth=access.curWidth
+        paints.add(paint)
+    }*/
     override fun onTouchEvent(event: MotionEvent): Boolean {
         //return super.onTouchEvent(event)
         when(event.action and MotionEvent.ACTION_MASK){
@@ -27,18 +34,20 @@ class CustomDraw (context: Context) : View(context), AdapterView.OnItemSelectedL
                 if(ids>4) return false
                 xCoord = event.getX(ids)
                 yCoord= event.getY(ids)
-                path[ids].moveTo(xCoord,yCoord)
+                finalPath[sizePaint][ids].moveTo(xCoord,yCoord)
+                //pathWidth.add(access.curWidth)
                 invalidate()
             }
             MotionEvent.ACTION_MOVE -> {
                 for(i in 0 until event.pointerCount){
                     xCoord = event.getX(i)
                     yCoord = event.getY(i)
-                    path[i].lineTo(xCoord,yCoord)
+                    finalPath[sizePaint][i].lineTo(xCoord,yCoord)
                 }
                 invalidate()
             }
             MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP -> {
+                //pathWidth.remove(access.curWidth)
                 invalidate()
             }
         }
@@ -54,40 +63,30 @@ class CustomDraw (context: Context) : View(context), AdapterView.OnItemSelectedL
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        paint.isAntiAlias=true
-        paint.style=Paint.Style.STROKE
-        val spin1 = access.brushWidth
-        spin1.adapter = infoWidth
-        var size = spin1.selectedItem.toString()
-        paint.strokeWidth=size.toFloat()
-        spin1.onItemSelectedListener=this
-        for(i in 0 until path.size){
-            //val spin1 = access.brushWidth
-            //spin1.adapter = infoWidth
-            //val size = spin1.selectedItem.toString()
-            println("width is $curWidth")
-            //paint.strokeWidth=size.toFloat()
-            paint.strokeWidth=curWidth
-            canvas.drawPath(path[i],paint)
+        for(k in 0 until finalPath.size) {
+            for (i in 0 until path.size) {
+                //paint.strokeWidth = access.curWidth
+                canvas.drawPath(finalPath[k][i], paints[k])
+            }
         }
         access.clear.setOnClickListener{
-            for(i in 0 until path.size){
-                path[i].reset()
-            }
+            finalPath.clear()
+            paints.clear()
+            sizePaint=-1
+            upDatePaint(access.curWidth)
             invalidate()
         }
     }
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun upDatePaint(width: Float){
+        val painted = Paint()
+        painted.style=Paint.Style.STROKE
+        painted.isAntiAlias=true
+        painted.strokeWidth=width
+        paints.add(painted)
+        sizePaint += 1
+        val paths = arrayOf(Path(),Path(),Path(),Path(),Path())
+        finalPath.add(paths)
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        //p0!!.getItemAtPosition(pos)
-        curWidth=widths[pos]
-        infoWidth.notifyDataSetChanged()
-
-
-    }
 }
