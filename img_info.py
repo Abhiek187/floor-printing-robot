@@ -24,6 +24,27 @@ def closestColor(color):
 
 	return res
 
+def checkProgress(progress):
+	# Show progress
+	if (progress == int(round(total*0.1))):
+		print("10% done")
+	elif (progress == int(round(total*0.2))):
+		print("20% done")
+	elif (progress == int(round(total*0.3))):
+		print("30% done")
+	elif (progress == int(round(total*0.4))):
+		print("40% done")
+	elif (progress == int(round(total*0.5))):
+		print("50% done")
+	elif (progress == int(round(total*0.6))):
+		print("60% done")
+	elif (progress == int(round(total*0.7))):
+		print("70% done")
+	elif (progress == int(round(total*0.8))):
+		print("80% done")
+	elif (progress == int(round(total*0.9))):
+		print("90% done")
+
 argc = len(sys.argv)
 if (argc == 1):
 	raise IOError('Please supply an image file.')
@@ -34,8 +55,10 @@ file = sys.argv[1]
 image = Image.open(file) # will throw an error if image file is invalid
 pix = image.load()
 width, height = image.size
+total = width * height
 rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int array
 x = y = 0
+progress = 0
 state = 'right' # robot starts at top left moving right; possible state: left, right, down
 print("Starting print job...")
 
@@ -74,6 +97,9 @@ while x < width and y < height:
 			#print('Turn right, move left')
 			state = 'left'
 			x -= 1
+
+	progress += 1
+	checkProgress(progress)
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
