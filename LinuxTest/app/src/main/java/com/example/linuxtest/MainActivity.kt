@@ -5,10 +5,13 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -27,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         val buttonLoad = findViewById<Button>(R.id.buttonLoad)
         val buttonPrint = findViewById<Button>(R.id.buttonPrint)
+        val clear = findViewById<Button >(R.id.clear)
+        val line1 = findViewById<View>(R.id.line1)
+        val line2 = findViewById<View>(R.id.line2)
 
         // Load content from JSON
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
@@ -36,6 +42,11 @@ class MainActivity : AppCompatActivity() {
         val hostname = json.getString("hostname") // change if static IP address changes
 
         val imagesDB = ImagesDBHelper(this)
+
+        val  limits = ConstraintSet()
+        val newView = CustomDraw(this)
+        //newView.layoutParams.height=0
+
 
         buttonUpload.setOnClickListener {
             // Get photo from library
@@ -65,8 +76,18 @@ class MainActivity : AppCompatActivity() {
                 ssh(username, password, hostname)
             }
         }
+        pageLayout.addView(newView)
+        newView.id=View.generateViewId()
+        newView.layoutParams.height=0
+        /*val parms = newView.layoutParams as ConstraintLayout.LayoutParams
+        parms.topToBottom = clear.id
+        parms.bottomToTop = buttonUpload.id
+        newView.requestLayout()*/
+        limits.clone(pageLayout)
+        limits.connect(newView.id, ConstraintSet.TOP,line1.id,ConstraintSet.BOTTOM,1)
+        limits.connect(newView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
+        limits.applyTo(pageLayout)
 
-        pageLayout.addView(CustomDraw(this))
     }
 
     private fun isOnline(): Boolean {
