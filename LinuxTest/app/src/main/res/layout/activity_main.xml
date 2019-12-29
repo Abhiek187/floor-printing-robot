@@ -11,6 +11,8 @@
         android:id="@+id/clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/clear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,19 +31,19 @@
         android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:text="@string/save"
         app:layout_constraintBaseline_toBaselineOf="@+id/buttonUpload"
+        app:layout_constraintEnd_toStartOf="@+id/buttonLoad"
         app:layout_constraintStart_toEndOf="@+id/buttonUpload" />
 
     <Button
         android:id="@+id/buttonLoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="@string/load"
         app:layout_constraintBaseline_toBaselineOf="@+id/buttonUpload"
-        app:layout_constraintEnd_toStartOf="@+id/buttonPrint" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonPrint"
+        app:layout_constraintStart_toEndOf="@+id/buttonSave" />
 
     <Button
         android:id="@+id/buttonPrint"
