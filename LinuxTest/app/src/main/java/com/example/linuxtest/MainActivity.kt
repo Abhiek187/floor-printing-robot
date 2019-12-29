@@ -3,13 +3,16 @@ package com.example.linuxtest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -20,6 +23,11 @@ class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
         '<', '>', '|', '\"', ':') // illegal file name characters
     private var currentImgName: String? = null
+    private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
+    private val colors = arrayListOf(Color.BLACK,Color.RED,Color.rgb(255,165,0),Color.YELLOW,Color.GREEN,Color.BLUE,Color.rgb(128,0,128),Color.rgb(165,42,42),Color.WHITE)
+    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple","Brown","White")
+    var curWidth = 8f
+    var curColor = Color.BLACK
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         val buttonLoad = findViewById<Button>(R.id.buttonLoad)
         val buttonPrint = findViewById<Button>(R.id.buttonPrint)
+        val line1 = findViewById<View>(R.id.line1)
+        val line2 = findViewById<View>(R.id.line2)
+        val spin1 = findViewById<Spinner>(R.id.brushWidth)
+        val spin2 = findViewById<Spinner>(R.id.colors)
 
         // Load content from JSON
         val json = JSONObject(assets.open("google-services.json").bufferedReader()
@@ -52,6 +64,40 @@ class MainActivity : AppCompatActivity() {
         pageLayout.foreground = getDrawable(R.drawable.shape_window_dim)
         pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
 
+        drawView.id=View.generateViewId()
+        drawView.layoutParams.height=0
+        val limits = ConstraintSet()
+        limits.clone(pageLayout)
+        limits.connect(drawView.id, ConstraintSet.TOP,line1.id,ConstraintSet.BOTTOM,1)
+        limits.connect(drawView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
+        limits.applyTo(pageLayout)
+
+
+        val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
+        infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spin1.adapter=infoWidth
+
+        spin1.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                curWidth=widths[pos]
+                drawView.upDatePaint(curWidth,curColor)
+            }
+        }
+
+        val infoColors = ArrayAdapter(this,android.R.layout.simple_list_item_1,colNames)
+        infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spin2.adapter=infoColors
+
+        spin2.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                curColor=colors[pos]
+                drawView.upDatePaint(curWidth,curColor)
+            }
+        }
         buttonUpload.setOnClickListener {
             // Get photo from gallery
             val intent = Intent(Intent.ACTION_GET_CONTENT)
