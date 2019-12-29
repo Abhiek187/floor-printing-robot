@@ -2,7 +2,6 @@ package com.example.linuxtest
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -30,10 +29,23 @@ class ImagesDBHelper(context: Context):
         onCreate(db)
     }
 
-    fun getTable(): Cursor? {
+    fun getSaves(): ArrayList<Image> {
         val db = this.readableDatabase
-        return db.rawQuery("SELECT $COLUMN_NAME, $COLUMN_IMAGE FROM $TABLE_NAME",
+        val cursor = db.rawQuery("SELECT $COLUMN_NAME, $COLUMN_IMAGE FROM $TABLE_NAME",
             null)
+        val saves = arrayListOf<Image>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME))
+                val image = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE))
+                saves.add(Image(name, image))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return saves
     }
 
     fun addImage(name: String, image: String) {

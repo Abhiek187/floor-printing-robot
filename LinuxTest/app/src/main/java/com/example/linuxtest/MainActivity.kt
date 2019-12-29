@@ -95,11 +95,21 @@ class MainActivity : AppCompatActivity() {
                         .show()
                     return@inner
                 } else if (name.indexOfAny(illegalChars) >= 0) {
-                    Toast.makeText(this, "Invalid file name", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid file name", Toast.LENGTH_SHORT)
+                        .show()
                     return@inner
+                } else {
+                    val copies = imagesDB.getSaves().filter { save -> save.name == name }
+
+                    if (copies.isNotEmpty()) {
+                        Toast.makeText(this, "Name already taken", Toast.LENGTH_SHORT)
+                            .show()
+                        return@inner
+                    }
                 }
 
                 currentImgName = name
+                this.title = name
                 val image = "$name.png"
                 imagesDB.addImage(name, image)
                 drawView.saveDrawing(image)
