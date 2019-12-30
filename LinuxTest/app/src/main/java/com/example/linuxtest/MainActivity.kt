@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             // Save image to database
             currentImgName?.let {
                 // Image already saved before, don't ask for name
-                drawView.saveDrawing("$it.png")
+                drawView.saveDrawing("$it.png", false)
                 Toast.makeText(this, "Saved $it", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                 this.title = name
                 val image = "$name.png"
                 imagesDB.addImage(name, image)
-                drawView.saveDrawing(image)
+                drawView.saveDrawing(image, false)
                 Toast.makeText(this, "Saved new image!", Toast.LENGTH_SHORT).show()
                 popupWindow.dismiss()
             }
@@ -191,8 +191,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Save before printing
-            drawView.saveDrawing("$currentImgName.png")
+            // Save & scale before printing
+            drawView.saveDrawing("$currentImgName.png", true)
             Toast.makeText(this, "Saved $currentImgName", Toast.LENGTH_SHORT).show()
             thread {
                 ssh(username, password, hostname)
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
             println("Connecting to $hostname...")
             session.connect()
 
-            val image = "$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
+            val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
             sftp(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
             execute(session, command = "python3 lol.py")
             execute(session, command = "cd floor* && python3 img_info.py '$image'")

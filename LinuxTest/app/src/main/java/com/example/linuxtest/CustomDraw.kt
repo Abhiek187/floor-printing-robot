@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 
 class CustomDraw (context: Context) : View(context) {
     private val access = context as MainActivity
@@ -69,14 +70,21 @@ class CustomDraw (context: Context) : View(context) {
         }
     }
 
-    fun saveDrawing(image: String) {
+    fun saveDrawing(image: String, scale: Boolean) {
         // Save drawing as a bitmap and convert it to a PNG file
-        val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+        var bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE) // make background white instead of transparent (black)
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         draw(canvas)
-        val file = File("${access.filesDir.path}/$image")
+
+        val file = if (scale) {
+            bitmap = Bitmap.createScaledBitmap(bitmap, (this.width / 3f).roundToInt(),
+                (this.height / 3f).roundToInt(), true)
+            File("${access.filesDir.path}/scaled_$image")
+        } else {
+            File("${access.filesDir.path}/$image")
+        }
 
         try {
             thread {
