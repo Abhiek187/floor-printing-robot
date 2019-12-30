@@ -3,10 +3,12 @@ package com.example.linuxtest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -14,10 +16,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jcraft.jsch.*
+//import com.sun.xml.internal.fastinfoset.util.CharArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.FileDescriptor
 import java.util.*
 import kotlin.concurrent.thread
+
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -28,7 +33,8 @@ class MainActivity : AppCompatActivity() {
     private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple","Brown","White")
     var curWidth = 8f
     var curColor = Color.BLACK
-
+    lateinit var drawView: View
+    //private val drawView = CustomDraw(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -52,12 +58,12 @@ class MainActivity : AppCompatActivity() {
         val hostname = json.getString("hostname") // change if static IP address changes
 
         val imagesDB = ImagesDBHelper(this)
-        val drawView = CustomDraw(this)
+         drawView = CustomDraw(this)
         currentImgName = intent.getStringExtra("imageName") // current saved image
         title = currentImgName ?: "Untitled" // show which file is being edited at the top
 
         currentImgName?.let {
-            drawView.loadDrawing("${this.filesDir.path}/$it.png")
+            (this.drawView as CustomDraw).loadDrawing("${this.filesDir.path}/$it.png")
         }
 
         pageLayout.addView(drawView)
@@ -82,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 curWidth=widths[pos]
-                drawView.upDatePaint(curWidth,curColor)
+                (drawView as CustomDraw).upDatePaint(curWidth,curColor)
             }
         }
 
@@ -95,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 curColor=colors[pos]
-                drawView.upDatePaint(curWidth,curColor)
+                (drawView as CustomDraw).upDatePaint(curWidth,curColor)
             }
         }
         buttonUpload.setOnClickListener {
@@ -112,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             // Save image to database
             currentImgName?.let {
                 // Image already saved before, don't ask for name
-                drawView.saveDrawing("$it.png")
+                (drawView as CustomDraw).saveDrawing("$it.png")
                 Toast.makeText(this, "Saved $it", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -158,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                 this.title = name
                 val image = "$name.png"
                 imagesDB.addImage(name, image)
-                drawView.saveDrawing(image)
+                (drawView as CustomDraw).saveDrawing(image)
                 Toast.makeText(this, "Saved new image!", Toast.LENGTH_SHORT).show()
                 popupWindow.dismiss()
             }
@@ -185,13 +191,23 @@ class MainActivity : AppCompatActivity() {
                 ssh(username, password, hostname)
             }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             println(data?.data) // image URI (not to be confused with URL)
+            val info = data?.data
+            /*val image = MediaStore.Images.Media.getBitmap(this.contentResolver,info)
+            (drawView as CustomDraw).loadPicture(image)*/
+            val parcelFileDescriptor =
+                info?.let { contentResolver.openFileDescriptor(it, "r") }
+            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            val image2 = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            (drawView as CustomDraw).loadPicture(image2)
+
+            parcelFileDescriptor.close()
         }
     }
 

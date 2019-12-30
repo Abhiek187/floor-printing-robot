@@ -92,7 +92,9 @@ class CustomDraw (context: Context) : View(context) {
         paints.clear()
         sizePaint=-1
         upDatePaint(access.curWidth,access.curColor)
+        println("Path is $path")
         mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
+        println("mBitmap in Load is $mBitmap")
         invalidate()
     }
 
@@ -106,4 +108,16 @@ class CustomDraw (context: Context) : View(context) {
         val paths = arrayOf(Path(),Path(),Path(),Path(),Path())
         finalPath.add(paths)
     }
+
+    fun loadPicture(temp: Bitmap){
+        //Retrieve picture from Photo Gallery
+        finalPath.clear()
+        paints.clear()
+        sizePaint=-1
+        upDatePaint(access.curWidth,access.curColor)
+        mBitmap= Bitmap.createBitmap(temp)
+        invalidate()
+    }
+
+
 }
