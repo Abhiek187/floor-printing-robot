@@ -58,13 +58,14 @@ class CustomDraw (context: Context) : View(context) {
                 canvas.drawPath(path, paints[k])
             }
         }
-        access.clear.setOnClickListener{
+        access.clear.setOnClickListener {
             mBitmap = null
             finalPath.clear()
             paints.clear()
             sizePaint = -1
             updatePaint(access.curWidth,access.curColor)
             invalidate()
+            access.newDrawing()
         }
     }
 

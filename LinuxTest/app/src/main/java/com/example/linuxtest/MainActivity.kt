@@ -191,6 +191,9 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            // Save before printing
+            drawView.saveDrawing("$currentImgName.png")
+            Toast.makeText(this, "Saved $currentImgName", Toast.LENGTH_SHORT).show()
             thread {
                 ssh(username, password, hostname)
             }
@@ -203,6 +206,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             println(data?.data) // image URI (not to be confused with URL)
         }
+    }
+
+    fun newDrawing() {
+        // Clear = create new drawing (so can save new images on the same session)
+        currentImgName = null
+        title = "Untitled"
     }
 
     private fun isOnline(): Boolean {
