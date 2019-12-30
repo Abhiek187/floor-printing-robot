@@ -16,8 +16,8 @@ class CustomDraw (context: Context) : View(context) {
     private var mBitmap: Bitmap? = null // loaded drawing
 
     private var paints = arrayListOf<Paint>()
-    private var finalPath = arrayListOf<Array<Path>>()
-    private var sizePaint=-1
+    private var finalPath = arrayListOf<Array<Path>>() // arrays of 5 paths
+    private var sizePaint = -1
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action and MotionEvent.ACTION_MASK){
@@ -62,8 +62,8 @@ class CustomDraw (context: Context) : View(context) {
             mBitmap = null
             finalPath.clear()
             paints.clear()
-            sizePaint=-1
-            upDatePaint(access.curWidth,access.curColor)
+            sizePaint = -1
+            updatePaint(access.curWidth,access.curColor)
             invalidate()
         }
     }
@@ -90,20 +90,20 @@ class CustomDraw (context: Context) : View(context) {
         // Clear the previous drawing and load the image as a bitmap
         finalPath.clear()
         paints.clear()
-        sizePaint=-1
-        upDatePaint(access.curWidth,access.curColor)
+        sizePaint = -1
+        updatePaint(access.curWidth,access.curColor)
         mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
         invalidate()
     }
 
-    fun upDatePaint(width: Float, color: Int){
+    fun updatePaint(width: Float, color: Int){
         val painted = Paint(Paint.ANTI_ALIAS_FLAG)
         painted.style=Paint.Style.STROKE
         painted.strokeWidth=width
         painted.color=color
         paints.add(painted)
         sizePaint += 1
-        val paths = arrayOf(Path(),Path(),Path(),Path(),Path())
+        val paths = Array(5) { Path() }
         finalPath.add(paths)
     }
 }

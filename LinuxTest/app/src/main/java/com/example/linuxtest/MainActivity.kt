@@ -24,8 +24,19 @@ class MainActivity : AppCompatActivity() {
         '<', '>', '|', '\"', ':') // illegal file name characters
     private var currentImgName: String? = null
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
-    private val colors = arrayListOf(Color.BLACK,Color.RED,Color.rgb(255,165,0),Color.YELLOW,Color.GREEN,Color.BLUE,Color.rgb(128,0,128),Color.rgb(165,42,42),Color.WHITE)
-    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple","Brown","White")
+    private val colors = arrayListOf(
+        Color.BLACK,
+        Color.RED,
+        Color.rgb(255,165,0), // orange
+        Color.YELLOW,
+        Color.GREEN,
+        Color.BLUE,
+        Color.rgb(128,0,128), // purple
+        Color.rgb(165,42,42), // brown
+        Color.WHITE
+    )
+    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple",
+        "Brown","White") // must be in the same order as above
     var curWidth = 8f
     var curColor = Color.BLACK
 
@@ -65,13 +76,12 @@ class MainActivity : AppCompatActivity() {
         pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
 
         drawView.id=View.generateViewId()
-        drawView.layoutParams.height=0
+        drawView.layoutParams.height=0 // 0 dp = match constraint
         val limits = ConstraintSet()
         limits.clone(pageLayout)
         limits.connect(drawView.id, ConstraintSet.TOP,line1.id,ConstraintSet.BOTTOM,1)
         limits.connect(drawView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
         limits.applyTo(pageLayout)
-
 
         val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
         infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -82,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 curWidth=widths[pos]
-                drawView.upDatePaint(curWidth,curColor)
+                drawView.updatePaint(curWidth,curColor)
             }
         }
 
@@ -95,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 curColor=colors[pos]
-                drawView.upDatePaint(curWidth,curColor)
+                drawView.updatePaint(curWidth,curColor)
             }
         }
         buttonUpload.setOnClickListener {
