@@ -59,6 +59,7 @@ class CustomDraw (context: Context) : View(context) {
             }
         }
         access.clear.setOnClickListener{
+            mBitmap = null
             finalPath.clear()
             paints.clear()
             sizePaint=-1
