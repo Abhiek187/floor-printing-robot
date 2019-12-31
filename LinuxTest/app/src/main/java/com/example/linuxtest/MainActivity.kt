@@ -9,6 +9,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -141,6 +142,14 @@ class MainActivity : AppCompatActivity() {
 
             val editTextName = popupView.findViewById<EditText>(R.id.editTextName)
             val buttonSaveName = popupView.findViewById<Button>(R.id.buttonSaveName)
+
+            editTextName.setOnKeyListener{_, keyCode,keyEvent ->
+                if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    buttonSaveName.performClick()
+                    return@setOnKeyListener true
+                }
+                return@setOnKeyListener false
+            }
 
             // Restore background when popup disappears
             popupWindow.setOnDismissListener { pageLayout.foreground.alpha = 0 }
