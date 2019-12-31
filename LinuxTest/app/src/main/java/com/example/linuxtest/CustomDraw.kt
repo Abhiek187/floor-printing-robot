@@ -125,6 +125,4 @@ class CustomDraw (context: Context) : View(context) {
         mBitmap = Bitmap.createBitmap(temp)
         invalidate()
     }
-
-
 }

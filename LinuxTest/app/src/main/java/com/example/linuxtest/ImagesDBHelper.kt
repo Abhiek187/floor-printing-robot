@@ -57,21 +57,4 @@ class ImagesDBHelper(context: Context):
         db.insert(TABLE_NAME, null, cv)
         db.close()
     }
-
-    fun updateImage(name: String, image: String) {
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT $COLUMN_IMAGE FROM $TABLE_NAME " +
-                "WHERE $COLUMN_NAME = '$name'", null)
-
-        if (cursor.moveToFirst()) {
-            // Should only be one result
-            val oldImg = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE))
-            val cv = ContentValues()
-            cv.put(COLUMN_IMAGE, image)
-            db.update(TABLE_NAME, cv, "$COLUMN_IMAGE =?", arrayOf(oldImg))
-        }
-
-        cursor.close()
-        db.close()
-    }
 }

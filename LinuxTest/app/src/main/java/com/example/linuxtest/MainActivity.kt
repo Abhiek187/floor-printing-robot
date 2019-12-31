@@ -250,9 +250,10 @@ class MainActivity : AppCompatActivity() {
             session.connect()
 
             val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
-            sftp(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
+            sftpPut(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
             execute(session, command = "python3 lol.py")
             execute(session, command = "cd floor* && python3 img_info.py '$image'")
+            sftpGet(session, src = "./floor-printing-robot/new_$image", dest = this.filesDir.path)
 
             println("Disconnecting from $hostname...")
             session.disconnect()
@@ -262,11 +263,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sftp(session: Session, src: String, dest: String) {
-        // Transfer files through sftp (similar to scp)
+    private fun sftpPut(session: Session, src: String, dest: String) {
+        // Transfer files from the app to the pi
         val sftpChannel = session.openChannel("sftp") as ChannelSftp
         sftpChannel.connect()
-        sftpChannel.put(src, dest) // or sftpChannel.get(dest, src)
+        sftpChannel.put(src, dest)
+        println("Transferred file from $src to $dest")
+        sftpChannel.disconnect()
+    }
+
+    private fun sftpGet(session: Session, src: String, dest: String) {
+        // Transfer files from the pi to the app
+        val sftpChannel = session.openChannel("sftp") as ChannelSftp
+        sftpChannel.connect()
+        sftpChannel.get(src, dest)
         println("Transferred file from $src to $dest")
         sftpChannel.disconnect()
     }
