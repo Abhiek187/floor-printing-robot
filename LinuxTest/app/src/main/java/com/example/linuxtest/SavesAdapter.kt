@@ -1,9 +1,11 @@
 package com.example.linuxtest
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_saves.view.*
@@ -20,7 +22,10 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewName.text = saves[position].name
-        holder.textViewImage.text = saves[position].image
+        val path = "${context.filesDir.path}/${saves[position].image}"
+        val mbitmap = BitmapFactory.decodeFile(path)
+        //holder.textViewImage. = saves[position].image
+        holder.textViewImage.setImageBitmap(mbitmap)
 
         holder.itemView.setOnClickListener {
             (context as SavesActivity).finishActivity(saves[position].name)
@@ -39,5 +44,5 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
 class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
     // Get all properties from adapter_saves
     val textViewName: TextView = view.textViewName
-    val textViewImage: TextView = view.textViewImage
+    val textViewImage: ImageView = view.textViewImage
 }
