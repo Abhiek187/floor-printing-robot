@@ -23,9 +23,9 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textViewName.text = saves[position].name
         val path = "${context.filesDir.path}/${saves[position].image}"
-        val mbitmap = BitmapFactory.decodeFile(path)
-        //holder.textViewImage. = saves[position].image
-        holder.textViewImage.setImageBitmap(mbitmap)
+        val bitmap = BitmapFactory.decodeFile(path)
+        holder.textViewImage.setImageBitmap(bitmap)
+        holder.textViewImage.contentDescription = "Image of ${saves[position].name}"
 
         holder.itemView.setOnClickListener {
             (context as SavesActivity).finishActivity(saves[position].name)
