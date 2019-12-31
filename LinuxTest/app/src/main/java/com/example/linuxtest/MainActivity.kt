@@ -3,6 +3,7 @@ package com.example.linuxtest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         "Brown","White") // must be in the same order as above
     var curWidth = 8f
     var curColor = Color.BLACK
+    private lateinit var drawView: CustomDraw
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val hostname = json.getString("hostname") // change if static IP address changes
 
         val imagesDB = ImagesDBHelper(this)
-        val drawView = CustomDraw(this)
+        drawView = CustomDraw(this)
         currentImgName = intent.getStringExtra("imageName") // current saved image
         title = currentImgName ?: "Untitled" // show which file is being edited at the top
 
@@ -202,9 +204,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            println(data?.data) // image URI (not to be confused with URL)
+            val info = data?.data ?: return // image URI (not to be confused with URL)
+            val parcelFileDescriptor = contentResolver.openFileDescriptor(info, "r")
+
+            val fileDescriptor = parcelFileDescriptor?.fileDescriptor ?: return
+            val image2 = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            drawView.loadPicture(image2)
+
+            parcelFileDescriptor.close()
         }
     }
 

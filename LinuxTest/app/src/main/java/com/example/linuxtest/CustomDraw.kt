@@ -115,4 +115,16 @@ class CustomDraw (context: Context) : View(context) {
         val paths = Array(5) { Path() }
         finalPath.add(paths)
     }
+
+    fun loadPicture(temp: Bitmap){
+        //Retrieve picture from Photo Gallery
+        finalPath.clear()
+        paints.clear()
+        sizePaint = -1
+        updatePaint(access.curWidth,access.curColor)
+        mBitmap = Bitmap.createBitmap(temp)
+        invalidate()
+    }
+
+
 }
