@@ -14,11 +14,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.jcraft.jsch.*
-import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.util.*
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -56,13 +51,6 @@ class MainActivity : AppCompatActivity() {
         val line2 = findViewById<View>(R.id.line2)
         val spin1 = findViewById<Spinner>(R.id.brushWidth)
         val spin2 = findViewById<Spinner>(R.id.colors)
-
-        // Load content from JSON
-        val json = JSONObject(assets.open("google-services.json").bufferedReader()
-            .readText())
-        val username = json.getString("username")
-        val password = json.getString("password")
-        val hostname = json.getString("hostname") // change if static IP address changes
 
         val imagesDB = ImagesDBHelper(this)
         drawView = CustomDraw(this)
@@ -196,9 +184,10 @@ class MainActivity : AppCompatActivity() {
             // Save & scale before printing
             drawView.saveDrawing("$currentImgName.png", true)
             Toast.makeText(this, "Saved $currentImgName", Toast.LENGTH_SHORT).show()
-            thread {
-                ssh(username, password, hostname)
-            }
+            // Show print log
+            val intent = Intent(this, PrintActivity::class.java)
+            intent.putExtra("imageName", currentImgName)
+            startActivity(intent)
         }
     }
 
@@ -232,81 +221,5 @@ class MainActivity : AppCompatActivity() {
                     nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         }
         return false
-    }
-
-    private fun ssh(username: String, password: String, hostname: String, port: Int = 22) {
-        try {
-            val jsch = JSch()
-            // Connect to SSH using the Java Secure Channel
-            val session = jsch.getSession(username, hostname, port)
-            session.setPassword(password)
-
-            // Avoid asking for key confirmation
-            val properties = Properties()
-            properties["StrictHostKeyChecking"] = "no"
-            session.setConfig(properties)
-
-            println("Connecting to $hostname...")
-            session.connect()
-
-            val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
-            sftpPut(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
-            execute(session, command = "python3 lol.py")
-            execute(session, command = "cd floor* && python3 img_info.py '$image'")
-            sftpGet(session, src = "./floor-printing-robot/new_$image", dest = this.filesDir.path)
-
-            println("Disconnecting from $hostname...")
-            session.disconnect()
-        } catch (ex: JSchException) {
-            ex.printStackTrace()
-            println("Couldn't connect to $hostname")
-        }
-    }
-
-    private fun sftpPut(session: Session, src: String, dest: String) {
-        // Transfer files from the app to the pi
-        val sftpChannel = session.openChannel("sftp") as ChannelSftp
-        sftpChannel.connect()
-        sftpChannel.put(src, dest)
-        println("Transferred file from $src to $dest")
-        sftpChannel.disconnect()
-    }
-
-    private fun sftpGet(session: Session, src: String, dest: String) {
-        // Transfer files from the pi to the app
-        val sftpChannel = session.openChannel("sftp") as ChannelSftp
-        sftpChannel.connect()
-        sftpChannel.get(src, dest)
-        println("Transferred file from $src to $dest")
-        sftpChannel.disconnect()
-    }
-
-    private fun execute(session: Session, command: String) {
-        // Create an SSH Channel
-        val sshChannel = session.openChannel("exec") as ChannelExec
-        val outputStream = ByteArrayOutputStream()
-        val errStream = ByteArrayOutputStream()
-        sshChannel.outputStream = outputStream
-        sshChannel.setExtOutputStream(errStream)
-
-        // Execute Linux command
-        sshChannel.setCommand(command)
-        sshChannel.connect()
-        println("Output from $command:")
-
-        // Wait for command to finish
-        while (!sshChannel.isClosed) {
-            println("Waiting for response...")
-            Thread.sleep(1_000)
-        }
-
-        // Check if program succeeded or failed
-        if (sshChannel.exitStatus == 0) {
-            println(outputStream.toString()) // success: print stdout
-        } else {
-            println(errStream.toString()) // error: print stderr
-        }
-
-        sshChannel.disconnect()
     }
 }
