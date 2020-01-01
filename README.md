@@ -2,6 +2,9 @@
 Capstone project: A robot that can draw images on a surface
 
 ## img_info.py
+
+A Python script that converts an image into its basic colors
+
 ### Requirements
 **Python 3.6+ and pip 3**: (https://docs.python-guide.org/starting/install3/linux/)
 
@@ -23,3 +26,15 @@ To preview the image on Linux: `fbi -a [new_image_file]` (No cops will be called
 **small.png**: a collection of colored pixels
 
 **square.png**: a small, black square
+
+## LinuxTest
+
+An Android app that lets you draw or upload images and print them to a raspberry pi
+
+### Requirements
+- Android Studio
+- A raspberry pi connected to the internet
+- ```google-services.json``` in the assets folder with the following properties:
+  - **username**: the username of the pi (default pi)
+  - **password**: the password of the pi (default raspberry)
+  - **hostname**: the hostname or IP address the pi is connected to
