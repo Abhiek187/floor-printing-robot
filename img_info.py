@@ -5,8 +5,9 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 
 # List of avaiable colors (use color name from CSS)
-COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
-	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]
+'''COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
+	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]'''
+COLORS = [name_to_rgb('black'), name_to_rgb('white')]
 
 def closestColor(color):
 	# Find the color a pixel closely matches to
