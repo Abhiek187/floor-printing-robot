@@ -16,6 +16,8 @@ class PrintActivity : AppCompatActivity() {
     private lateinit var textViewLog: TextView
     private lateinit var imageViewPrint: ImageView
     private lateinit var currentImgName: String
+    private var didFinish = true
+    private var prevOutput = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +57,7 @@ class PrintActivity : AppCompatActivity() {
 
             val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
             sftpPut(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
-            execute(session, command = "python3 lol.py")
-            execute(session, command = "cd floor* && python3 img_info.py '$image'")
+            execute(session, command = "cd floor*; python3 img_info.py '$image' &> out.log")
             sftpGet(session, src = "./floor-printing-robot/new_$image", dest = this.filesDir.path)
 
             uiPrint("Disconnecting from $hostname...")
@@ -84,7 +85,7 @@ class PrintActivity : AppCompatActivity() {
         val sftpChannel = session.openChannel("sftp") as ChannelSftp
         sftpChannel.connect()
         sftpChannel.put(src, dest)
-        uiPrint("Transferred file from $src to $dest")
+        uiPrint("Transferred file from $src to $dest\n")
         sftpChannel.disconnect()
     }
 
@@ -100,34 +101,61 @@ class PrintActivity : AppCompatActivity() {
     private fun execute(session: Session, command: String) {
         // Create an SSH Channel
         val sshChannel = session.openChannel("exec") as ChannelExec
-        val inputStream = sshChannel.inputStream
-        val buffer = ByteArray(1024)
-        val outputStream = ByteArrayOutputStream()
+        /*val outputStream = ByteArrayOutputStream()
         val errStream = ByteArrayOutputStream()
         sshChannel.outputStream = outputStream
-        sshChannel.setExtOutputStream(errStream)
+        sshChannel.setExtOutputStream(errStream)*/
 
         // Execute Linux command
         sshChannel.setCommand(command)
         sshChannel.connect()
         uiPrint("Output from $command:")
+        didFinish = false
+
+        thread {
+            while (!didFinish) {
+                getOutput(session, command = "cat floor*/out.log")
+            }
+        }
 
         // Wait for command to finish
         while (!sshChannel.isClosed) {
-            /*while (inputStream.available() > 0) {
-                val i = inputStream.read(buffer, 0, 1024)
-                if (i < 0) break
-                uiPrint(String(buffer, 0, i))
-            }*/
-
             Thread.sleep(1_000)
         }
 
+        didFinish = true
+        uiPrint("") // just a newline
+
         // Check if program succeeded or failed
-        if (sshChannel.exitStatus == 0) {
+        /*if (sshChannel.exitStatus == 0) {
             uiPrint(outputStream.toString()) // success: print stdout
         } else {
             uiPrint(errStream.toString()) // error: print stderr
+        }*/
+
+        sshChannel.disconnect()
+    }
+
+    private fun getOutput(session: Session, command: String) {
+        // Get output of command in real time
+        val sshChannel = session.openChannel("exec") as ChannelExec
+        val outputStream = ByteArrayOutputStream()
+        sshChannel.outputStream = outputStream
+
+        // Execute Linux command
+        sshChannel.setCommand(command)
+        sshChannel.connect()
+
+        // Wait for command to finish
+        while (!sshChannel.isClosed) {
+            Thread.sleep(1_000)
+        }
+
+        // Check if output has changed, and print what's newly added
+        if (outputStream.toString() != prevOutput) {
+            val newOutput = outputStream.toString().substringAfter(prevOutput)
+            runOnUiThread { textViewLog.append(newOutput) } // success: print stdout (no extra \n)
+            prevOutput = outputStream.toString()
         }
 
         sshChannel.disconnect()

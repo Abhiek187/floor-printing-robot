@@ -28,23 +28,23 @@ def closestColor(color):
 def checkProgress(progress):
 	# Show progress
 	if (progress == int(round(total*0.1))):
-		print("10% done")
+		print("10% done", flush=True)
 	elif (progress == int(round(total*0.2))):
-		print("20% done")
+		print("20% done", flush=True)
 	elif (progress == int(round(total*0.3))):
-		print("30% done")
+		print("30% done", flush=True)
 	elif (progress == int(round(total*0.4))):
-		print("40% done")
+		print("40% done", flush=True)
 	elif (progress == int(round(total*0.5))):
-		print("50% done")
+		print("50% done", flush=True)
 	elif (progress == int(round(total*0.6))):
-		print("60% done")
+		print("60% done", flush=True)
 	elif (progress == int(round(total*0.7))):
-		print("70% done")
+		print("70% done", flush=True)
 	elif (progress == int(round(total*0.8))):
-		print("80% done")
+		print("80% done", flush=True)
 	elif (progress == int(round(total*0.9))):
-		print("90% done")
+		print("90% done", flush=True)
 
 argc = len(sys.argv)
 if (argc == 1):
@@ -61,7 +61,7 @@ rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int
 x = y = 0
 progress = 0
 state = 'right' # robot starts at top left moving right; possible state: left, right, down
-print("Starting print job...")
+print("Starting print job...", flush=True)
 
 while x < width and y < height:
 	# Print color at current pixel
@@ -106,4 +106,4 @@ while x < width and y < height:
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
 img_name = f"new_{file.split('/')[-1]}"
 new_img.save(img_name)
-print(f'Done! Preview print job at {img_name}')
+print(f"Done! Preview print job at {img_name}", flush=True)
