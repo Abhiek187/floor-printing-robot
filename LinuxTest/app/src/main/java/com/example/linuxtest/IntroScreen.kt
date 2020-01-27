@@ -26,7 +26,6 @@ class IntroScreen : FragmentActivity() {
             override fun onPageSelected(position: Int) {
                 if (position == 2) {
                     skipBtn.visibility = View.GONE
-                    nextBtn.text = "Done"
                 } else {
                     skipBtn.visibility = View.VISIBLE
                 }
