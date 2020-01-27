@@ -6,4 +6,30 @@
     <string name="load">Load</string>
     <string name="print">Print</string>
     <string name="save_as">Save image as:</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+
+    <string name="explainColors">To change the color of your image select
+    the drop down menu that has the names of the colors and select the color
+    of your choice</string>
+
+    <string name="explainWidth">To change the width of your brush stroke
+    when drawing an image select the drop down menu that indicates the current
+    size of the brush stroke. From there select the width of your choice</string>
+
+    <string name="explainDraw">To start drawing an image simply touch the
+    canvas in the middle of the screen between the two boundaries and
+    start drawing</string>
+
+    <string name="upLoad">Upload</string>
+
+    <string name="explainUpload">The Upload Button can be used to access
+    photos from the gallery app. Pressing the button will take you to the
+    set of photos in the gallery and you are then able to select a photo
+    to set as your image in the canvas instead of drawing an image</string>
+
+    <string name="explainLoad">The Load Button can be used to look at all
+    previously saved images. From there the user can select an image
+    to reuse as needed</string>
+
 </resources>

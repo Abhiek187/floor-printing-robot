@@ -41,7 +41,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val sharedPref = Prefs(this)
+        if(sharedPref.isFirst){
+            startActivity(Intent(this,IntroScreen::class.java))
+        }
+        //startActivity(Intent(this,IntroScreen::class.java))
         // UI elements
         val pageLayout = findViewById<ConstraintLayout>(R.id.pageLayout)
         val buttonUpload = findViewById<Button>(R.id.buttonUpload)
