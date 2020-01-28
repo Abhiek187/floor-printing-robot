@@ -11,5 +11,5 @@ class Prefs (context: Context) {
 
     var isFirst: Boolean
         get() = prefs.getBoolean(isFirstKey,true)
-        set(value) =prefs.edit().putBoolean(isFirstKey,value).apply()
+        set(value) = prefs.edit().putBoolean(isFirstKey,value).apply()
 }

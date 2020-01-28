@@ -1,6 +1,5 @@
 package com.example.linuxtest.fragments
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,6 +19,4 @@ class Page2 : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_page2, container, false)
     }
-
-
 }

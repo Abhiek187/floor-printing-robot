@@ -33,4 +33,6 @@
     <string name="explainPrint">The Print Button is used to print the
     image using the mobile printer</string>
 
+    <string name="squareImage">Sample drawing (a square)</string>
+
 </resources>

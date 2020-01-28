@@ -1,6 +1,5 @@
 package com.example.linuxtest.fragments
 
-
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,8 +17,6 @@ class Page1 : Fragment() {
     private lateinit var mContext: Context
 
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
-
-
     private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple",
         "Brown","White")
 
@@ -49,8 +46,5 @@ class Page1 : Fragment() {
         spinColors.adapter=infoColors
 
         return view
-        //return inflater.inflate(R.layout.fragment_page1, container, false)
     }
-
-
 }

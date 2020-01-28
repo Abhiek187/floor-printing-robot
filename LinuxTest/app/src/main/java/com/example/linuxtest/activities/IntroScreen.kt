@@ -20,12 +20,13 @@ class IntroScreen : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro_screen)
+
         val page = findViewById<ViewPager>(R.id.page)
         val skipBtn = findViewById<Button>(R.id.skip)
         val nextBtn = findViewById<Button>(R.id.next)
         val left = findViewById<SmartTabLayout>(R.id.indicator)
-        val adapter =
-            MyAdapter(supportFragmentManager)
+        val adapter = MyAdapter(supportFragmentManager)
+
         page.adapter=adapter
         left.setViewPager(page)
         left.setOnPageChangeListener(object : SimpleOnPageChangeListener() {
@@ -55,8 +56,7 @@ class IntroScreen : FragmentActivity() {
     private fun endTutorial(){
         val sharedPref = Prefs(this)
         sharedPref.isFirst=false
-        startActivity(Intent(this,
-            MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }
 
