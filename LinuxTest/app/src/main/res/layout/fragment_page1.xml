@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Page1">
+    tools:context=".fragments.Page1">
 
     <Spinner
         android:id="@+id/demoColors"

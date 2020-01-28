@@ -1,4 +1,4 @@
-package com.example.linuxtest
+package com.example.linuxtest.activities
 
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.linuxtest.R
 import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream

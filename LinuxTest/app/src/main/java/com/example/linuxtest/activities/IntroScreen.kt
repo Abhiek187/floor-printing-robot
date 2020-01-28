@@ -1,4 +1,4 @@
-package com.example.linuxtest
+package com.example.linuxtest.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,11 @@ import android.widget.Button
 import androidx.fragment.app.*
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
+import com.example.linuxtest.R
+import com.example.linuxtest.fragments.Page1
+import com.example.linuxtest.fragments.Page2
+import com.example.linuxtest.fragments.Page3
+import com.example.linuxtest.storage.Prefs
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 
 
@@ -19,7 +24,8 @@ class IntroScreen : FragmentActivity() {
         val skipBtn = findViewById<Button>(R.id.skip)
         val nextBtn = findViewById<Button>(R.id.next)
         val left = findViewById<SmartTabLayout>(R.id.indicator)
-        val adapter = MyAdapter(supportFragmentManager)
+        val adapter =
+            MyAdapter(supportFragmentManager)
         page.adapter=adapter
         left.setViewPager(page)
         left.setOnPageChangeListener(object : SimpleOnPageChangeListener() {
@@ -49,7 +55,8 @@ class IntroScreen : FragmentActivity() {
     private fun endTutorial(){
         val sharedPref = Prefs(this)
         sharedPref.isFirst=false
-        startActivity(Intent(this,MainActivity::class.java))
+        startActivity(Intent(this,
+            MainActivity::class.java))
     }
 }
 

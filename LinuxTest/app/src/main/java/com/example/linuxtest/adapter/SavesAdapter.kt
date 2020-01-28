@@ -1,4 +1,4 @@
-package com.example.linuxtest
+package com.example.linuxtest.adapter
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -8,13 +8,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.linuxtest.image.Image
+import com.example.linuxtest.R
+import com.example.linuxtest.activities.SavesActivity
 import kotlinx.android.synthetic.main.adapter_saves.view.*
 
 class SavesAdapter(private var context: Context, private var saves: ArrayList<Image>):
     RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context).inflate(R.layout.adapter_saves, parent,
+        val inflater = LayoutInflater.from(context).inflate(
+            R.layout.adapter_saves, parent,
             false)
 
         return ViewHolder(inflater)

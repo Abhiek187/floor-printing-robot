@@ -1,9 +1,10 @@
-package com.example.linuxtest
+package com.example.linuxtest.image
 
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import com.example.linuxtest.activities.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileOutputStream

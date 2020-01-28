@@ -1,12 +1,16 @@
-package com.example.linuxtest
+package com.example.linuxtest.storage
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.linuxtest.image.Image
 
 class ImagesDBHelper(context: Context):
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    SQLiteOpenHelper(context,
+        DATABASE_NAME, null,
+        DATABASE_VERSION
+    ) {
     companion object {
         // Located in /data/user/0/com.example.linuxtest/files/databases
         private const val DATABASE_VERSION = 1

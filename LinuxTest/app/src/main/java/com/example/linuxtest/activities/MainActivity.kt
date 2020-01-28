@@ -1,4 +1,4 @@
-package com.example.linuxtest
+package com.example.linuxtest.activities
 
 import android.app.Activity
 import android.content.Context
@@ -15,6 +15,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import com.example.linuxtest.*
+import com.example.linuxtest.image.CustomDraw
+import com.example.linuxtest.storage.ImagesDBHelper
+import com.example.linuxtest.storage.Prefs
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -43,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val sharedPref = Prefs(this)
         if(sharedPref.isFirst){
-            startActivity(Intent(this,IntroScreen::class.java))
+            startActivity(Intent(this, IntroScreen::class.java))
         }
         //startActivity(Intent(this,IntroScreen::class.java))
         // UI elements
@@ -127,7 +131,8 @@ class MainActivity : AppCompatActivity() {
             val focusable = true // can dismiss by tapping outside the popup
             pageLayout.foreground.alpha = 220 // dim background when popup appears
 
-            val popupView = layoutInflater.inflate(R.layout.popup_save, pageLayout,
+            val popupView = layoutInflater.inflate(
+                R.layout.popup_save, pageLayout,
                 false)
             val popupWindow = PopupWindow(popupView, width, height, focusable)
             popupWindow.showAtLocation(pageLayout, Gravity.CENTER, 0, 0)

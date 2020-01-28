@@ -1,8 +1,7 @@
-package com.example.linuxtest
+package com.example.linuxtest.fragments
 
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import com.example.linuxtest.R
 
 /**
  * A simple [Fragment] subclass.
