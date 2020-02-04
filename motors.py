@@ -2,65 +2,66 @@
 
 # Import required modules
 import time
+from enum import Enum
 import RPi.GPIO as GPIO
+
+# Constants for the pins
+class Pin(Enum):
+	PWMA = 7
+	AIN2 = 11
+	AIN1 = 12
+	STBY = 13
+	BIN1 = 15
+	BIN2 = 16
+	PWMB = 18
 
 # Declare the GPIO settings
 GPIO.setmode(GPIO.BOARD)
 
 # Set up GPIO pins
-GPIO.setup(7, GPIO.OUT) # connected to PWMA
-GPIO.setup(11, GPIO.OUT) # connected to AIN2
-GPIO.setup(12, GPIO.OUT) # connected to AIN1
-GPIO.setup(13, GPIO.OUT) # connected to STBY
-GPIO.setup(15, GPIO.OUT) # connected to BIN1
-GPIO.setup(16, GPIO.OUT) # connected to BIN2
-GPIO.setup(18, GPIO.OUT) # connected to PWMB
+for pin in Pin:
+	GPIO.setup(pin.value, GPIO.OUT)
 
 # Drive the motor clockwise
 # Motor A:
-GPIO.output(12, GPIO.HIGH) # set AIN1
-GPIO.output(11, GPIO.LOW) # set AIN2
+GPIO.output(Pin.AIN1.value, GPIO.HIGH)
+GPIO.output(Pin.AIN2.value, GPIO.LOW)
 # Motor B:
-GPIO.output(15, GPIO.HIGH) # set BIN1
-GPIO.output(16, GPIO.LOW) # set BIN2
+GPIO.output(Pin.BIN1,value, GPIO.HIGH)
+GPIO.output(Pin.BIN2.value, GPIO.LOW)
 
 # Set the motor speed
 # Motor A:
-GPIO.output(7, GPIO.HIGH) # set PWMA
+GPIO.output(Pin.PWMA.value, GPIO.HIGH)
 # Motor B:
-GPIO.output(18, GPIO.HIGH) # set PWMB
+GPIO.output(Pin.PWMB.value, GPIO.HIGH)
 
 # Disable STBY (standby)
-GPIO.output(13, GPIO.HIGH)
+GPIO.output(Pin.STBY.value, GPIO.HIGH)
 
 # Wait 5 seconds
 time.sleep(5)
 
 # Drive the motor counterclockwise
 # Motor A:
-GPIO.output(12, GPIO.LOW) # set AIN1
-GPIO.output(11, GPIO.HIGH) # set AIN2
+GPIO.output(Pin.AIN1.value, GPIO.LOW)
+GPIO.output(Pin.AIN2.value, GPIO.HIGH)
 # Motor B:
-GPIO.output(15, GPIO.LOW) # set BIN1
-GPIO.output(16, GPIO.HIGH) # set BIN2
+GPIO.output(Pin.BIN1.value, GPIO.LOW)
+GPIO.output(Pin.BIN2.value, GPIO.HIGH)
 
 # Set the motor speed
 # Motor A:
-GPIO.output(7, GPIO.HIGH) # set PWMA
+GPIO.output(Pin.PWMA.value, GPIO.HIGH)
 # Motor B:
-GPIO.output(18, GPIO.HIGH) # set PWMB
+GPIO.output(Pin.PWMB.value, GPIO.HIGH)
 
 # Disable STBY (standby)
-GPIO.output(13, GPIO.HIGH)
+GPIO.output(Pin.STBY.value, GPIO.HIGH)
 
 # Wait 5 seconds
 time.sleep(5)
 
 # Reset all the GPIO pins by setting them to LOW
-GPIO.output(12, GPIO.LOW) # set AIN1
-GPIO.output(11, GPIO.LOW) # set AIN2
-GPIO.output(7, GPIO.LOW) # set PWMA
-GPIO.output(13, GPIO.LOW) # set STBY
-GPIO.output(15, GPIO.LOW) # set BIN1
-GPIO.output(16, GPIO.LOW) # set BIN2
-GPIO.output(18, GPIO.LOW) # set PWMB
+for pin in Pin:
+	GPIO.output(pin.value, GPIO.LOW)
