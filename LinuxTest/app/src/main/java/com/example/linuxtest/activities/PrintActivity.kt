@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.linuxtest.R
+import com.example.linuxtest.storage.Prefs
 import com.jcraft.jsch.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -28,12 +29,31 @@ class PrintActivity : AppCompatActivity() {
         textViewLog.text = ""
         imageViewPrint = findViewById(R.id.imageViewPrint)
 
+        var username = ""
+        var password = ""
+        var hostname = ""
+
+        val sharedPref = Prefs(this)
+
         // Load content from JSON
-        val json = JSONObject(assets.open("google-services.json").bufferedReader()
+        /*val json = JSONObject(assets.open("google-services.json").bufferedReader()
             .readText())
         val username = json.getString("username")
         val password = json.getString("password")
-        val hostname = json.getString("hostname")
+        val hostname = json.getString("hostname")*/
+        if(sharedPref.username.isNotEmpty()) {
+             username = sharedPref.username
+        }
+
+        if(sharedPref.password.isNotEmpty()) {
+             password = sharedPref.password
+        }
+
+        if(sharedPref.hostname.isNotEmpty()) {
+             hostname = sharedPref.hostname
+        }
+
+
         currentImgName = intent.getStringExtra("imageName")!!
 
         thread {

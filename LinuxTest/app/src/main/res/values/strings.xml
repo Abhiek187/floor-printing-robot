@@ -8,6 +8,11 @@
     <string name="save_as">Save image as:</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="setting">Settings</string>
+    <string name="userName">username</string>
+    <string name="password">password</string>
+    <string name="hostName">hostname</string>
+    <string name="saveSetting">Save</string>
     <string name="arrow1">\u2190</string>
 
     <string name="explainColors">This drop down menu is used to change the
@@ -32,6 +37,10 @@
 
     <string name="explainPrint">The Print Button is used to print the
     image using the mobile printer</string>
+
+    <string name="explainSetting">The Setting Button will take you to
+    another activity where you will enter the username, password, and
+    hostname information.</string>
 
     <string name="squareImage">Sample drawing (a square)</string>
 

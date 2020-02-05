@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         val buttonLoad = findViewById<Button>(R.id.buttonLoad)
         val buttonPrint = findViewById<Button>(R.id.buttonPrint)
+        val buttonSettings = findViewById<Button>(R.id.setting)
         val line1 = findViewById<View>(R.id.line1)
         val line2 = findViewById<View>(R.id.line2)
         val spin1 = findViewById<Spinner>(R.id.brushWidth)
@@ -107,6 +108,11 @@ class MainActivity : AppCompatActivity() {
                 drawView.updatePaint(curWidth,curColor)
             }
         }
+
+        buttonSettings.setOnClickListener{
+            startActivity(Intent(this,Settings::class.java))
+        }
+
         buttonUpload.setOnClickListener {
             // Get photo from gallery
             val intent = Intent(Intent.ACTION_GET_CONTENT)
