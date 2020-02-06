@@ -3,6 +3,7 @@ package com.example.linuxtest.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
 import com.example.linuxtest.R
@@ -19,6 +20,14 @@ class Settings : AppCompatActivity() {
         val userName = findViewById<EditText>(R.id.userID)
         val saveSettingBtn = findViewById<Button>(R.id.saveSetting)
         val sharedPref = Prefs(this)
+
+        hostname.setOnKeyListener{_, keyCode,keyEvent ->
+            if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                saveSettingBtn.performClick()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
 
         saveSettingBtn.setOnClickListener {
             if (hostname.text.isNotEmpty()) {
