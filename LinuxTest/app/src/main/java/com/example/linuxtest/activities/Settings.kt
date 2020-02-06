@@ -2,6 +2,7 @@ package com.example.linuxtest.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
 import com.example.linuxtest.R
@@ -23,6 +24,14 @@ class Settings : AppCompatActivity() {
         hostname.setText(sharedPref.hostname)
         password.setText(sharedPref.password)
         userName.setText(sharedPref.username)
+
+        hostname.setOnKeyListener{_, keyCode,keyEvent ->
+            if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                saveSettingBtn.performClick()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
 
         saveSettingBtn.setOnClickListener {
             sharedPref.hostname = hostname.text.toString()
