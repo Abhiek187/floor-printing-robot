@@ -9,38 +9,40 @@
     <string name="skip">Skip</string>
     <string name="next">Next</string>
     <string name="setting">Settings</string>
-    <string name="userName">username</string>
-    <string name="password">password</string>
-    <string name="hostName">hostname</string>
+    <string name="userName">Username</string>
+    <string name="password">Password</string>
+    <string name="hostName">Hostname</string>
+    <string name="sample_username">pi</string>
+    <string name="sample_password">raspberry</string>
+    <string name="sample_hostname">192.168.1.128</string>
     <string name="saveSetting">Save</string>
     <string name="arrow1">\u2190</string>
 
     <string name="explainColors">This drop down menu is used to change the
-    color</string>
+    color.</string>
 
     <string name="explainWidth">This drop down menu can be used to change the
-    width of the brush</string>
+    width of the brush.</string>
 
     <string name="explainDraw">To start drawing an image simply touch the
     canvas in the middle of the screen between the two boundaries and
-    start drawing</string>
+    start drawing.</string>
 
     <string name="upLoad">Upload</string>
 
     <string name="explainUpload">The Upload Button is used to upload an image
-    from the gallery app</string>
+    from the gallery app.</string>
 
     <string name="explainLoad">The Load Button can be used to upload an image
-    from the database</string>
+    from the database.</string>
 
     <string name="Print">Print</string>
 
     <string name="explainPrint">The Print Button is used to print the
-    image using the mobile printer</string>
+    image using the mobile printer.</string>
 
-    <string name="explainSetting">The Setting Button will take you to
-    another activity where you will enter the username, password, and
-    hostname information.</string>
+    <string name="explainSetting">The Settings Button will let you configure
+    the login information for the raspberry pi.</string>
 
     <string name="squareImage">Sample drawing (a square)</string>
 

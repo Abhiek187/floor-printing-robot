@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         val buttonLoad = findViewById<Button>(R.id.buttonLoad)
         val buttonPrint = findViewById<Button>(R.id.buttonPrint)
-        val buttonSettings = findViewById<Button>(R.id.setting)
+        val buttonSettings = findViewById<ImageButton>(R.id.setting)
         val line1 = findViewById<View>(R.id.line1)
         val line2 = findViewById<View>(R.id.line2)
         val spin1 = findViewById<Spinner>(R.id.brushWidth)
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonSettings.setOnClickListener{
-            startActivity(Intent(this,Settings::class.java))
+            startActivity(Intent(this, Settings::class.java))
         }
 
         buttonUpload.setOnClickListener {
@@ -205,6 +205,13 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "No network connection", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            val prefs = Prefs(this)
+            if (prefs.username.isBlank() || prefs.password.isBlank() || prefs.hostname.isBlank()) {
+                Toast.makeText(this, "RPI info missing in settings", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             // Save & scale before printing
             drawView.saveDrawing("$currentImgName.png", true)
             Toast.makeText(this, "Saved $currentImgName", Toast.LENGTH_SHORT).show()

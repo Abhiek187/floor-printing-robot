@@ -17,14 +17,14 @@ class Prefs (context: Context) {
         set(value) = prefs.edit().putBoolean(isFirstKey,value).apply()
 
     var username: String
-        get() = prefs.getString(userKey,"username").toString()
+        get() = prefs.getString(userKey,"").toString()
         set(value) = prefs.edit().putString(userKey,value).apply()
 
     var password: String
-        get() = prefs.getString(passwordKey,"password").toString()
+        get() = prefs.getString(passwordKey,"").toString()
         set(value) = prefs.edit().putString(passwordKey,value).apply()
 
     var hostname: String
-        get() = prefs.getString(hostNameKey,"hostname").toString()
+        get() = prefs.getString(hostNameKey,"").toString()
         set(value) = prefs.edit().putString(hostNameKey,value).apply()
 }

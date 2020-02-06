@@ -7,74 +7,83 @@
     tools:context=".activities.Settings">
 
     <TextView
-        android:id="@+id/userName"
+        android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/userName"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:text="@string/userName"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/userID"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextUsername"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="1sp"
-        android:layout_marginStart="5dp"
-        android:background="@null"
-        android:hint="@string/userName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/userName"
-        app:layout_constraintLeft_toRightOf="@id/userName" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/sample_username"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textViewUsername" />
 
     <TextView
-        android:id="@+id/password"
+        android:id="@+id/textViewPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:paddingTop="10dp"
         android:text="@string/password"
-        android:paddingTop="10dp"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/userID"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextUsername" />
 
     <EditText
-        android:id="@+id/Password"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextPassword"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="1dp"
-        android:layout_marginStart="5dp"
-        android:background="@null"
-        android:hint="@string/password"
-        app:layout_constraintBaseline_toBaselineOf="@+id/password"
-        app:layout_constraintLeft_toRightOf="@id/password" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/sample_password"
+        android:inputType="textPassword"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textViewPassword" />
 
     <TextView
-        android:id="@+id/hostName"
+        android:id="@+id/textViewHostname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hostName"
+        android:layout_marginStart="10dp"
         android:paddingTop="10dp"
+        android:text="@string/hostName"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/Password"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
     <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextHostname"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="1dp"
-        android:layout_marginStart="5dp"
-        android:background="@null"
-        android:hint="@string/hostName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/hostName"
-        app:layout_constraintLeft_toRightOf="@id/hostName" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:digits="0123456789."
+        android:hint="@string/sample_hostname"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewHostname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textViewHostname" />
 
     <Button
         android:id="@+id/saveSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/saveSetting"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,7 @@
         android:text="@string/arrow1"
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/upLoad"
-        app:layout_constraintLeft_toRightOf="@id/upLoad" />
+        app:layout_constraintStart_toEndOf="@id/upLoad" />
 
     <TextView
         android:id="@+id/explainUpload"
@@ -32,7 +32,7 @@
         android:layout_marginTop="30dp"
         android:text="@string/explainUpload"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/arrow3"
+        app:layout_constraintStart_toEndOf="@id/arrow3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
@@ -53,7 +53,7 @@
         android:text="@string/arrow1"
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/Load"
-        app:layout_constraintLeft_toRightOf="@id/Load" />
+        app:layout_constraintStart_toEndOf="@id/Load" />
 
     <TextView
         android:id="@+id/explainLoad"
@@ -62,7 +62,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/explainLoad"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/arrow4"
+        app:layout_constraintStart_toEndOf="@id/arrow4"
         app:layout_constraintTop_toBottomOf="@+id/explainUpload"
         app:layout_constraintWidth_percent="0.6" />
 
@@ -83,7 +83,7 @@
         android:text="@string/arrow1"
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/Print"
-        app:layout_constraintLeft_toRightOf="@id/Print" />
+        app:layout_constraintStart_toEndOf="@id/Print" />
 
     <TextView
         android:id="@+id/explainPrint"
@@ -92,28 +92,33 @@
         android:layout_marginTop="10dp"
         android:text="@string/explainPrint"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/arrow5"
+        app:layout_constraintStart_toEndOf="@id/arrow5"
         app:layout_constraintTop_toBottomOf="@+id/explainLoad"
         app:layout_constraintWidth_percent="0.6" />
 
-    <Button
+    <ImageButton
         android:id="@+id/settingBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setting"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="10dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/setting"
+        android:src="@drawable/baseline_settings_black_18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Print"/>
+        app:layout_constraintTop_toBottomOf="@id/Print" />
 
     <TextView
         android:id="@+id/arrow6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="20dp"
         android:text="@string/arrow1"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/settingBtn"
-        app:layout_constraintLeft_toRightOf="@id/settingBtn"/>
+        app:layout_constraintStart_toEndOf="@+id/settingBtn"
+        app:layout_constraintTop_toBottomOf="@+id/Print" />
 
     <TextView
         android:id="@+id/explainSetting"
@@ -122,7 +127,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/explainSetting"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@id/arrow6"
+        app:layout_constraintStart_toEndOf="@id/arrow6"
         app:layout_constraintTop_toBottomOf="@id/explainPrint"
         app:layout_constraintWidth_percent="0.6"/>
 
