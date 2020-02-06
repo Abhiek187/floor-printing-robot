@@ -33,8 +33,4 @@ An Android app that lets you draw or upload images and print them to a raspberry
 
 ### Requirements
 - Android Studio
-- A Raspberry Pi connected to the internet
-- ```google-services.json``` in the assets folder with the following properties:
-  - **username**: the username of the pi (default pi)
-  - **password**: the password of the pi (default raspberry)
-  - **hostname**: the hostname or IP address the pi is connected to
+- A Raspberry Pi connected to the internet (need to enter the username, password, and IP address in settings)
