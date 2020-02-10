@@ -12,6 +12,8 @@ A Python script that converts an image into its basic colors
 
 **webcolors**: `pip3 install webcolors`
 
+(Or can type `pip3 install -r requirements.txt` to get PIL and webcolors.)
+
 **numpy**: `pip3 install numpy` or `sudo apt-get install python3-numpy`
 
 **fbi (optional)**: `sudo apt-get install fbi`
