@@ -5,6 +5,10 @@ Capstone project: A robot that can draw images on a surface
 
 A Python script that converts an image into its basic colors
 
+## motors.py (only works on a raspberry pi)
+
+A script that runs the motors on the raspberry pi.
+
 ### Requirements
 **Python 3.6+ and pip 3**: (https://docs.python-guide.org/starting/install3/linux/)
 
@@ -12,7 +16,9 @@ A Python script that converts an image into its basic colors
 
 **webcolors**: `pip3 install webcolors`
 
-(Or can type `pip3 install -r requirements.txt` to get PIL and webcolors.)
+**RPi.GPIO**: `pip3 install RPi.GPIO`
+
+(Or can type `pip3 install -r requirements.txt` to get PIL, webcolors, and RPi.GPIO)
 
 **numpy**: `pip3 install numpy` or `sudo apt-get install python3-numpy`
 
