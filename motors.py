@@ -15,7 +15,7 @@ class Pin(Enum):
 	BIN2 = 16
 	PWMB = 18
 
-# p, q, a, b = GPIO.PWM(pin, 20)
+# p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
 
 # stop(): Stops both motors
