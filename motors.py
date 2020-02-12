@@ -115,6 +115,7 @@ try:
 		sleep(5)
 
 except KeyboardInterrupt:
+	print("Stopping the motors...")
 	# Reset all the GPIO pins by setting them to LOW
 	for pin in Pin:
 		GPIO.output(pin.value, GPIO.LOW)
