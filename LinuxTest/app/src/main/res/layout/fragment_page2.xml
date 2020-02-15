@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/page2"
     tools:context=".fragments.Page2">
 
     <TextView
@@ -30,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/explainDraw"/>
 
-    <ImageView
+<!--    <ImageView
         android:id="@+id/demoImage"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -39,7 +40,8 @@
         app:layout_constraintBottom_toTopOf="@id/boundary2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/boundary1" />
+        app:layout_constraintTop_toBottomOf="@id/boundary1" />-->
+
 
     <View
         android:id="@+id/boundary2"
