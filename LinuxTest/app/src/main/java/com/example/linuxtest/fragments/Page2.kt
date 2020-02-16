@@ -42,11 +42,12 @@ class Page2 : Fragment() {
 class Demo(context: Context) : View(context){
     private var paths = arrayListOf(Path(),Path(),Path(),Path(),Path())
     private var paint: Paint = Paint()
-    private val framePerSec = 5
+    private val framePerSec = 15
     private val duration: Long = 5000
     private var startTime by Delegates.notNull<Long>()
     private val xCoord = (this.resources.displayMetrics.widthPixels/3).toFloat()
     private val yCoord = (this.resources.displayMetrics.heightPixels/3).toFloat()
+
     init {
 
         startTime = System.currentTimeMillis()
@@ -58,32 +59,37 @@ class Demo(context: Context) : View(context){
         invalidate()
     }
 
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        paths[0].moveTo(xCoord,yCoord)
-        paths[1].moveTo(xCoord,yCoord+80f)
-        paths[2].moveTo(xCoord,yCoord+160f)
-        paths[3].moveTo(xCoord,yCoord+240f)
+        paths[0].moveTo((xCoord*0.6).toFloat(),yCoord)
+        paths[1].moveTo((xCoord*0.6).toFloat(),yCoord+80f)
+        paths[2].moveTo((xCoord*0.6).toFloat(),yCoord+160f)
+        paths[3].moveTo((xCoord*0.6).toFloat(),yCoord+240f)
         paths[4].moveTo(xCoord,yCoord)
 
-        paths[0].lineTo(xCoord+20f,yCoord)
-        paths[1].lineTo(xCoord+20f,yCoord+80f)
-        paths[2].lineTo(xCoord+20f,yCoord+160f)
-        paths[3].lineTo(xCoord+20f,yCoord+240f)
+        paths[0].lineTo((xCoord*0.6).toFloat()+20f,yCoord)
+        paths[1].lineTo((xCoord*0.6).toFloat()+20f,yCoord+80f)
+        paths[2].lineTo((xCoord*0.6).toFloat()+20f,yCoord+160f)
+        paths[3].lineTo((xCoord*0.6).toFloat()+20f,yCoord+240f)
         paths[4].lineTo(xCoord,yCoord+20f)
+
         for(i in paths.indices) {
                 val currentTime: Long = System.currentTimeMillis() - startTime
                 if (i < 4) {
-                    paths[i].lineTo(xCoord + (10 * currentTime / 100).toFloat(), yCoord + (80f * i))
-                } else {
-                    paths[i].lineTo(xCoord, yCoord + (5 * currentTime / 100).toFloat())
+                    paths[i].lineTo((xCoord*0.6).toFloat() + (8 * currentTime / 100).toFloat(),
+                        yCoord + (80f * i))
+                }
+                else {
+                    paths[i].lineTo(xCoord, yCoord + (6 * currentTime / 100).toFloat())
                 }
                 canvas?.drawPath(paths[i], paint)
                 if (currentTime < duration) {
                     postInvalidateDelayed((1000 / framePerSec).toLong())
                 }
         }
+
     }
 
 
