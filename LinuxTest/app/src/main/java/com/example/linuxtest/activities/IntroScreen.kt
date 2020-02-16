@@ -68,8 +68,8 @@ class MyAdapter(fragManager: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> Page1()
-            1 -> Page2()
+            0 -> Page2()
+            1 -> Page1()
             2 -> Page3()
             else -> Page1()
         }
