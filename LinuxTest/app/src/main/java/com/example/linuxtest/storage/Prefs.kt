@@ -27,6 +27,4 @@ class Prefs (context: Context) {
     var hostname: String
         get() = prefs.getString(hostNameKey,"").toString()
         set(value) = prefs.edit().putString(hostNameKey,value).apply()
-
-
 }

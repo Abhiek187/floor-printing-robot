@@ -44,6 +44,4 @@
     <string name="explainSetting">The Settings Button will let you configure
     the login information for the raspberry pi.</string>
 
-    <string name="squareImage">Sample drawing (a square)</string>
-
 </resources>
