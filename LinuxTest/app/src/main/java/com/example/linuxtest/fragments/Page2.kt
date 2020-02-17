@@ -67,7 +67,7 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
         invalidate() // start drawing the animation
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         paths[0].moveTo(xMin, yMin + 0.1f*yDelta)
@@ -88,21 +88,21 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
                 if (xMin + xDest < xMax) {
                     // Keep calling onDraw until lines reach the boundaries
                     paths[i].lineTo(xMin + xDest, yMin + 0.1f * (i * 2 + 1) * yDelta)
-                    canvas?.drawPath(paths[i], paint)
+                    canvas.drawPath(paths[i], paint)
                     postInvalidateDelayed(1000L / framePerSec)
                 } else {
                     // Stop the line at the boundary
                     paths[i].lineTo(xMax, yMin + 0.1f * (i * 2 + 1) * yDelta)
-                    canvas?.drawPath(paths[i], paint)
+                    canvas.drawPath(paths[i], paint)
                 }
             } else {
                 if (yMin + yDest < yMax) {
                     paths[i].lineTo(xMin + 0.5f*xDelta, yMin + yDest)
-                    canvas?.drawPath(paths[i], paint)
+                    canvas.drawPath(paths[i], paint)
                     postInvalidateDelayed(1000L / framePerSec)
                 } else {
                     paths[i].lineTo(xMin + 0.5f*xDelta, yMax)
-                    canvas?.drawPath(paths[i], paint)
+                    canvas.drawPath(paths[i], paint)
                 }
             }
         }
