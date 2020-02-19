@@ -76,28 +76,12 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
         paths[3].moveTo(xMin, yMin + 0.7f*yDelta)
         paths[4].moveTo(xMin, yMin + 0.9f*yDelta)
         paths[5].moveTo(xMin + 0.5f*xDelta, yMin)
-
-        if(num==0) {
-            val currentTime = System.currentTimeMillis() - startTime
-            val xDest = 2f * currentTime
-            if (xMin + xDest < xMax) {
-                // Keep calling onDraw until lines reach the boundaries
-                paths[num].lineTo(xMin + xDest, yMin + 0.1f * (num * 2 + 1) * yDelta)
-                canvas.drawPath(paths[num], paint)
-                postInvalidateDelayed(1000L / framePerSec)
-            } else {
-                // Stop the line at the boundary
-                paths[num].lineTo(xMax, yMin + 0.1f * (num * 2 + 1) * yDelta)
-                canvas.drawPath(paths[num], paint)
-                num=1
-                startTime = System.currentTimeMillis()
-                invalidate()
-            }
-        }
-
-        if(num in 1..4){ // Draw all horizontal lines
-            for(i in 0 until num){ // Redraw all previous paths
-                canvas.drawPath(paths[i],paint)
+        
+        if(num < paths.lastIndex){ // Draw all horizontal lines
+            if(num > 0) {
+                for (i in 0 until num) { // Redraw all previous paths
+                    canvas.drawPath(paths[i], paint)
+                }
             }
             val currentTime = System.currentTimeMillis() - startTime
             val xDest = 2f * currentTime
@@ -133,34 +117,5 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
             }
         }
 
-        /*for(i in paths.indices) {
-            // Keep adding to the path at the specified frame rate for a certain duration
-            val currentTime = System.currentTimeMillis() - startTime
-            val xDest = (53 * currentTime / 100).toFloat()
-            val yDest = (64 * currentTime / 100).toFloat()
-
-            // Keep making longer lines at each frame
-            if (i < paths.size - 1) {
-                if (xMin + xDest < xMax) {
-                    // Keep calling onDraw until lines reach the boundaries
-                    paths[i].lineTo(xMin + xDest, yMin + 0.1f * (i * 2 + 1) * yDelta)
-                    canvas.drawPath(paths[i], paint)
-                    postInvalidateDelayed(1000L / framePerSec)
-                } else {
-                    // Stop the line at the boundary
-                    paths[i].lineTo(xMax, yMin + 0.1f * (i * 2 + 1) * yDelta)
-                    canvas.drawPath(paths[i], paint)
-                }
-            } else {
-                if (yMin + yDest < yMax) {
-                    paths[i].lineTo(xMin + 0.5f*xDelta, yMin + yDest)
-                    canvas.drawPath(paths[i], paint)
-                    postInvalidateDelayed(1000L / framePerSec)
-                } else {
-                    paths[i].lineTo(xMin + 0.5f*xDelta, yMax)
-                    canvas.drawPath(paths[i], paint)
-                }
-            }
-        }*/
     }
 }
