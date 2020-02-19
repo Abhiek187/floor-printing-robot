@@ -59,7 +59,7 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
     private val yMin = boundary1.y
     private val yMax = boundary2.y
     private val yDelta = yMax - yMin
-
+    private var num = 0
     init {
         paint.color = Color.BLACK
         paint.style = Paint.Style.STROKE
@@ -77,7 +77,63 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
         paths[4].moveTo(xMin, yMin + 0.9f*yDelta)
         paths[5].moveTo(xMin + 0.5f*xDelta, yMin)
 
-        for(i in paths.indices) {
+        if(num==0) {
+            val currentTime = System.currentTimeMillis() - startTime
+            val xDest = 2f * currentTime
+            if (xMin + xDest < xMax) {
+                // Keep calling onDraw until lines reach the boundaries
+                paths[num].lineTo(xMin + xDest, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                postInvalidateDelayed(1000L / framePerSec)
+            } else {
+                // Stop the line at the boundary
+                paths[num].lineTo(xMax, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                num=1
+                startTime = System.currentTimeMillis()
+                invalidate()
+            }
+        }
+
+        if(num in 1..4){ // Draw all horizontal lines
+            for(i in 0 until num){ // Redraw all previous paths
+                canvas.drawPath(paths[i],paint)
+            }
+            val currentTime = System.currentTimeMillis() - startTime
+            val xDest = 2f * currentTime
+            if (xMin + xDest < xMax) {
+                // Keep calling onDraw until lines reach the boundaries
+                paths[num].lineTo(xMin + xDest, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                postInvalidateDelayed(1000L / framePerSec)
+            } else {
+                // Stop the line at the boundary
+                paths[num].lineTo(xMax, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                num += 1
+                startTime = System.currentTimeMillis()
+                invalidate()
+            }
+
+        }
+
+        if(num==paths.size-1){ //Draw the last vertical path
+            for(i in 0 until num){ // Redraw all previous paths
+                canvas.drawPath(paths[i],paint)
+            }
+            val currentTime = System.currentTimeMillis() - startTime
+            val yDest = 2f * currentTime
+            if (yMin + yDest < yMax) {
+                paths[num].lineTo(xMin + 0.5f*xDelta, yMin + yDest)
+                canvas.drawPath(paths[num], paint)
+                postInvalidateDelayed(1000L / framePerSec)
+            } else {
+                paths[num].lineTo(xMin + 0.5f*xDelta, yMax)
+                canvas.drawPath(paths[num], paint)
+            }
+        }
+
+        /*for(i in paths.indices) {
             // Keep adding to the path at the specified frame rate for a certain duration
             val currentTime = System.currentTimeMillis() - startTime
             val xDest = (53 * currentTime / 100).toFloat()
@@ -105,6 +161,6 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
                     canvas.drawPath(paths[i], paint)
                 }
             }
-        }
+        }*/
     }
 }
