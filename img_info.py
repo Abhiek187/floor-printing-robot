@@ -9,7 +9,7 @@ from webcolors import name_to_rgb, rgb_to_name
 	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]"""
 COLORS = [name_to_rgb("black"), name_to_rgb("white")]
 
-def closestColor(color):
+def closest_color(color):
 	# Find the color a pixel closely matches to
 	res = "???"
 	min_dist = sys.maxsize
@@ -25,7 +25,19 @@ def closestColor(color):
 
 	return res
 
-def checkProgress(progress):
+def check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color):
+	# Look at the next pixel (excluding last one)
+	if x < width and y < height:
+		color = closest_color(pix[x,y])
+		rgb_arr[y][x] = list(name_to_rgb(color))
+		#print(f"({x},{y}): Print {color}")
+
+		if prev_color != color:
+			#print(f"Switching to {color}...")
+			pass
+		prev_color = color
+
+def check_progress(progress):
 	# Show progress
 	if (progress == int(round(total*0.1))):
 		print("10% done", flush=True)
@@ -65,59 +77,47 @@ print("Starting print job...", flush=True)
 
 # Print the first pixel
 prev_color = "white" # surface color
-color = closestColor(pix[x,y])
-rgb_arr[y][x] = list(name_to_rgb(color))
-#print(f"({x},{y}): Print {color}")
-
-if color != prev_color:
-	#print(f"Switching to {color}...")
-	pass
-prev_color = color
+check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color) # really check current pixel this time
 
 while x < width and y < height:
 	# Check state of robot
 	if (state == "left"):
 		# Robot is moving left; if at the edge, need to turn left and move down
 		if (x == 0):
-			#print("Turn left, move down")
 			state = "down"
 			y += 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Turn left, move down")
 		else:
-			#print("Continue left")
 			x -= 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Continue left")
 	elif (state == "right"):
 		# Robot is moving right; if at the edge, need to turn right and move down
 		if (x == width - 1):
-			#print("Turn right, move down")
 			state = "down"
 			y += 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Turn right, move down")
 		else:
-			#print("Continue right")
 			x += 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Continue right")
 	else:
 		# Robot moved down, need to turn in the right direction
 		if (x == 0):
-			#print("Turn left, move right")
 			state = "right"
 			x += 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Turn left, move right")
 		else:
-			#print("Turn right, move left")
 			state = "left"
 			x -= 1
+			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
+			#print("Turn right, move left")
 
 	progress += 1
-	checkProgress(progress)
-
-	# Look at the next pixel (excluding last one)
-	if x < width and y < height:
-		color = closestColor(pix[x,y])
-		rgb_arr[y][x] = list(name_to_rgb(color))
-		#print(f"({x},{y}): Print {color}")
-
-		if prev_color != color:
-			#print(f"Switching to {color}...")
-			pass
-		prev_color = color
+	check_progress(progress)
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
