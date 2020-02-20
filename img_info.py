@@ -60,15 +60,21 @@ total = width * height
 rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int array
 x = y = 0
 progress = 0
-state = 'right' # robot starts at top left moving right; possible state: left, right, down
+state = 'right' # robot starts at top left moving right; possible states: left, right, down
 print("Starting print job...", flush=True)
 
-while x < width and y < height:
-	# Print color at current pixel
-	color = closestColor(pix[x,y])
-	rgb_arr[y][x] = list(name_to_rgb(color))
-	#print(f'({x},{y}): Print {color}')
+# Print the first pixel
+prev_color = "white" # surface color
+color = closestColor(pix[x,y])
+rgb_arr[y][x] = list(name_to_rgb(color))
+#print(f'({x},{y}): Print {color}')
 
+if color != prev_color:
+	#print(f"Switching to {color}...")
+	pass
+prev_color = color
+
+while x < width and y < height:
 	# Check state of robot
 	if (state == 'left'):
 		# Robot is moving left; if at the edge, need to turn left and move down
@@ -101,6 +107,17 @@ while x < width and y < height:
 
 	progress += 1
 	checkProgress(progress)
+
+	# Look at the next pixel (excluding last one)
+	if x < width and y < height:
+		color = closestColor(pix[x,y])
+		rgb_arr[y][x] = list(name_to_rgb(color))
+		#print(f"({x},{y}): Print {color}")
+
+		if prev_color != color:
+			#print(f"Switching to {color}...")
+			pass
+		prev_color = color
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
