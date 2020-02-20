@@ -2,18 +2,18 @@
 
 # Import required modules
 from time import sleep
-from enum import Enum
 import RPi.GPIO as GPIO
 
 # Constants for the pins
-class Pin(Enum):
-	PWMA = 7
-	AIN2 = 11
-	AIN1 = 12
-	STBY = 13
-	BIN1 = 15
-	BIN2 = 16
-	PWMB = 18
+class Pin():
+	def __init__(self):
+		self.PWMA = 7
+		self.AIN2 = 11
+		self.AIN1 = 12
+		self.STBY = 13
+		self.BIN1 = 15
+		self.BIN2 = 16
+		self.PWMB = 18
 
 # p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
@@ -64,10 +64,11 @@ class Pin(Enum):
 print("Starting the motors...")
 # Declare the GPIO settings
 GPIO.setmode(GPIO.BOARD)
+pins = Pin()
 
 # Set up GPIO pins
-for pin in Pin:
-	GPIO.setup(pin.value, GPIO.OUT)
+for pin in vars(pins).values():
+	GPIO.setup(pin, GPIO.OUT)
 
 # Run the following continuously until we interrupt
 try:
@@ -75,20 +76,20 @@ try:
 		# Drive the motor clockwise
 		print("Moving clockwise...")
 		# Motor A:
-		GPIO.output(Pin.AIN1.value, GPIO.HIGH)
-		GPIO.output(Pin.AIN2.value, GPIO.LOW)
+		GPIO.output(pins.AIN1, GPIO.HIGH)
+		GPIO.output(pins.AIN2, GPIO.LOW)
 		# Motor B:
-		GPIO.output(Pin.BIN1.value, GPIO.HIGH)
-		GPIO.output(Pin.BIN2.value, GPIO.LOW)
+		GPIO.output(pins.BIN1, GPIO.HIGH)
+		GPIO.output(pins.BIN2, GPIO.LOW)
 
 		# Set the motor speed
 		# Motor A:
-		GPIO.output(Pin.PWMA.value, GPIO.HIGH)
+		GPIO.output(pins.PWMA, GPIO.HIGH)
 		# Motor B:
-		GPIO.output(Pin.PWMB.value, GPIO.HIGH)
+		GPIO.output(pins.PWMB, GPIO.HIGH)
 
 		# Disable STBY (standby)
-		GPIO.output(Pin.STBY.value, GPIO.HIGH)
+		GPIO.output(pins.STBY, GPIO.HIGH)
 
 		# Wait 5 seconds
 		sleep(5)
@@ -96,20 +97,20 @@ try:
 		# Drive the motor counterclockwise
 		print("Moving counterclockwise...")
 		# Motor A:
-		GPIO.output(Pin.AIN1.value, GPIO.LOW)
-		GPIO.output(Pin.AIN2.value, GPIO.HIGH)
+		GPIO.output(pins.AIN1, GPIO.LOW)
+		GPIO.output(pins.AIN2, GPIO.HIGH)
 		# Motor B:
-		GPIO.output(Pin.BIN1.value, GPIO.LOW)
-		GPIO.output(Pin.BIN2.value, GPIO.HIGH)
+		GPIO.output(pins.BIN1, GPIO.LOW)
+		GPIO.output(pins.BIN2, GPIO.HIGH)
 
 		# Set the motor speed
 		# Motor A:
-		GPIO.output(Pin.PWMA.value, GPIO.HIGH)
+		GPIO.output(pins.PWMA, GPIO.HIGH)
 		# Motor B:
-		GPIO.output(Pin.PWMB.value, GPIO.HIGH)
+		GPIO.output(pins.PWMB, GPIO.HIGH)
 
 		# Disable STBY (standby)
-		GPIO.output(Pin.STBY.value, GPIO.HIGH)
+		GPIO.output(pins.STBY, GPIO.HIGH)
 
 		# Wait 5 seconds
 		sleep(5)
@@ -117,8 +118,8 @@ try:
 except KeyboardInterrupt:
 	print("Stopping the motors...")
 	# Reset all the GPIO pins by setting them to LOW
-	for pin in Pin:
-		GPIO.output(pin.value, GPIO.LOW)
+	for pin in vars(pins).values():
+		GPIO.output(pin, GPIO.LOW)
 
 	# Clean up pins
 	GPIO.cleanup()
