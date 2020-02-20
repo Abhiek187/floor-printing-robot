@@ -5,13 +5,13 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 
 # List of avaiable colors (use color name from CSS)
-'''COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
-	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]'''
-COLORS = [name_to_rgb('black'), name_to_rgb('white')]
+"""COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
+	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]"""
+COLORS = [name_to_rgb("black"), name_to_rgb("white")]
 
 def closestColor(color):
 	# Find the color a pixel closely matches to
-	res = '???'
+	res = "???"
 	min_dist = sys.maxsize
 	r1, g1, b1, *a1 = color # might get rgba values, in that case extract the *a* values
 
@@ -48,26 +48,26 @@ def checkProgress(progress):
 
 argc = len(sys.argv)
 if (argc == 1):
-	raise IOError('Please supply an image file.')
+	raise IOError("Please supply an image file.")
 elif (argc > 2):
-	raise IOError('Only 1 image file please. Thank you!')
+	raise IOError("Only 1 image file please. Thank you!")
 
 file = sys.argv[1]
 image = Image.open(file) # will throw an error if image file is invalid
 pix = image.load()
 width, height = image.size
 total = width * height
-rgb_arr = np.zeros((height, width, 3), dtype='uint8') # RGB x width x height int array
+rgb_arr = np.zeros((height, width, 3), dtype="uint8") # RGB x width x height int array
 x = y = 0
 progress = 0
-state = 'right' # robot starts at top left moving right; possible states: left, right, down
+state = "right" # robot starts at top left moving right; possible states: left, right, down
 print("Starting print job...", flush=True)
 
 # Print the first pixel
 prev_color = "white" # surface color
 color = closestColor(pix[x,y])
 rgb_arr[y][x] = list(name_to_rgb(color))
-#print(f'({x},{y}): Print {color}')
+#print(f"({x},{y}): Print {color}")
 
 if color != prev_color:
 	#print(f"Switching to {color}...")
@@ -76,33 +76,33 @@ prev_color = color
 
 while x < width and y < height:
 	# Check state of robot
-	if (state == 'left'):
+	if (state == "left"):
 		# Robot is moving left; if at the edge, need to turn left and move down
 		if (x == 0):
-			#print('Turn left, move down')
-			state = 'down'
+			#print("Turn left, move down")
+			state = "down"
 			y += 1
 		else:
-			#print('Continue left')
+			#print("Continue left")
 			x -= 1
-	elif (state == 'right'):
+	elif (state == "right"):
 		# Robot is moving right; if at the edge, need to turn right and move down
 		if (x == width - 1):
-			#print('Turn right, move down')
-			state = 'down'
+			#print("Turn right, move down")
+			state = "down"
 			y += 1
 		else:
-			#print('Continue right')
+			#print("Continue right")
 			x += 1
 	else:
 		# Robot moved down, need to turn in the right direction
 		if (x == 0):
-			#print('Turn left, move right')
-			state = 'right'
+			#print("Turn left, move right")
+			state = "right"
 			x += 1
 		else:
-			#print('Turn right, move left')
-			state = 'left'
+			#print("Turn right, move left")
+			state = "left"
 			x -= 1
 
 	progress += 1
