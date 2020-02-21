@@ -8,7 +8,7 @@ Dir = [
     'backward',
 ]
 pwm = PCA9685(0x40, debug=False)
-pwm.setPWMFreq(50)
+pwm.setPWMFreq(50) # freq range: 40 - 1000
 
 class MotorDriver():
     def __init__(self):
@@ -45,6 +45,13 @@ class MotorDriver():
         else:
             pwm.setDutycycle(self.PWMB, 0)
 
+"""
+Notes:
+Front of bot = side away from pi
+Motor 1 moves the opposite of command.
+Speed range: 0 - 100
+"""
+
 def move_forward(speed):
     Motor.MotorRun(0, 'forward', speed)
     Motor.MotorRun(1, 'backward', speed)
@@ -62,8 +69,8 @@ def turn_right(speed):
     Motor.MotorRun(1, 'forward', speed)
 
 def stop():
-    Motor.MotorRun(0, 'forward', 0)
-    Motor.MotorRun(1, 'backward', 0)
+    Motor.MotorStop(0)
+    Motor.MotorStop(1)
 
 print("Testing the motors...")
 Motor = MotorDriver()
