@@ -48,29 +48,34 @@ class MotorDriver():
 """
 Notes:
 Front of bot = side away from pi
-Motor 1 moves the opposite of command.
+Motor 1 moves the opposite of command and is slower than motor 0.
 Speed range: 0 - 100
 """
 
-def move_forward(speed):
-    Motor.MotorRun(0, 'forward', speed)
+def move_forward(speed, duration):
+    Motor.MotorRun(0, 'forward', speed*0.7)
     Motor.MotorRun(1, 'backward', speed)
+    sleep(duration)
 
-def move_backwards(speed):
-    Motor.MotorRun(0, 'backward', speed)
+def move_backwards(speed, duration):
+    Motor.MotorRun(0, 'backward', speed*0.7)
     Motor.MotorRun(1, 'forward', speed)
+    sleep(duration)
 
-def turn_left(speed):
+def turn_left(speed, duration):
     Motor.MotorRun(0, 'backward', speed)
-    Motor.MotorRun(1, 'backward', speed)
+    Motor.MotorRun(1, 'backward', speed*1.18)
+    sleep(duration)
 
-def turn_right(speed):
+def turn_right(speed, duration):
     Motor.MotorRun(0, 'forward', speed)
-    Motor.MotorRun(1, 'forward', speed)
+    Motor.MotorRun(1, 'forward', speed*1.04)
+    sleep(duration)
 
-def stop():
+def stop(duration=0):
     Motor.MotorStop(0)
     Motor.MotorStop(1)
+    sleep(duration)
 
 #print("Testing the motors...")
 Motor = MotorDriver()
@@ -78,20 +83,16 @@ Motor = MotorDriver()
 """try:
     while True:
         print("Moving forward...")
-        move_forward(30)
-        sleep(1)
+        move_forward(20, 1)
 
         print("Moving backwards...")
-        move_backwards(30)
-        sleep(1)
+        move_backwards(20, 1)
 
         print("Turning right...")
-        turn_right(40)
-        sleep(1)
+        turn_right(40, 1)
 
         print("Turning left...")
-        turn_left(40)
-        sleep(1)
+        turn_left(40, 1)
 
 except IOError as e:
     print(e)
@@ -99,4 +100,3 @@ except IOError as e:
 except KeyboardInterrupt:
     print("Stopping the motors...")
     stop()"""
-

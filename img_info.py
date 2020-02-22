@@ -6,7 +6,6 @@ from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
-from time import sleep
 import signal
 
 # List of avaiable colors (use color name from CSS)
@@ -102,16 +101,13 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move down")
-			turn_left(TSPEED)
-			sleep(1)
-			move_forward(FSPEED)
-			sleep(1)
+			turn_left(TSPEED, 1)
+			move_forward(FSPEED, 1)
 		else:
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Continue left")
-			move_forward(FSPEED)
-			sleep(1)
+			move_forward(FSPEED, 1)
 	elif (state == "right"):
 		# Robot is moving right; if at the edge, need to turn right and move down
 		if (x == width - 1):
@@ -119,16 +115,13 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move down")
-			turn_right(TSPEED)
-			sleep(1)
-			move_forward(FSPEED)
-			sleep(1)
+			turn_right(TSPEED, 1)
+			move_forward(FSPEED, 1)
 		else:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Continue right")
-			move_forward(FSPEED)
-			sleep(1)
+			move_forward(FSPEED, 1)
 	else:
 		# Robot moved down, need to turn in the right direction
 		if (x == 0):
@@ -136,24 +129,19 @@ while x < width and y < height:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move right")
-			turn_left(TSPEED)
-			sleep(1)
-			move_forward(FSPEED)
-			sleep(1)
+			turn_left(TSPEED, 1)
+			move_forward(FSPEED, 1)
 		else:
 			state = "left"
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move left")
-			turn_right(TSPEED)
-			sleep(1)
-			move_forward(FSPEED)
-			sleep(1)
+			turn_right(TSPEED, 1)
+			move_forward(FSPEED, 1)
 
 	progress += 1
 	check_progress(progress)
-	stop()
-	sleep(1)
+	stop(1)
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
