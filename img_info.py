@@ -7,7 +7,7 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
 import signal
-from time import time, sleep
+from time import time
 
 # List of avaiable colors (use color name from CSS)
 """COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
@@ -103,7 +103,6 @@ input("Turning left, press enter to continue...")
 stop()
 TL = time() - start_time
 input(f"Turning left for {TL} seconds, press enter to continue...")
-sleep(1)
 
 print("Starting print job...", flush=True)
 # Print the first pixel
