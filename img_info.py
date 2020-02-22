@@ -1,13 +1,26 @@
 import sys
+sys.path.append("motors")
+
 import numpy as np
 from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
+from motors.main import move_forward, turn_left, turn_right, stop
+from time import sleep
+import signal
 
 # List of avaiable colors (use color name from CSS)
 """COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
 	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]"""
 COLORS = [name_to_rgb("black"), name_to_rgb("white")]
+FSPEED = 20 # forward speed
+TSPEED = 40 # turn speed
+
+def stop_robot(signum, frame):
+	# Stop the motors upon SIGINT
+	print("Stopping the print job...")
+	stop()
+	sys.exit(0)
 
 def closest_color(color):
 	# Find the color a pixel closely matches to
@@ -30,7 +43,7 @@ def check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color):
 	if x < width and y < height:
 		color = closest_color(pix[x,y])
 		rgb_arr[y][x] = list(name_to_rgb(color))
-		#print(f"({x},{y}): Print {color}")
+		print(f"({x},{y}): Print {color}")
 
 		if prev_color != color:
 			#print(f"Switching to {color}...")
@@ -74,6 +87,7 @@ x = y = 0
 progress = 0
 state = "right" # robot starts at top left moving right; possible states: left, right, down
 print("Starting print job...", flush=True)
+signal.signal(signal.SIGINT, stop_robot) # stop in case of an emergency
 
 # Print the first pixel
 prev_color = "white" # surface color
@@ -88,10 +102,16 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move down")
+			turn_left(TSPEED)
+			sleep(1)
+			move_forward(FSPEED)
+			sleep(1)
 		else:
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Continue left")
+			move_forward(FSPEED)
+			sleep(1)
 	elif (state == "right"):
 		# Robot is moving right; if at the edge, need to turn right and move down
 		if (x == width - 1):
@@ -99,10 +119,16 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move down")
+			turn_right(TSPEED)
+			sleep(1)
+			move_forward(FSPEED)
+			sleep(1)
 		else:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Continue right")
+			move_forward(FSPEED)
+			sleep(1)
 	else:
 		# Robot moved down, need to turn in the right direction
 		if (x == 0):
@@ -110,14 +136,24 @@ while x < width and y < height:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move right")
+			turn_left(TSPEED)
+			sleep(1)
+			move_forward(FSPEED)
+			sleep(1)
 		else:
 			state = "left"
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move left")
+			turn_right(TSPEED)
+			sleep(1)
+			move_forward(FSPEED)
+			sleep(1)
 
 	progress += 1
 	check_progress(progress)
+	stop()
+	sleep(1)
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list

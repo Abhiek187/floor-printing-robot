@@ -72,10 +72,10 @@ def stop():
     Motor.MotorStop(0)
     Motor.MotorStop(1)
 
-print("Testing the motors...")
+#print("Testing the motors...")
 Motor = MotorDriver()
 
-try:
+"""try:
     while True:
         print("Moving forward...")
         move_forward(30)
@@ -86,11 +86,11 @@ try:
         sleep(1)
 
         print("Turning right...")
-        turn_right(30)
+        turn_right(40)
         sleep(1)
 
         print("Turning left...")
-        turn_left(30)
+        turn_left(40)
         sleep(1)
 
 except IOError as e:
@@ -98,5 +98,5 @@ except IOError as e:
 
 except KeyboardInterrupt:
     print("Stopping the motors...")
-    stop()
+    stop()"""
 
