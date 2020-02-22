@@ -52,24 +52,24 @@ Motor 1 moves the opposite of command and is slower than motor 0.
 Speed range: 0 - 100
 """
 
-def move_forward(speed, duration):
-    Motor.MotorRun(0, 'forward', speed*0.7)
+def move_forward(speed, duration=0):
+    Motor.MotorRun(0, 'forward', speed*0.85)
     Motor.MotorRun(1, 'backward', speed)
     sleep(duration)
 
-def move_backwards(speed, duration):
-    Motor.MotorRun(0, 'backward', speed*0.7)
+def move_backwards(speed, duration=0):
+    Motor.MotorRun(0, 'backward', speed*0.85)
     Motor.MotorRun(1, 'forward', speed)
     sleep(duration)
 
-def turn_left(speed, duration):
+def turn_left(speed, duration=0):
     Motor.MotorRun(0, 'backward', speed)
-    Motor.MotorRun(1, 'backward', speed*1.18)
+    Motor.MotorRun(1, 'backward', speed)
     sleep(duration)
 
-def turn_right(speed, duration):
+def turn_right(speed, duration=0):
     Motor.MotorRun(0, 'forward', speed)
-    Motor.MotorRun(1, 'forward', speed*1.04)
+    Motor.MotorRun(1, 'forward', speed)
     sleep(duration)
 
 def stop(duration=0):

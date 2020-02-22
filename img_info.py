@@ -7,13 +7,14 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
 import signal
+from time import time, sleep
 
 # List of avaiable colors (use color name from CSS)
 """COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
 	name_to_rgb('purple'),name_to_rgb('black'),name_to_rgb('brown'),name_to_rgb('white')]"""
 COLORS = [name_to_rgb("black"), name_to_rgb("white")]
 FSPEED = 20 # forward speed
-TSPEED = 40 # turn speed
+TSPEED = 30 # turn speed
 
 def stop_robot(signum, frame):
 	# Stop the motors upon SIGINT
@@ -85,9 +86,26 @@ rgb_arr = np.zeros((height, width, 3), dtype="uint8") # RGB x width x height int
 x = y = 0
 progress = 0
 state = "right" # robot starts at top left moving right; possible states: left, right, down
-print("Starting print job...", flush=True)
 signal.signal(signal.SIGINT, stop_robot) # stop in case of an emergency
 
+# Perform calibration to determine turn speeds
+input("Calibration is needed to turn the robot 90\u00B0. Press enter to continue...") # let the user read the message
+start_time = time()
+turn_right(TSPEED)
+input("Turning right, press enter to continue...")
+stop()
+TR = time() - start_time
+input(f"Turning right for {TR} seconds, press enter to continue...")
+
+start_time = time()
+turn_left(TSPEED)
+input("Turning left, press enter to continue...")
+stop()
+TL = time() - start_time
+input(f"Turning left for {TL} seconds, press enter to continue...")
+sleep(1)
+
+print("Starting print job...", flush=True)
 # Print the first pixel
 prev_color = "white" # surface color
 check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color) # really check current pixel this time
@@ -101,7 +119,7 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move down")
-			turn_left(TSPEED, 1)
+			turn_left(TSPEED, TL)
 			move_forward(FSPEED, 1)
 		else:
 			x -= 1
@@ -115,7 +133,7 @@ while x < width and y < height:
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move down")
-			turn_right(TSPEED, 1)
+			turn_right(TSPEED, TR)
 			move_forward(FSPEED, 1)
 		else:
 			x += 1
@@ -129,19 +147,19 @@ while x < width and y < height:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn left, move right")
-			turn_left(TSPEED, 1)
+			turn_left(TSPEED, TL)
 			move_forward(FSPEED, 1)
 		else:
 			state = "left"
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
 			#print("Turn right, move left")
-			turn_right(TSPEED, 1)
+			turn_right(TSPEED, TR)
 			move_forward(FSPEED, 1)
 
 	progress += 1
 	check_progress(progress)
-	stop(1)
+	stop(0.1)
 
 # See how the image looks with basic colors
 new_img = Image.fromarray(rgb_arr) # note: parameter must be array, not list
