@@ -98,7 +98,6 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
                 startTime = System.currentTimeMillis()
                 invalidate()
             }
-
         }
 
         if(num==paths.size-1){ //Draw the last vertical path
