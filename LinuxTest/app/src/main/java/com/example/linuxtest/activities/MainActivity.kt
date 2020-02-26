@@ -27,17 +27,17 @@ class MainActivity : AppCompatActivity() {
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
     private val colors = arrayListOf(
         Color.BLACK,
-        Color.RED,
+        /*Color.RED,
         Color.rgb(255,165,0), // orange
         Color.YELLOW,
         Color.GREEN,
         Color.BLUE,
         Color.rgb(128,0,128), // purple
-        Color.rgb(165,42,42), // brown
+        Color.rgb(165,42,42), // brown*/
         Color.WHITE
     )
-    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple",
-        "Brown","White") // must be in the same order as above
+    private val colNames = arrayListOf("Black",/*"Red","Orange","Yellow","Green","Blue","Purple",
+        "Brown",*/"White") // must be in the same order as above
     var curWidth = 8f
     var curColor = Color.BLACK
     private lateinit var drawView: CustomDraw

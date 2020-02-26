@@ -17,8 +17,8 @@ class Page1 : Fragment() {
     private lateinit var mContext: Context
 
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
-    private val colNames = arrayListOf("Black","Red","Orange","Yellow","Green","Blue","Purple",
-        "Brown","White")
+    private val colNames = arrayListOf("Black",/*"Red","Orange","Yellow","Green","Blue","Purple",
+        "Brown",*/"White")
 
     private lateinit var spinColors: Spinner
     private lateinit var spinWidth: Spinner
