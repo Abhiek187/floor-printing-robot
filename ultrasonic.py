@@ -14,13 +14,13 @@ count = 5
 # Constants for the pins
 class Pin():
     def __init__(self):
-        self.PWMA = 7
+        """self.PWMA = 7
         self.AIN2 = 11
         self.AIN1 = 12
         self.STBY = 13
         self.BIN1 = 15
         self.BIN2 = 16
-        self.PWMB = 18
+        self.PWMB = 18"""
         self.Trigger = 38 #GPIO Pin Number
         self.Echo = 40 #GPIO Pin Number
 
@@ -70,9 +70,9 @@ class Pin():
     p.ChangeFrequency(speed + 5)
     b.ChangeFrequency(speed + 5)"""
 
-print("Starting the motors...")
+print("Testing the ultrasonic sensor...")
 # Declare the GPIO settings
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD) # use pin numbers 1-40 instead of GPIO N
 pins = Pin()
 
 # Set up GPIO pins
@@ -167,7 +167,7 @@ try:
                 break
 
 except KeyboardInterrupt:
-    print("Stopping the motors...")
+    print("Stopping the ultrasonic sensor...")
     # Reset all the GPIO pins by setting them to LOW
     """for pin in vars(pins).values():
         GPIO.output(pin, GPIO.LOW)"""
