@@ -6,7 +6,7 @@ from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
-import signal
+from signal import signal, SIGINT
 from time import time
 
 # List of avaiable colors (use color name from CSS)
@@ -86,7 +86,7 @@ rgb_arr = np.zeros((height, width, 3), dtype="uint8") # RGB x width x height int
 x = y = 0
 progress = 0
 state = "right" # robot starts at top left moving right; possible states: left, right, down
-signal.signal(signal.SIGINT, stop_robot) # stop in case of an emergency
+signal(SIGINT, stop_robot) # stop in case of an emergency
 
 # Perform calibration to determine turn speeds
 input("Calibration is needed to turn the robot 90\u00B0. Press enter to continue...") # let the user read the message

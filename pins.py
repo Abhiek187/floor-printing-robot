@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 # Import required modules
-from time import sleep
+import sys
+sys.path.append("motors")
+
+from time import sleep, time
 import RPi.GPIO as GPIO
 from motors.main import stop
 
 # Assign global variable for count
-count = 0
+count = 5
 
 # Constants for the pins
 class Pin():
@@ -18,8 +21,8 @@ class Pin():
         self.BIN1 = 15
         self.BIN2 = 16
         self.PWMB = 18
-        self.Trigger = 27 #GPIO Pin Number
-        self.Echo = 17 #GPIO Pin Number
+        self.Trigger = 38 #GPIO Pin Number
+        self.Echo = 40 #GPIO Pin Number
 
 # p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
@@ -73,8 +76,8 @@ GPIO.setmode(GPIO.BOARD)
 pins = Pin()
 
 # Set up GPIO pins
-for pin in vars(pins).values():
-    GPIO.setup(pin, GPIO.OUT)
+"""for pin in vars(pins).values():
+    GPIO.setup(pin, GPIO.OUT)"""
 
 # Run the following continuously until we interrupt
 try:
@@ -122,47 +125,52 @@ try:
         sleep(5)"""
 
     while True:
-        
+
         #assign Trigger and Echo to GPIO status
-        GPIO.setup(False)
-        GPIO.setup(Trigger, GPIO.OUT)
-        GPIO.setup(Echo, GPIO.IN)
+        #GPIO.setup(False)
+        GPIO.setup(pins.Trigger, GPIO.OUT)
+        GPIO.setup(pins.Echo, GPIO.IN)
 
         #Set Trigger to Low
-        GPIO.output(Trigger, GPIO.LOW)
+        GPIO.output(pins.Trigger, GPIO.LOW)
 
         #sensor calibration
-        time.sleep(1.4)
+        sleep(1.4)
 
         #Set Trigger to High
-        GPIO.output(Trigger, GPIO.HIGH)
-        time.sleep(0.00001)
-        GPIO.output(Trigger, GPIO.LOW)
+        GPIO.output(pins.Trigger, GPIO.HIGH)
+        sleep(0.00001)
+        GPIO.output(pins.Trigger, GPIO.LOW)
 
         #condition to set start/stop time based on echo
-        while GPIO.input(Echo)==0:
-            pulse_start = time.time()
-        while GPIO.input(Echo)==1:
-            pulse_end = time.time()
+        while GPIO.input(pins.Echo)==0:
+            pulse_start = time()
+        while GPIO.input(pins.Echo)==1:
+            pulse_end = time()
 
         #calculate distance. Assume speed of sound is 17150 cm/s
+        #^Bruh it's not, the speed of sound is 343 m/s. You're just taking 343, dividing it by 2, and multiplying it by 100 to get the cm sound traveled one way...chrysnosis, am I right!
         pulse_duration = pulse_end - pulse_start
         # Round to 2 decimal places
-        distance = round(pulse_duration * 17150, 2) 
+        distance = round(pulse_duration * 17150, 2)
 
         #Checks to see if the bot detects anything within 50 cm
-        if(distance <= 50): 
-            if(count < 5):
-                count = count + 1
+        if(distance <= 50):
+            if(count > 0):
+                print(f"Obstacle {distance} cm away. Trying again in 5 seconds, {count} {'attempt' if count == 1 else 'attempts'} left...")
+                count -= 1
                 stop(5)
             else:
-                stop() #If it detects anything within 50 cm more than 5 times then it stops
-            
+                print("Ight imma head out...")
+                stop() #If it detects anything within 50 cm more than 5 times then it stops for good
+                GPIO.cleanup()
+                break
+
 except KeyboardInterrupt:
     print("Stopping the motors...")
     # Reset all the GPIO pins by setting them to LOW
-    for pin in vars(pins).values():
-        GPIO.output(pin, GPIO.LOW)
+    """for pin in vars(pins).values():
+        GPIO.output(pin, GPIO.LOW)"""
 
     # Clean up pins
     GPIO.cleanup()
