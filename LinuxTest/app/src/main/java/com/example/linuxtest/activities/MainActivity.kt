@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,6 +26,16 @@ class MainActivity : AppCompatActivity() {
         '<', '>', '|', '\"', ':') // illegal file name characters
     private var currentImgName: String? = null
     private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
+
+    private val imageArrays = arrayOf(
+        R.drawable.stroke_width_8f,
+        R.drawable.stroke_width_10f,
+        R.drawable.stroke_width_12f,
+        R.drawable.stroke_width_14f,
+        R.drawable.stroke_width_16f,
+        R.drawable.stroke_width_18f,
+        R.drawable.stroke_width_20f
+    )
     private val colors = arrayListOf(
         Color.BLACK,
         /*Color.RED,
@@ -83,9 +94,12 @@ class MainActivity : AppCompatActivity() {
         limits.connect(drawView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
         limits.applyTo(pageLayout)
 
-        val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
+        /*val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
         infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spin1.adapter=infoWidth
+        spin1.adapter=infoWidth*/
+
+        val pictureAdapter = ImageAdapter(this, imageArrays)
+        spin1.adapter = pictureAdapter
 
         spin1.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -252,5 +266,27 @@ class MainActivity : AppCompatActivity() {
                     nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         }
         return false
+    }
+}
+
+class ImageAdapter(context: Context, private val images: Array<Int>) :
+    ArrayAdapter<Int>(context,R.layout.support_simple_spinner_dropdown_item,images){
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        //return super.getDropDownView(position, convertView, parent)
+        return getImagePosition(position)
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        //return super.getView(position, convertView, parent)
+        return getImagePosition(position)
+    }
+
+    private fun getImagePosition(position: Int): View{
+        val imageView = ImageView(context)
+        imageView.setBackgroundResource(images[position])
+        imageView.layoutParams =
+            AbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        return imageView
     }
 }
