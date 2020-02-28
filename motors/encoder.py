@@ -5,10 +5,10 @@ from math import pi
 class Pin():
 	def __init__(self):
 		self.PWMA = 32
-		self.AIN1 = 12
-		self.AIN2 = 11
-		self.OUT1 = 16
-		self.OUT2 = 18
+		self.AIN1 = 11
+		self.AIN2 = 12
+		self.SIGA = 16
+		self.SIGB = 18
 
 def move_gear(speed):
 	counts = 3591.84 # counts per revolution
@@ -22,8 +22,8 @@ def stop_gear():
 	pwma.ChangeDutyCycle(0)
 	GPIO.output(pin.AIN1, GPIO.LOW)
 	GPIO.output(pin.AIN2, GPIO.LOW)
-	GPIO.output(pin.OUT1, GPIO.LOW)
-	GPIO.output(pin.OUT2, GPIO.LOW)
+	GPIO.output(pin.SIGA, GPIO.LOW)
+	GPIO.output(pin.SIGB, GPIO.LOW)
 
 print("Testing the encoder...")
 GPIO.setmode(GPIO.BOARD)
@@ -34,8 +34,8 @@ pwma = GPIO.PWM(pin.PWMA, 20) # freq = 20
 pwma.start(0) # duty cycle = 0
 GPIO.setup(pin.AIN1, GPIO.OUT)
 GPIO.setup(pin.AIN2, GPIO.OUT)
-GPIO.setup(pin.OUT1, GPIO.OUT)
-GPIO.setup(pin.OUT2, GPIO.OUT)
+GPIO.setup(pin.SIGA, GPIO.OUT)
+GPIO.setup(pin.SIGB, GPIO.OUT)
 
 # Run the following continuously until we interrupt
 try:
