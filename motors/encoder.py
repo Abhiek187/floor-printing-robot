@@ -20,37 +20,46 @@ def move_gear(speed):
 def stop_gear():
 	# Reset all the GPIO pins by setting them to LOW
 	pwma.ChangeDutyCycle(0)
-	GPIO.output(pin.AIN1, GPIO.LOW)
-	GPIO.output(pin.AIN2, GPIO.LOW)
-	GPIO.output(pin.SIGA, GPIO.LOW)
-	GPIO.output(pin.SIGB, GPIO.LOW)
+	GPIO.output(pins.AIN1, GPIO.LOW)
+	GPIO.output(pins.AIN2, GPIO.LOW)
+	GPIO.output(pins.SIGA, GPIO.LOW)
+	GPIO.output(pins.SIGB, GPIO.LOW)
 
 print("Testing the encoder...")
 GPIO.setmode(GPIO.BOARD)
 pins = Pin()
 
 # Set up GPIO pins
-pwma = GPIO.PWM(pin.PWMA, 20) # freq = 20
+GPIO.setup(pins.PWMA, GPIO.OUT)
+pwma = GPIO.PWM(pins.PWMA, 20) # freq = 20
 pwma.start(0) # duty cycle = 0
-GPIO.setup(pin.AIN1, GPIO.OUT)
-GPIO.setup(pin.AIN2, GPIO.OUT)
-GPIO.setup(pin.SIGA, GPIO.OUT)
-GPIO.setup(pin.SIGB, GPIO.OUT)
+GPIO.setup(pins.AIN1, GPIO.OUT)
+GPIO.setup(pins.AIN2, GPIO.OUT)
+GPIO.setup(pins.SIGA, GPIO.OUT)
+GPIO.setup(pins.SIGB, GPIO.OUT)
 
 # Run the following continuously until we interrupt
 try:
 	while True:
+		print("Clockwise?")
 		GPIO.output(pins.AIN1, GPIO.HIGH)
 		GPIO.output(pins.AIN2, GPIO.LOW)
 		move_gear(10)
 		sleep(3)
-		stop_gear()
 
+		print("Stopping...")
+		stop_gear()
+		sleep(3)
+
+		print("Counterclockwise?")
 		GPIO.output(pins.AIN1, GPIO.LOW)
 		GPIO.output(pins.AIN2, GPIO.HIGH)
 		move_gear(10)
 		sleep(3)
+
+		print("Stopping...")
 		stop_gear()
+		sleep(3)
 
 except KeyboardInterrupt:
 	print("Stopping the encoder...")

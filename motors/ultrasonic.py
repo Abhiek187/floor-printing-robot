@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
 # Import required modules
-import sys
-sys.path.append("motors")
-
 from time import sleep, time
 import RPi.GPIO as GPIO
-from motors.main import stop
+from main import stop
 
 # Assign global variable for count
 count = 5
