@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.Spinner
 import com.example.linuxtest.R
+import com.example.linuxtest.adapter.ImageAdapter
+import com.example.linuxtest.databinding.FragmentPage1Binding
 
 /**
  * A simple [Fragment] subclass.
@@ -44,9 +44,9 @@ class Page1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_page1,container,false)
-        spinColors = view.findViewById(R.id.demoColors)
-        spinWidth = view.findViewById(R.id.demoBrushWidth)
+        val binding = FragmentPage1Binding.inflate(inflater, container, false)
+        spinColors = binding.demoColors
+        spinWidth = binding.demoBrushWidth
 
         /*val infoWidth = ArrayAdapter(mContext,android.R.layout.simple_list_item_1,widths)
         infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -59,28 +59,6 @@ class Page1 : Fragment() {
         infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinColors.adapter=infoColors
 
-        return view
-    }
-}
-
-class ImageAdapter(context: Context, private val images: Array<Int>) :
-    ArrayAdapter<Int>(context,R.layout.support_simple_spinner_dropdown_item,images){
-
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        //return super.getDropDownView(position, convertView, parent)
-        return getImagePosition(position)
-    }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        //return super.getView(position, convertView, parent)
-        return getImagePosition(position)
-    }
-
-    private fun getImagePosition(position: Int): View{
-        val imageView = ImageView(context)
-        imageView.setBackgroundResource(images[position])
-        imageView.layoutParams =
-            AbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        return imageView
+        return binding.root
     }
 }

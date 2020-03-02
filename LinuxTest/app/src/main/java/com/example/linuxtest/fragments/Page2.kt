@@ -10,9 +10,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import com.example.linuxtest.R
+import com.example.linuxtest.databinding.FragmentPage2Binding
 
 /**
  * A simple [Fragment] subclass.
@@ -30,18 +29,18 @@ class Page2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_page2, container, false)
+        val binding = FragmentPage2Binding.inflate(inflater, container, false)
 
-        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.page2)
-        val boundary1 = view.findViewById<View>(R.id.boundary1)
-        val boundary2 = view.findViewById<View>(R.id.boundary2)
+        val constraintLayout = binding.page2
+        val boundary1 = binding.boundary1
+        val boundary2 = binding.boundary2
 
         boundary2.post {
             // Add animation dynamically (assuming both boundaries are posted)
             constraintLayout.addView(Demo(mContext, boundary1, boundary2))
         }
 
-        return view
+        return binding.root
     }
 }
 
@@ -60,6 +59,7 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
     private val yMax = boundary2.y
     private val yDelta = yMax - yMin
     private var num = 0
+
     init {
         paint.color = Color.BLACK
         paint.style = Paint.Style.STROKE
@@ -77,9 +77,11 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
         paths[4].moveTo(xMin, yMin + 0.9f*yDelta)
         paths[5].moveTo(xMin + 0.5f*xDelta, yMin)
         
-        if(num < paths.lastIndex){ // Draw all horizontal lines
-            if(num > 0) {
-                for (i in 0 until num) { // Redraw all previous paths
+        if (num < paths.lastIndex) {
+            // Draw all horizontal lines
+            if (num > 0) {
+                for (i in 0 until num) {
+                    // Redraw all previous paths
                     canvas.drawPath(paths[i], paint)
                 }
             }
@@ -100,8 +102,10 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
             }
         }
 
-        if(num==paths.size-1){ //Draw the last vertical path
-            for(i in 0 until num){ // Redraw all previous paths
+        if (num == paths.size - 1) {
+            // Draw the last vertical path
+            for (i in 0 until num){
+                // Redraw all previous paths
                 canvas.drawPath(paths[i],paint)
             }
             val currentTime = System.currentTimeMillis() - startTime
@@ -115,6 +119,5 @@ class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
                 canvas.drawPath(paths[num], paint)
             }
         }
-
     }
 }

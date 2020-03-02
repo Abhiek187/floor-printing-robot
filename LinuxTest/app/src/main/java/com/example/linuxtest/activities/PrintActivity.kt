@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.example.linuxtest.R
+import com.example.linuxtest.databinding.ActivityPrintBinding
 import com.example.linuxtest.storage.Prefs
 import com.jcraft.jsch.*
 import java.io.ByteArrayOutputStream
@@ -22,11 +22,12 @@ class PrintActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_print)
+        val binding = ActivityPrintBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         
-        textViewLog = findViewById(R.id.textViewLog)
+        textViewLog = binding.textViewLog
         textViewLog.text = ""
-        imageViewPrint = findViewById(R.id.imageViewPrint)
+        imageViewPrint = binding.imageViewPrint
 
         // Load pi info from SharedPreferences
         val sharedPref = Prefs(this)
