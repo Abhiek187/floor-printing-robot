@@ -44,4 +44,6 @@
     <string name="explainSetting">The Settings Button will let you configure
     the login information for the raspberry pi.</string>
 
+    <string name="strokeWidth">Stroke Width</string>
+
 </resources>
