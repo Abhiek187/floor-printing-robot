@@ -3,21 +3,20 @@ package com.example.linuxtest.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
-import android.widget.Button
-import android.widget.EditText
-import com.example.linuxtest.R
+import com.example.linuxtest.databinding.ActivitySettingsBinding
 import com.example.linuxtest.storage.Prefs
 
 class Settings : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        val binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val hostname = findViewById<EditText>(R.id.editTextHostname)
-        val password = findViewById<EditText>(R.id.editTextPassword)
-        val userName = findViewById<EditText>(R.id.editTextUsername)
-        val saveSettingBtn = findViewById<Button>(R.id.saveSetting)
+        val hostname = binding.editTextHostname
+        val password = binding.editTextPassword
+        val userName = binding.editTextUsername
+        val saveSettingBtn = binding.saveSetting
 
         val sharedPref = Prefs(this)
         // Populate EditText's with saved info

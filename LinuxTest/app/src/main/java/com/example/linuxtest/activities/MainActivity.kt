@@ -10,18 +10,17 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.example.linuxtest.R
+import com.example.linuxtest.adapter.ImageAdapter
+import com.example.linuxtest.databinding.ActivityMainBinding
+import com.example.linuxtest.databinding.PopupSaveBinding
 import com.example.linuxtest.image.CustomDraw
 import com.example.linuxtest.storage.ImagesDBHelper
 import com.example.linuxtest.storage.Prefs
-
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -58,23 +57,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         val sharedPref = Prefs(this)
-        if(sharedPref.isFirst){
+        if (sharedPref.isFirst) {
             startActivity(Intent(this, IntroScreen::class.java))
         }
-        //startActivity(Intent(this,IntroScreen::class.java))
+
         // UI elements
-        val pageLayout = findViewById<ConstraintLayout>(R.id.pageLayout)
-        val buttonUpload = findViewById<Button>(R.id.buttonUpload)
-        val buttonSave = findViewById<Button>(R.id.buttonSave)
-        val buttonLoad = findViewById<Button>(R.id.buttonLoad)
-        val buttonPrint = findViewById<Button>(R.id.buttonPrint)
-        val buttonSettings = findViewById<ImageButton>(R.id.setting)
-        val line1 = findViewById<View>(R.id.line1)
-        val line2 = findViewById<View>(R.id.line2)
-        val spin1 = findViewById<Spinner>(R.id.brushWidth)
-        val spin2 = findViewById<Spinner>(R.id.colors)
+        val pageLayout = binding.pageLayout
+        val buttonUpload = binding.buttonUpload
+        val buttonSave = binding.buttonSave
+        val buttonLoad = binding.buttonLoad
+        val buttonPrint = binding.buttonPrint
+        val buttonSettings = binding.setting
+        val line1 = binding.line1
+        val line2 = binding.line2
+        val spin1 = binding.brushWidth
+        val spin2 = binding.colors
 
         val imagesDB = ImagesDBHelper(this)
         drawView = CustomDraw(this)
@@ -150,17 +151,15 @@ class MainActivity : AppCompatActivity() {
             val focusable = true // can dismiss by tapping outside the popup
             pageLayout.foreground.alpha = 220 // dim background when popup appears
 
-            val popupView = layoutInflater.inflate(
-                R.layout.popup_save, pageLayout,
-                false)
-            val popupWindow = PopupWindow(popupView, width, height, focusable)
+            val popupView = PopupSaveBinding.inflate(layoutInflater)
+            val popupWindow = PopupWindow(popupView.root, width, height, focusable)
             popupWindow.showAtLocation(pageLayout, Gravity.CENTER, 0, 0)
 
-            val editTextName = popupView.findViewById<EditText>(R.id.editTextName)
-            val buttonSaveName = popupView.findViewById<Button>(R.id.buttonSaveName)
+            val editTextName = popupView.editTextName
+            val buttonSaveName = popupView.buttonSaveName
 
             editTextName.setOnKeyListener{_, keyCode,keyEvent ->
-                if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     buttonSaveName.performClick()
                     return@setOnKeyListener true
                 }
@@ -266,32 +265,5 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
-}
-
-class ImageAdapter(context: Context, private val images: Array<Int>) :
-    ArrayAdapter<Int>(context,android.R.layout.simple_spinner_dropdown_item,images) {
-
-    private val mflater: LayoutInflater = LayoutInflater.from(context)
-
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var views = convertView
-        if(views == null){
-            views = mflater.inflate(R.layout.imagelist_layout,parent,false)
-        }
-        val image = views!!.findViewById<ImageView>(R.id.imageHolder)
-        image.setImageResource(images[position])
-        return image
-    }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var views = convertView
-        if(views == null){
-            views = mflater.inflate(R.layout.imagelist_layout,parent,false)
-        }
-        val image = views!!.findViewById<ImageView>(R.id.imageHolder)
-        image.setImageResource(images[position])
-        return image
-    }
-
 }
 
