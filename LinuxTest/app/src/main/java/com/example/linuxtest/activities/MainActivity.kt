@@ -10,16 +10,18 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.example.linuxtest.*
+import com.example.linuxtest.R
 import com.example.linuxtest.image.CustomDraw
 import com.example.linuxtest.storage.ImagesDBHelper
 import com.example.linuxtest.storage.Prefs
+
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         R.drawable.stroke_width_18f,
         R.drawable.stroke_width_20f
     )
+
     private val colors = arrayListOf(
         Color.BLACK,
         /*Color.RED,
@@ -93,10 +96,6 @@ class MainActivity : AppCompatActivity() {
         limits.connect(drawView.id, ConstraintSet.TOP,line1.id,ConstraintSet.BOTTOM,1)
         limits.connect(drawView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
         limits.applyTo(pageLayout)
-
-        /*val infoWidth = ArrayAdapter(this,android.R.layout.simple_list_item_1,widths)
-        infoWidth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spin1.adapter=infoWidth*/
 
         val pictureAdapter = ImageAdapter(this, imageArrays)
         spin1.adapter = pictureAdapter
@@ -270,23 +269,29 @@ class MainActivity : AppCompatActivity() {
 }
 
 class ImageAdapter(context: Context, private val images: Array<Int>) :
-    ArrayAdapter<Int>(context,R.layout.support_simple_spinner_dropdown_item,images){
+    ArrayAdapter<Int>(context,android.R.layout.simple_spinner_dropdown_item,images) {
+
+    private val mflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        //return super.getDropDownView(position, convertView, parent)
-        return getImagePosition(position)
+        var views = convertView
+        if(views == null){
+            views = mflater.inflate(R.layout.imagelist_layout,parent,false)
+        }
+        val image = views!!.findViewById<ImageView>(R.id.imageHolder)
+        image.setImageResource(images[position])
+        return image
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        //return super.getView(position, convertView, parent)
-        return getImagePosition(position)
+        var views = convertView
+        if(views == null){
+            views = mflater.inflate(R.layout.imagelist_layout,parent,false)
+        }
+        val image = views!!.findViewById<ImageView>(R.id.imageHolder)
+        image.setImageResource(images[position])
+        return image
     }
 
-    private fun getImagePosition(position: Int): View{
-        val imageView = ImageView(context)
-        imageView.setBackgroundResource(images[position])
-        imageView.layoutParams =
-            AbsListView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        return imageView
-    }
 }
+
