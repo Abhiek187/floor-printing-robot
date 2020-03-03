@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
         '<', '>', '|', '\"', ':') // illegal file name characters
     private var currentImgName: String? = null
-    private val widths = arrayListOf(8f,10f,12f,14f,16f,18f,20f)
+    private val widths = arrayListOf(8f,12f,16f,20f,24f,28f,32f)
 
     private val imageArrays = arrayOf(
         R.drawable.stroke_width_8f,
