@@ -7,6 +7,7 @@ from main import stop
 
 # Assign global variable for count
 count = 5
+timeout = 0.04
 
 # Constants for the pins
 class Pin():
@@ -124,7 +125,7 @@ try:
     while True:
 
         #assign Trigger and Echo to GPIO status
-        #GPIO.setup(False)
+        GPIO.setup(False)
         GPIO.setup(pins.Trigger, GPIO.OUT)
         GPIO.setup(pins.Echo, GPIO.IN)
 
@@ -139,12 +140,17 @@ try:
         sleep(0.00001)
         GPIO.output(pins.Trigger, GPIO.LOW)
 
-        #condition to set start/stop time based on echo
+        #condition to set start/stop time based on echo (timeout if taking too long)
+        pulse_start = time()
+        max_time = pulse_start + timeout
         print("Echo = 0")
-        while GPIO.input(pins.Echo)==0:
+        while GPIO.input(pins.Echo) == 0 and pulse_start < timeout:
             pulse_start = time()
+
+        pulse_end = time()
+        max_time = pulse_end + timeout
         print("Echo = 1")
-        while GPIO.input(pins.Echo)==1:
+        while GPIO.input(pins.Echo) == 1 and pulse_end < timeout:
             pulse_end = time()
 
         #calculate distance. Assume speed of sound is 17150 cm/s
@@ -153,16 +159,14 @@ try:
         # Round to 2 decimal places
         distance = round(pulse_duration * 17150, 2)
 
-        #Checks to see if the bot detects anything within 50 cm
-        if(distance <= 50):
-            if(count > 0):
+        # Checks to see if the bot detects anything within 50 cm
+        if distance <= 50:
+            if count > 0:
                 print(f"Obstacle {distance} cm away. Trying again in 5 seconds, {count} {'attempt' if count == 1 else 'attempts'} left...")
                 count -= 1
                 stop(5)
             else:
                 print("Ight imma head out...")
-                stop() #If it detects anything within 50 cm more than 5 times then it stops for good
-                GPIO.cleanup()
                 break
         else:
             print(f"Distance: {distance} cm")
@@ -173,5 +177,7 @@ except KeyboardInterrupt:
     """for pin in vars(pins).values():
         GPIO.output(pin, GPIO.LOW)"""
 
-    # Clean up pins
+finally:
+    # Stop the bot and clean up the pins
+    stop()
     GPIO.cleanup()
