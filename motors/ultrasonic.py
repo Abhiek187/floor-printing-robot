@@ -18,8 +18,8 @@ class Pin():
         self.BIN1 = 15
         self.BIN2 = 16
         self.PWMB = 18"""
-        self.Trigger = 38 #GPIO Pin Number
-        self.Echo = 40 #GPIO Pin Number
+        self.Trigger = 3 #GPIO Pin Number
+        self.Echo = 32 #GPIO Pin Number
 
 # p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
@@ -132,7 +132,7 @@ try:
         GPIO.output(pins.Trigger, GPIO.LOW)
 
         #sensor calibration
-        sleep(1.4)
+        sleep(0.01)
 
         #Set Trigger to High
         GPIO.output(pins.Trigger, GPIO.HIGH)
@@ -140,8 +140,10 @@ try:
         GPIO.output(pins.Trigger, GPIO.LOW)
 
         #condition to set start/stop time based on echo
+        print("Echo = 0")
         while GPIO.input(pins.Echo)==0:
             pulse_start = time()
+        print("Echo = 1")
         while GPIO.input(pins.Echo)==1:
             pulse_end = time()
 
@@ -162,6 +164,8 @@ try:
                 stop() #If it detects anything within 50 cm more than 5 times then it stops for good
                 GPIO.cleanup()
                 break
+        else:
+            print(f"Distance: {distance} cm")
 
 except KeyboardInterrupt:
     print("Stopping the ultrasonic sensor...")
