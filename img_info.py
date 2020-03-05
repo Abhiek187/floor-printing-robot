@@ -105,12 +105,13 @@ TL = time() - start_time
 input(f"Turning left for {TL} seconds, press enter to continue...")
 
 # Determine how far to move each cycle (s/px)
-w_dist = 30 # cm wide of printing area
+w_dist = 14 # cm wide of printing area
 pix_width = w_dist/width # cm/px wide
-TFW = pix_width/FSPEED # time forward width (s/px)
-h_dist = 30 # cm tall of printing area
+real_speed = 0.8*FSPEED - 6
+TFW = pix_width/real_speed # time forward width (s/px)
+h_dist = 20 # cm tall of printing area
 pix_height = h_dist/height # cm/px tall
-TFH = pix_height/FSPEED # time forward height (s/px)
+TFH = pix_height/real_speed # time forward height (s/px)
 
 print("Starting print job...", flush=True)
 # Print the first pixel
