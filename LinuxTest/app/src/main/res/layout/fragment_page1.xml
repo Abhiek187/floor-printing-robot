@@ -15,6 +15,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/arrow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/arrow1"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toStartOf="@id/explainColors"
+        app:layout_constraintStart_toEndOf="@id/demoColors"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/explainColors"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -24,28 +35,15 @@
         app:layout_constraintStart_toEndOf="@id/arrow1"
         app:layout_constraintBottom_toTopOf="@id/explainWidth"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.6"
-
-        />
-    <TextView
-        android:id="@+id/arrow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/arrow1"
-        android:textSize="25sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/demoColors"
-        app:layout_constraintEnd_toStartOf="@id/explainColors"/>
+        app:layout_constraintWidth_percent="0.6" />
 
     <Spinner
         android:id="@+id/demoBrushWidth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/explainColors"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/explainColors" />
 
     <TextView
         android:id="@+id/arrow2"
@@ -63,10 +61,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textSize="20sp"
         android:text="@string/explainWidth"
-        app:layout_constraintTop_toBottomOf="@id/explainColors"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@id/arrow2"
-        app:layout_constraintWidth_percent="0.6"/>
+        app:layout_constraintTop_toBottomOf="@id/explainColors"
+        app:layout_constraintWidth_percent="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

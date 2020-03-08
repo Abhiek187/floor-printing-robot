@@ -3,66 +3,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<View
-    android:id="@+id/view1"
-    android:layout_width="20dp"
-    android:layout_height="8dp"
-    android:background="#000000"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
 
-<View
-    android:id="@+id/view2"
-    android:layout_width="20dp"
-    android:layout_height="12dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view1"/>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="75dp"
+        android:layout_height="4dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<View
-    android:id="@+id/view3"
-    android:layout_width="20dp"
-    android:layout_height="16dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view2"/>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="75dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
 
-<View
-    android:id="@+id/view4"
-    android:layout_width="20dp"
-    android:layout_height="20dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view3" />
+    <View
+        android:id="@+id/view3"
+        android:layout_width="75dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view2" />
 
-<View
-    android:id="@+id/view5"
-    android:layout_width="20dp"
-    android:layout_height="24dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view4"/>
+    <View
+        android:id="@+id/view4"
+        android:layout_width="75dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view3" />
 
-<View
-    android:id="@+id/view6"
-    android:layout_width="20dp"
-    android:layout_height="28dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view5"/>
+    <View
+        android:id="@+id/view5"
+        android:layout_width="75dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view4" />
 
-<View
-    android:id="@+id/view7"
-    android:layout_width="20dp"
-    android:layout_height="32dp"
-    android:background="#000000"
-    android:layout_marginTop="20dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/view6"/>
+    <View
+        android:id="@+id/view6"
+        android:layout_width="75dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view5" />
+
+    <View
+        android:id="@+id/view7"
+        android:layout_width="75dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="20dp"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view6" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>
