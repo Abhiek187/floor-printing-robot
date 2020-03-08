@@ -132,7 +132,7 @@ try:
         #Set Trigger to Low
         GPIO.output(pins.Trigger, GPIO.LOW)
 
-        #sensor calibration
+        #sensor calibration (sleep mode...:())
         sleep(0.01)
 
         #Set Trigger to High
