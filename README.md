@@ -1,5 +1,5 @@
 # floor-printing-robot
-Capstone project: A robot that can draw images on a surface
+Capstone project: A robot that can draw images on a surface (MVP: draw a square (enclosed shape) with the bot)
 
 ## img_info.py
 
