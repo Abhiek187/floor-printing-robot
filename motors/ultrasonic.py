@@ -77,6 +77,11 @@ pins = Pin()
 """for pin in vars(pins).values():
     GPIO.setup(pin, GPIO.OUT)"""
 
+# Assign Trigger and Echo to GPIO status
+#GPIO.setup(False)
+GPIO.setup(pins.Trigger, GPIO.OUT)
+GPIO.setup(pins.Echo, GPIO.IN)
+
 # Run the following continuously until we interrupt
 try:
     """while True:
@@ -123,24 +128,18 @@ try:
         sleep(5)"""
 
     while True:
-
-        #assign Trigger and Echo to GPIO status
-        GPIO.setup(False)
-        GPIO.setup(pins.Trigger, GPIO.OUT)
-        GPIO.setup(pins.Echo, GPIO.IN)
-
-        #Set Trigger to Low
+        # Set Trigger to Low
         GPIO.output(pins.Trigger, GPIO.LOW)
 
-        #sensor calibration
-        sleep(0.01)
+        # Sensor calibration (let it settle for a second)
+        sleep(1)
 
-        #Set Trigger to High
+        # Set Trigger to High
         GPIO.output(pins.Trigger, GPIO.HIGH)
         sleep(0.00001)
         GPIO.output(pins.Trigger, GPIO.LOW)
 
-        #condition to set start/stop time based on echo (timeout if taking too long)
+        # Condition to set start/stop time based on echo (timeout if taking too long)
         pulse_start = time()
         max_time = pulse_start + timeout
         print("Echo = 0")
@@ -153,8 +152,7 @@ try:
         while GPIO.input(pins.Echo) == 1 and pulse_end < timeout:
             pulse_end = time()
 
-        #calculate distance. Assume speed of sound is 17150 cm/s
-        #^Bruh it's not, the speed of sound is 343 m/s. You're just taking 343, dividing it by 2, and multiplying it by 100 to get the cm sound traveled one way...chrysnosis, am I right!
+        # Calculate distance: take 34300 cm/s and divide it by 2 for the one-way trip
         pulse_duration = pulse_end - pulse_start
         # Round to 2 decimal places
         distance = round(pulse_duration * 17150, 2)

@@ -1,8 +1,10 @@
 package com.example.linuxtest.activities
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -15,6 +17,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.linuxtest.R
 import com.example.linuxtest.adapter.ImageAdapter
 import com.example.linuxtest.databinding.ActivityMainBinding
@@ -28,17 +32,8 @@ class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
         '<', '>', '|', '\"', ':') // illegal file name characters
     private var currentImgName: String? = null
-    private val widths = arrayListOf(8f,12f,16f,20f,24f,28f,32f)
-
-    /*private val imageArrays = arrayOf(
-        R.drawable.stroke_width_8f,
-        R.drawable.stroke_width_10f,
-        R.drawable.stroke_width_12f,
-        R.drawable.stroke_width_14f,
-        R.drawable.stroke_width_16f,
-        R.drawable.stroke_width_18f,
-        R.drawable.stroke_width_20f
-    )*/
+    private var readStorageAllowed = false
+    private val widths = arrayListOf(8f, 12f, 16f, 20f, 24f, 28f, 32f) // actual stroke widths
 
     private val colors = arrayListOf(
         Color.BLACK,
@@ -79,25 +74,6 @@ class MainActivity : AppCompatActivity() {
         val spin1 = binding.brushWidth
         val spin2 = binding.colors
 
-        val strokeBinding = StrokeImagesBinding.inflate(layoutInflater)
-        val view1 = strokeBinding.view1
-        val view2 = strokeBinding.view2
-        val view3 = strokeBinding.view3
-        val view4 = strokeBinding.view4
-        val view5 = strokeBinding.view5
-        val view6 = strokeBinding.view6
-        val view7 = strokeBinding.view7
-
-        val b1 = Bitmap.createBitmap(view1.layoutParams.width,view1.layoutParams.height,Bitmap.Config.RGB_565)
-        val b2 = Bitmap.createBitmap(view2.layoutParams.width,view2.layoutParams.height,Bitmap.Config.RGB_565)
-        val b3 = Bitmap.createBitmap(view3.layoutParams.width,view3.layoutParams.height,Bitmap.Config.RGB_565)
-        val b4 = Bitmap.createBitmap(view4.layoutParams.width,view4.layoutParams.height,Bitmap.Config.RGB_565)
-        val b5 = Bitmap.createBitmap(view5.layoutParams.width,view5.layoutParams.height,Bitmap.Config.RGB_565)
-        val b6 = Bitmap.createBitmap(view6.layoutParams.width,view6.layoutParams.height,Bitmap.Config.RGB_565)
-        val b7 = Bitmap.createBitmap(view7.layoutParams.width,view7.layoutParams.height,Bitmap.Config.RGB_565)
-
-        val imageArray = arrayOf(b1,b2,b3,b4,b5,b6,b7)
-
         val imagesDB = ImagesDBHelper(this)
         drawView = CustomDraw(this)
         currentImgName = intent.getStringExtra("imageName") // current saved image
@@ -107,18 +83,25 @@ class MainActivity : AppCompatActivity() {
             drawView.loadDrawing("${this.filesDir.path}/$it.png")
         }
 
+        // Add canvas and constrain it in between the two lines
         pageLayout.addView(drawView)
         pageLayout.foreground = getDrawable(R.drawable.shape_window_dim)
         pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
 
-        drawView.id=View.generateViewId()
-        drawView.layoutParams.height=0 // 0 dp = match constraint
+        drawView.id = View.generateViewId()
+        drawView.layoutParams.height = 0 // 0 dp = match constraint
         val limits = ConstraintSet()
         limits.clone(pageLayout)
-        limits.connect(drawView.id, ConstraintSet.TOP,line1.id,ConstraintSet.BOTTOM,1)
-        limits.connect(drawView.id,ConstraintSet.BOTTOM,line2.id,ConstraintSet.TOP,1)
+        limits.connect(drawView.id, ConstraintSet.TOP, line1.id,  ConstraintSet.BOTTOM,1)
+        limits.connect(drawView.id, ConstraintSet.BOTTOM, line2.id, ConstraintSet.TOP,1)
         limits.applyTo(pageLayout)
 
+        // Create bitmaps out of the views in stroke_images.xml (to be displayed in the spinner)
+        val strokeBinding = StrokeImagesBinding.inflate(layoutInflater)
+        val views = arrayOf(strokeBinding.view1, strokeBinding.view2, strokeBinding.view3,
+            strokeBinding.view4, strokeBinding.view5, strokeBinding.view6, strokeBinding.view7)
+        val imageArray = views.map { view -> Bitmap.createBitmap(view.layoutParams.width,
+            view.layoutParams.height, Bitmap.Config.RGB_565) }
         val pictureAdapter = ImageAdapter(this, imageArray)
         spin1.adapter = pictureAdapter
 
@@ -150,11 +133,25 @@ class MainActivity : AppCompatActivity() {
 
         buttonUpload.setOnClickListener {
             // Get photo from gallery
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*" // access gallery or photos
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+                // Request permission to look at camera roll
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+            } else {
+                readStorageAllowed = true
+            }
 
-            intent.resolveActivity(packageManager)?.let {
-                startActivityForResult(intent, 0)
+            if (readStorageAllowed) {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "image/*" // access gallery or photos
+
+                intent.resolveActivity(packageManager)?.let {
+                    startActivityForResult(intent, 0)
+                }
+            } else {
+                Toast.makeText(this, "You must give permission to access photos.",
+                    Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -179,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             val editTextName = popupView.editTextName
             val buttonSaveName = popupView.buttonSaveName
 
-            editTextName.setOnKeyListener{_, keyCode,keyEvent ->
+            editTextName.setOnKeyListener{_, keyCode, keyEvent ->
                 if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     buttonSaveName.performClick()
                     return@setOnKeyListener true
@@ -252,6 +249,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PrintActivity::class.java)
             intent.putExtra("imageName", currentImgName)
             startActivity(intent)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (requestCode == 0) {
+            // If request is cancelled, the result array is empty
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                readStorageAllowed = true
+            }
         }
     }
 
