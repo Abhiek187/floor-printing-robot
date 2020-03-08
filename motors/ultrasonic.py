@@ -131,7 +131,7 @@ try:
         # Set Trigger to Low
         GPIO.output(pins.Trigger, GPIO.LOW)
 
-        # Sensor calibration (let it settle for a second)
+        # Sensor calibration (let it settle for a second, sleep mode...:())
         sleep(1)
 
         # Set Trigger to High
