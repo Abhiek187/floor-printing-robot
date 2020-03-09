@@ -7,7 +7,7 @@ from main import stop
 
 # Assign global variable for count
 count = 5
-timeout = 0.04
+timeout = 1
 
 # Constants for the pins
 class Pin():
@@ -19,8 +19,8 @@ class Pin():
         self.BIN1 = 15
         self.BIN2 = 16
         self.PWMB = 18"""
-        self.Trigger = 3 #GPIO Pin Number
-        self.Echo = 32 #GPIO Pin Number
+        self.Trigger = 11
+        self.Echo = 13
 
 # p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
@@ -140,17 +140,35 @@ try:
         GPIO.output(pins.Trigger, GPIO.LOW)
 
         # Condition to set start/stop time based on echo (timeout if taking too long)
+        print("Echo = 0")
         pulse_start = time()
         max_time = pulse_start + timeout
-        print("Echo = 0")
-        while GPIO.input(pins.Echo) == 0 and pulse_start < timeout:
+        while GPIO.input(pins.Echo) == 0 and pulse_start < max_time:
             pulse_start = time()
 
+        if GPIO.input(pins.Echo) == 0:
+            if count == 0:
+                print("Ight imma head out...")
+                break
+            else:
+                print(f"That took too long! ({count} {'attempt' if count == 1 else 'attempts'} left)")
+                count -= 1
+                continue # try again
+
+        print("Echo = 1")
         pulse_end = time()
         max_time = pulse_end + timeout
-        print("Echo = 1")
-        while GPIO.input(pins.Echo) == 1 and pulse_end < timeout:
+        while GPIO.input(pins.Echo) == 1 and pulse_end < max_time:
             pulse_end = time()
+
+        if GPIO.input(pins.Echo) == 1:
+            if count == 0:
+                print("Ight imma head out...")
+                break
+            else:
+                print("That took too long! ({count} {'attempt' if count == 1 else 'attempts'} left)")
+                count -= 1
+                continue
 
         # Calculate distance: take 34300 cm/s and divide it by 2 for the one-way trip
         pulse_duration = pulse_end - pulse_start
@@ -162,7 +180,7 @@ try:
             if count > 0:
                 print(f"Obstacle {distance} cm away. Trying again in 5 seconds, {count} {'attempt' if count == 1 else 'attempts'} left...")
                 count -= 1
-                stop(5)
+                #stop(5)
             else:
                 print("Ight imma head out...")
                 break
@@ -177,5 +195,6 @@ except KeyboardInterrupt:
 
 finally:
     # Stop the bot and clean up the pins
+    print("Cleaning up the pins...")
     stop()
     GPIO.cleanup()
