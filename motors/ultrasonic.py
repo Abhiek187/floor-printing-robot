@@ -19,8 +19,8 @@ class Pin():
         self.BIN1 = 15
         self.BIN2 = 16
         self.PWMB = 18"""
-        self.Trigger = 11
-        self.Echo = 13
+        self.Trigger = 0
+        self.Echo = 2
 
 # p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
 # p, q, a, b.start(0)
@@ -70,7 +70,7 @@ class Pin():
 
 print("Testing the ultrasonic sensor...")
 # Declare the GPIO settings
-GPIO.setmode(GPIO.BOARD) # use pin numbers 1-40 instead of GPIO N
+GPIO.setmode(GPIO.BCM) # use pin numbers 1-40 instead of GPIO N
 pins = Pin()
 
 # Set up GPIO pins
@@ -78,7 +78,6 @@ pins = Pin()
     GPIO.setup(pin, GPIO.OUT)"""
 
 # Assign Trigger and Echo to GPIO status
-#GPIO.setup(False)
 GPIO.setup(pins.Trigger, GPIO.OUT)
 GPIO.setup(pins.Echo, GPIO.IN)
 
@@ -166,7 +165,7 @@ try:
                 print("Ight imma head out...")
                 break
             else:
-                print("That took too long! ({count} {'attempt' if count == 1 else 'attempts'} left)")
+                print(f"That took too long! ({count} {'attempt' if count == 1 else 'attempts'} left)")
                 count -= 1
                 continue
 
