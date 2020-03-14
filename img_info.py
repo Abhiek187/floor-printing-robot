@@ -6,8 +6,10 @@ from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
+from motors.ultrasonic import get_distance
 from signal import signal, SIGINT
 from time import time
+from threading import Thread
 
 # List of available colors (use color name from CSS)
 """COLORS = [name_to_rgb('red'),name_to_rgb('orange'),name_to_rgb('yellow'),name_to_rgb('green'),name_to_rgb('blue'),\
@@ -16,7 +18,7 @@ COLORS = [name_to_rgb("black"), name_to_rgb("white")]
 FSPEED = 20 # forward speed
 TSPEED = 30 # turn speed
 
-def stop_robot():
+def stop_robot(signum, frame):
 	# Stop the motors upon SIGINT
 	print("Stopping the print job...")
 	stop()
@@ -43,7 +45,7 @@ def check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color):
 	if x < width and y < height:
 		color = closest_color(pix[x,y])
 		rgb_arr[y][x] = list(name_to_rgb(color))
-		print(f"({x},{y}): Print {color}")
+		#print(f"({x},{y}): Print {color}")
 
 		if prev_color != color:
 			#print(f"Switching to {color}...")
@@ -113,6 +115,10 @@ h_dist = 20 # cm tall of printing area
 pix_height = h_dist/height # cm/px tall
 TFH = pix_height/real_speed # time forward height (s/px)
 
+# Start checking for obstacles
+ultra_thread = Thread(target=get_distance, daemon=True) # when script finishes, kill thread
+ultra_thread.start()
+
 print("Starting print job...", flush=True)
 # Print the first pixel
 prev_color = "white" # surface color
@@ -126,13 +132,13 @@ while x < width and y < height:
 			state = "down"
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Turn left, move down")
+			# Turn left, move down
 			turn_left(TSPEED, TL)
 			move_forward(FSPEED, TFH)
 		else:
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Continue left")
+			# Continue left
 			move_forward(FSPEED, TFW)
 	elif state == "right":
 		# Robot is moving right; if at the edge, need to turn right and move down
@@ -140,13 +146,13 @@ while x < width and y < height:
 			state = "down"
 			y += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Turn right, move down")
+			# Turn right, move down
 			turn_right(TSPEED, TR)
 			move_forward(FSPEED, TFH)
 		else:
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Continue right")
+			# Continue right
 			move_forward(FSPEED, TFW)
 	else:
 		# Robot moved down, need to turn in the right direction
@@ -154,14 +160,14 @@ while x < width and y < height:
 			state = "right"
 			x += 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Turn left, move right")
+			# Turn left, move right
 			turn_left(TSPEED, TL)
 			move_forward(FSPEED, TFW)
 		else:
 			state = "left"
 			x -= 1
 			check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color)
-			#print("Turn right, move left")
+			# Turn right, move left
 			turn_right(TSPEED, TR)
 			move_forward(FSPEED, TFW)
 
