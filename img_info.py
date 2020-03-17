@@ -6,7 +6,7 @@ from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
-from motors.ultrasonic import get_distance
+from motors.ultrasonic import get_distance, get_dimensions
 from signal import signal, SIGINT
 from time import time
 from threading import Thread
@@ -91,7 +91,7 @@ state = "right" # robot starts at top left moving right; possible states: left, 
 signal(SIGINT, stop_robot) # stop in case of an emergency
 
 # Perform calibration to determine turn speeds
-input("Calibration is needed to turn the robot 90\u00B0. Press enter to continue...") # let the user read the message
+"""input("Calibration is needed to turn the robot 90\u00B0. Press enter to continue...") # let the user read the message
 start_time = time()
 turn_right(TSPEED)
 input("Turning right, press enter to continue...")
@@ -104,14 +104,15 @@ turn_left(TSPEED)
 input("Turning left, press enter to continue...")
 stop()
 TL = time() - start_time
-input(f"Turning left for {TL} seconds, press enter to continue...")
+input(f"Turning left for {TL} seconds, press enter to continue...")"""
+TR, TL, w_dist, h_dist = get_dimensions(TSPEED)
 
 # Determine how far to move each cycle (s/px)
-w_dist = 14 # cm wide of printing area
+#w_dist = 14 # cm wide of printing area
 pix_width = w_dist/width # cm/px wide
 real_speed = 0.8*FSPEED - 6
 TFW = pix_width/real_speed # time forward width (s/px)
-h_dist = 20 # cm tall of printing area
+#h_dist = 20 # cm tall of printing area
 pix_height = h_dist/height # cm/px tall
 TFH = pix_height/real_speed # time forward height (s/px)
 
