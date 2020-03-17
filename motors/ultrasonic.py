@@ -10,6 +10,7 @@ from sys import exit
 # Assign global variable for count
 count = 5
 timeout = 1
+obstacleDetected = False # global variable to check if the bot needs to stop
 
 # Constants for the pins
 class Pin():
@@ -101,6 +102,9 @@ def get_dimensions(turn_speed):
 
 def get_distance():
     while count > 0:
+        while obstacleDetected:
+            pass # wait until printing can continue
+
         # Set Trigger to Low
         GPIO.output(pins.Trigger, GPIO.LOW)
 
@@ -120,6 +124,8 @@ def get_distance():
             pulse_start = time()
 
         if GPIO.input(pins.Echo) == 0:
+            obstacleDetected = True
+
             if count == 0:
                 print("Ight imma head out...")
                 break
@@ -135,6 +141,8 @@ def get_distance():
             pulse_end = time()
 
         if GPIO.input(pins.Echo) == 1:
+            obstacleDetected = True
+
             if count == 0:
                 print("Ight imma head out...")
                 break
@@ -150,10 +158,11 @@ def get_distance():
 
         # Checks to see if the bot detects anything within 50 cm
         if distance <= 50:
+            obstacleDetected = True
+
             if count > 0:
                 print(f"Obstacle {distance} cm away. Trying again in 5 seconds, {count} {'attempt' if count == 1 else 'attempts'} left...")
                 count -= 1
-                #stop(5)
             else:
                 print("Ight imma head out...")
         else:

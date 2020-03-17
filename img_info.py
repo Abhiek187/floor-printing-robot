@@ -6,7 +6,7 @@ from PIL import Image
 from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
-from motors.ultrasonic import get_distance, get_dimensions
+from motors.ultrasonic import get_distance, get_dimensions, obstacleDetected, count
 from signal import signal, SIGINT
 from time import time
 from threading import Thread
@@ -126,6 +126,14 @@ prev_color = "white" # surface color
 check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color) # really check current pixel this time
 
 while x < width and y < height:
+	# Check if the ultrasonic sensor detected an obstacle
+	if obstacleDetected:
+		if count == 0:
+			stop_robot(2, 0) # SIGINT = 2
+		else:
+			stop(5)
+			obstacleDetected = False
+
 	# Check state of robot
 	if state == "left":
 		# Robot is moving left; if at the edge, need to turn left and move down
