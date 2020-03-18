@@ -9,10 +9,10 @@ A Python script that converts an image into its basic colors
 
 Scripts that run the motors on the raspberry pi. You must enable I2C under Interfacing Options in raspi-config to get them to work.
 
-- **encoder.py**: powers the motor encoder to move the printer up and down in a rack and pinion system
+- **servo.py**: powers the S90 servo to move the printer up and down in a rack and pinion system
 - **main.py**: powers the wheels, allowing the bot to maneuver with the image
 - **PCA9685.py**: library code to handle the wheel motors using smbus
-- **ultrasonic.py**: runs the ultrasonic sensor to detect obstacles and restrain the printing area
+- **ultrasonic.py**: runs the ultrasonic sensor to detect obstacles and scale the printing area
 
 ### Requirements
 **Python 3.6+ and pip 3**: (https://docs.python-guide.org/starting/install3/linux/)
