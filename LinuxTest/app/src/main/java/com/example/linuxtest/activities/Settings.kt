@@ -13,16 +13,22 @@ class Settings : AppCompatActivity() {
         val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val serverName = binding.editServerUserName
+        val serverPassword = binding.editTextServerPassword
         val hostname = binding.editTextHostname
         val password = binding.editTextPassword
         val userName = binding.editTextUsername
         val saveSettingBtn = binding.saveSetting
+        val serverHostname = binding.editServerHostName
 
         val sharedPref = Prefs(this)
         // Populate EditText's with saved info
         hostname.setText(sharedPref.hostname)
         password.setText(sharedPref.password)
         userName.setText(sharedPref.username)
+        serverName.setText(sharedPref.serverName)
+        serverPassword.setText(sharedPref.serverPassword)
+        serverHostname.setText(sharedPref.serverHostname)
 
         hostname.setOnKeyListener{_, keyCode,keyEvent ->
             if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
@@ -36,6 +42,9 @@ class Settings : AppCompatActivity() {
             sharedPref.hostname = hostname.text.toString()
             sharedPref.password = password.text.toString()
             sharedPref.username = userName.text.toString()
+            sharedPref.serverName = serverName.text.toString()
+            sharedPref.serverPassword = serverPassword.text.toString()
+            sharedPref.serverHostname = serverHostname.text.toString()
 
             //startActivity(Intent(this,MainActivity::class.java))
             finish()

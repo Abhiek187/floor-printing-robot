@@ -9,6 +9,9 @@ class Prefs (context: Context) {
     private val userKey = "username"
     private val passwordKey = "password"
     private val hostNameKey = "hostname"
+    private val serverNameKey = "serverName"
+    private val serverPasswordKey = "serverPassword"
+    private val serverHostnameKey = "serverHostname"
     private val prefs: SharedPreferences = context.getSharedPreferences(fileName,
         Context.MODE_PRIVATE)
 
@@ -27,4 +30,16 @@ class Prefs (context: Context) {
     var hostname: String
         get() = prefs.getString(hostNameKey,"").toString()
         set(value) = prefs.edit().putString(hostNameKey,value).apply()
+
+    var serverName: String
+        get() = prefs.getString(serverNameKey,"").toString()
+        set(value) = prefs.edit().putString(serverNameKey,value).apply()
+
+    var serverPassword: String
+        get() = prefs.getString(serverPasswordKey,"").toString()
+        set(value) = prefs.edit().putString(serverPasswordKey,value).apply()
+
+    var serverHostname: String
+        get() = prefs.getString(serverHostnameKey,"").toString()
+        set(value) = prefs.edit().putString(serverHostnameKey,value).apply()
 }
