@@ -31,14 +31,41 @@ class PrintActivity : AppCompatActivity() {
 
         // Load pi info from SharedPreferences
         val sharedPref = Prefs(this)
-        val username = sharedPref.username
-        val password = sharedPref.password
-        val hostname = sharedPref.hostname
+        val serverName = sharedPref.serverName
+        val serverPassword = sharedPref.serverPassword
+        val serverHost = sharedPref.serverHostname
+       // val username = sharedPref.username
+        //val password = sharedPref.password
+        //val hostname = sharedPref.hostname
 
         currentImgName = intent.getStringExtra("imageName")!!
 
         thread {
-            ssh(username, password, hostname)
+            serverConnect(serverName, serverHost, serverPassword)
+            //ssh(username, password, hostname)
+        }
+    }
+
+    private fun serverConnect(serverName: String, serverHost: String,serverPassword: String){
+
+        try{
+            val jsch = JSch()
+            val session = jsch.getSession(serverName,serverHost)
+            session.setPassword(serverPassword)
+
+            val sharedPref = Prefs(this)
+            val username = sharedPref.username
+            val password = sharedPref.password
+            val hostname = username //hostname is also pi
+
+            uiPrint("Connecting to $serverHost")
+            thread {
+                ssh(username, password, hostname, 4755)
+            }
+
+        }catch (ex: JSchException){
+            ex.stackTrace
+            uiPrint("Could not connect to $serverName")
         }
     }
 
