@@ -13,13 +13,13 @@ class Settings : AppCompatActivity() {
         val binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val serverName = binding.editServerUserName
+        val serverHostname = binding.editTextServerHostName
+        val serverName = binding.editTextServerUserName
         val serverPassword = binding.editTextServerPassword
         val hostname = binding.editTextHostname
         val password = binding.editTextPassword
         val userName = binding.editTextUsername
         val saveSettingBtn = binding.saveSetting
-        val serverHostname = binding.editServerHostName
 
         val sharedPref = Prefs(this)
         // Populate EditText's with saved info

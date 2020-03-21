@@ -34,9 +34,9 @@ class PrintActivity : AppCompatActivity() {
         val serverName = sharedPref.serverName
         val serverPassword = sharedPref.serverPassword
         val serverHost = sharedPref.serverHostname
-       // val username = sharedPref.username
-        //val password = sharedPref.password
-        //val hostname = sharedPref.hostname
+        /*val username = sharedPref.username
+        val password = sharedPref.password
+        val hostname = sharedPref.hostname*/
 
         currentImgName = intent.getStringExtra("imageName")!!
 
@@ -46,26 +46,33 @@ class PrintActivity : AppCompatActivity() {
         }
     }
 
-    private fun serverConnect(serverName: String, serverHost: String,serverPassword: String){
-
-        try{
+    private fun serverConnect(serverName: String, serverHost: String, serverPassword: String) {
+        try {
             val jsch = JSch()
-            val session = jsch.getSession(serverName,serverHost)
+            val session = jsch.getSession(serverName, serverHost)
             session.setPassword(serverPassword)
+
+            // Avoid asking for key confirmation
+            val properties = Properties()
+            properties["StrictHostKeyChecking"] = "no"
+            session.setConfig(properties)
+
+            uiPrint("Connecting to $serverHost...")
+            session.connect(3000) // timeout after 3 seconds
 
             val sharedPref = Prefs(this)
             val username = sharedPref.username
             val password = sharedPref.password
-            val hostname = username //hostname is also pi
+            //val hostname = sharedPref.hostname
+            val hostname = username // hostname is also pi
 
-            uiPrint("Connecting to $serverHost")
-            thread {
-                ssh(username, password, hostname, 4755)
-            }
+            ssh(username, password, hostname, 4755)
 
-        }catch (ex: JSchException){
-            ex.stackTrace
-            uiPrint("Could not connect to $serverName")
+            uiPrint("Disconnecting from $serverHost...")
+            session.disconnect()
+        } catch (ex: JSchException) {
+            ex.printStackTrace()
+            uiPrint("Could not connect to $serverHost")
         }
     }
 
@@ -82,7 +89,7 @@ class PrintActivity : AppCompatActivity() {
             session.setConfig(properties)
 
             uiPrint("Connecting to $hostname...")
-            session.connect()
+            session.connect(3000) // timeout after 3 seconds
 
             val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
             sftpPut(session, src = "${this.filesDir.path}/$image", dest = "./floor*")

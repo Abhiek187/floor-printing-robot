@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/editServerUserName"
+        android:id="@+id/editTextServerUserName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -31,31 +31,6 @@
         app:layout_constraintStart_toEndOf="@id/textViewServerUserName" />
 
     <TextView
-        android:id="@+id/textServerHostName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:paddingTop="10dp"
-        android:text="@string/hostName"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editServerUserName"/>
-    
-    <EditText
-        android:id="@+id/editServerHostName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:inputType="text"
-        android:autofillHints="no"
-        android:hint="@string/sample_hostname"
-        app:layout_constraintBaseline_toBaselineOf="@id/textServerHostName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/textServerHostName"/>
-
-
-    <TextView
         android:id="@+id/textViewServerPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +39,7 @@
         android:textSize="20sp"
         android:text="@string/serverPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editServerHostName"/>
+        app:layout_constraintTop_toBottomOf="@id/textViewServerUserName"/>
 
     <EditText
         android:id="@+id/editTextServerPassword"
@@ -80,6 +55,30 @@
         app:layout_constraintStart_toEndOf="@id/textViewServerPassword"/>
 
     <TextView
+        android:id="@+id/textViewServerHostName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/serverHostname"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewServerPassword" />
+
+    <EditText
+        android:id="@+id/editTextServerHostName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:inputType="text"
+        android:autofillHints="no"
+        android:hint="@string/sample_hostname"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewServerHostName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textViewServerHostName"/>
+
+    <TextView
         android:id="@+id/textViewUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,7 +87,7 @@
         android:text="@string/userName"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextServerPassword" />
+        app:layout_constraintTop_toBottomOf="@id/textViewServerHostName" />
 
     <EditText
         android:id="@+id/editTextUsername"
@@ -112,7 +111,7 @@
         android:text="@string/password"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextUsername" />
+        app:layout_constraintTop_toBottomOf="@id/textViewUsername" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -120,9 +119,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:autofillHints="no"
         android:hint="@string/sample_password"
         android:inputType="textPassword"
-        android:autofillHints="no"
         app:layout_constraintBaseline_toBaselineOf="@+id/textViewPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/textViewPassword" />
@@ -136,7 +135,7 @@
         android:text="@string/hostName"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
+        app:layout_constraintTop_toBottomOf="@id/textViewPassword" />
 
     <EditText
         android:id="@+id/editTextHostname"

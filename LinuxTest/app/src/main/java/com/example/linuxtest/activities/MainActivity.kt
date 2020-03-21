@@ -236,8 +236,10 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val prefs = Prefs(this)
-            if (prefs.username.isBlank() || prefs.password.isBlank() || prefs.hostname.isBlank()) {
-                Toast.makeText(this, "RPI info missing in settings", Toast.LENGTH_SHORT)
+            if (prefs.username.isBlank() || prefs.password.isBlank() || prefs.hostname.isBlank() ||
+                prefs.serverName.isBlank() || prefs.serverPassword.isBlank() ||
+                prefs.serverHostname.isBlank()) {
+                Toast.makeText(this, "RPi info missing in settings", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }

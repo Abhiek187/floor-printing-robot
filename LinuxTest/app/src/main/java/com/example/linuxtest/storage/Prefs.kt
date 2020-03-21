@@ -20,26 +20,26 @@ class Prefs (context: Context) {
         set(value) = prefs.edit().putBoolean(isFirstKey,value).apply()
 
     var username: String
-        get() = prefs.getString(userKey,"").toString()
+        get() = prefs.getString(userKey,"")!!
         set(value) = prefs.edit().putString(userKey,value).apply()
 
     var password: String
-        get() = prefs.getString(passwordKey,"").toString()
+        get() = prefs.getString(passwordKey,"")!!
         set(value) = prefs.edit().putString(passwordKey,value).apply()
 
     var hostname: String
-        get() = prefs.getString(hostNameKey,"").toString()
+        get() = prefs.getString(hostNameKey,"")!!
         set(value) = prefs.edit().putString(hostNameKey,value).apply()
 
     var serverName: String
-        get() = prefs.getString(serverNameKey,"").toString()
+        get() = prefs.getString(serverNameKey,"")!!
         set(value) = prefs.edit().putString(serverNameKey,value).apply()
 
     var serverPassword: String
-        get() = prefs.getString(serverPasswordKey,"").toString()
+        get() = prefs.getString(serverPasswordKey,"")!!
         set(value) = prefs.edit().putString(serverPasswordKey,value).apply()
 
     var serverHostname: String
-        get() = prefs.getString(serverHostnameKey,"").toString()
+        get() = prefs.getString(serverHostnameKey,"")!!
         set(value) = prefs.edit().putString(serverHostnameKey,value).apply()
 }

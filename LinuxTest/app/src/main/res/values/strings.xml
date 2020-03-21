@@ -16,8 +16,9 @@
     <string name="sample_password">raspberry</string>
     <string name="sample_hostname">192.168.1.128</string>
     <string name="saveSetting">Save</string>
-    <string name="serverName">Server userName</string>
+    <string name="serverName">Server Username</string>
     <string name="sample_server">name@server.net</string>
+    <string name="serverHostname">Server Hostname</string>
     <string name="serverPassword">Server Password</string>
     <string name="arrow1">\u2190</string>
 
