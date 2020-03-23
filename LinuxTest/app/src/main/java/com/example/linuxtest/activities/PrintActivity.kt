@@ -51,6 +51,7 @@ class PrintActivity : AppCompatActivity() {
             val jsch = JSch()
             val session = jsch.getSession(serverName, serverHost)
             session.setPassword(serverPassword)
+            session.setPortForwardingL(4755,"localhost",4755)
 
             // Avoid asking for key confirmation
             val properties = Properties()
@@ -64,7 +65,7 @@ class PrintActivity : AppCompatActivity() {
             val username = sharedPref.username
             val password = sharedPref.password
             //val hostname = sharedPref.hostname
-            val hostname = username // hostname is also pi
+            val hostname = "localhost" // localhost is the server
 
             ssh(username, password, hostname, 4755)
 
