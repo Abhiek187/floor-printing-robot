@@ -96,7 +96,7 @@ def get_dimensions(turn_speed):
 def get_distance():
     global count, obstacle_detected
 
-    while count > 0:
+    while count >= 0:
         while obstacle_detected:
             pass # wait until printing can continue
 
