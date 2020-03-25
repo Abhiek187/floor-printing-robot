@@ -15,8 +15,8 @@ obstacle_detected = False # global variable to check if the bot needs to stop
 # Constants for the pins
 class Pin():
     def __init__(self):
-        self.Trigger = 0
-        self.Echo = 2
+        self.Trigger = 4
+        self.Echo = 5
 
 def stop_ultrasonic_sensor():
     # Stop the bot and clean up the pins
@@ -156,6 +156,7 @@ def get_distance():
                 count -= 1
             else:
                 print("Ight imma head out...")
+                break
         else:
             print(f"Distance: {distance} cm")
 
