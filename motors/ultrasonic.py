@@ -10,18 +10,11 @@ from sys import exit
 # Assign global variable for count
 count = 5
 timeout = 1
-obstacleDetected = False # global variable to check if the bot needs to stop
+obstacle_detected = False # global variable to check if the bot needs to stop
 
 # Constants for the pins
 class Pin():
     def __init__(self):
-        """self.PWMA = 7
-        self.AIN2 = 11
-        self.AIN1 = 12
-        self.STBY = 13
-        self.BIN1 = 15
-        self.BIN2 = 16
-        self.PWMB = 18"""
         self.Trigger = 0
         self.Echo = 2
 
@@ -101,8 +94,10 @@ def get_dimensions(turn_speed):
     return (right_time, left_time, width, height)
 
 def get_distance():
+    global count, obstacle_detected
+
     while count > 0:
-        while obstacleDetected:
+        while obstacle_detected:
             pass # wait until printing can continue
 
         # Set Trigger to Low
@@ -124,8 +119,6 @@ def get_distance():
             pulse_start = time()
 
         if GPIO.input(pins.Echo) == 0:
-            obstacleDetected = True
-
             if count == 0:
                 print("Ight imma head out...")
                 break
@@ -141,8 +134,6 @@ def get_distance():
             pulse_end = time()
 
         if GPIO.input(pins.Echo) == 1:
-            obstacleDetected = True
-
             if count == 0:
                 print("Ight imma head out...")
                 break
@@ -158,7 +149,7 @@ def get_distance():
 
         # Checks to see if the bot detects anything within 50 cm
         if distance <= 50:
-            obstacleDetected = True
+            obstacle_detected = True
 
             if count > 0:
                 print(f"Obstacle {distance} cm away. Trying again in 5 seconds, {count} {'attempt' if count == 1 else 'attempts'} left...")
@@ -168,51 +159,11 @@ def get_distance():
         else:
             print(f"Distance: {distance} cm")
 
-# p (L1), q (L2), a (R1), b (R2) = GPIO.PWM(pin, 20)
-# p, q, a, b.start(0)
+def get_obstacle_detected():
+    return obstacle_detected
 
-# stop(): Stops both motors
-"""def stop():
-    p.ChangeDutyCycle(0)
-    q.ChangeDutyCycle(0)
-    a.ChangeDutyCycle(0)
-    b.ChangeDutyCycle(0)"""
-
-# forward(speed): Sets both motors to move forward at speed. 0 <= speed <= 100
-"""def forward(speed):
-    p.ChangeDutyCycle(speed)
-    q.ChangeDutyCycle(0)
-    a.ChangeDutyCycle(speed)
-    b.ChangeDutyCycle(0)
-    p.ChangeFrequency(speed + 5)
-    a.ChangeFrequency(speed + 5)"""
-
-# reverse(speed): Sets both motors to reverse at speed. 0 <= speed <= 100
-"""def reverse(speed):
-    p.ChangeDutyCycle(0)
-    q.ChangeDutyCycle(speed)
-    a.ChangeDutyCycle(0)
-    b.ChangeDutyCycle(speed)
-    q.ChangeFrequency(speed + 5)
-    b.ChangeFrequency(speed + 5)"""
-
-# spinLeft(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
-"""def spinLeft(speed):
-    p.ChangeDutyCycle(0)
-    q.ChangeDutyCycle(speed)
-    a.ChangeDutyCycle(speed)
-    b.ChangeDutyCycle(0)
-    q.ChangeFrequency(speed + 5)
-    a.ChangeFrequency(speed + 5)"""
-
-# spinRight(speed): Sets motors to turn opposite directions at speed. 0 <= speed <= 100
-"""def spinRight(speed):
-    p.ChangeDutyCycle(speed)
-    q.ChangeDutyCycle(0)
-    a.ChangeDutyCycle(0)
-    b.ChangeDutyCycle(speed)
-    p.ChangeFrequency(speed + 5)
-    b.ChangeFrequency(speed + 5)"""
+def get_count():
+    return count
 
 register(stop_ultrasonic_sensor) # call this function every time this script is terminated
 print("Testing the ultrasonic sensor...")
@@ -229,47 +180,3 @@ pins = Pin()
 GPIO.setup(pins.Trigger, GPIO.OUT)
 GPIO.setup(pins.Echo, GPIO.IN)
 #get_distance() # uncomment if debugging the sensors
-
-# Run the following continuously until we interrupt
-"""while True:
-    # Drive the motor clockwise
-    print("Moving clockwise...")
-    # Motor A:
-    GPIO.output(pins.AIN1, GPIO.HIGH)
-    GPIO.output(pins.AIN2, GPIO.LOW)
-    # Motor B:
-    GPIO.output(pins.BIN1, GPIO.HIGH)
-    GPIO.output(pins.BIN2, GPIO.LOW)
-
-    # Set the motor speed
-    # Motor A:
-    GPIO.output(pins.PWMA, GPIO.HIGH)
-    # Motor B:
-    GPIO.output(pins.PWMB, GPIO.HIGH)
-
-    # Disable STBY (standby)
-    GPIO.output(pins.STBY, GPIO.HIGH)
-
-    # Wait 5 seconds
-    sleep(5)
-
-    # Drive the motor counterclockwise
-    print("Moving counterclockwise...")
-    # Motor A:
-    GPIO.output(pins.AIN1, GPIO.LOW)
-    GPIO.output(pins.AIN2, GPIO.HIGH)
-    # Motor B:
-    GPIO.output(pins.BIN1, GPIO.LOW)
-    GPIO.output(pins.BIN2, GPIO.HIGH)
-
-    # Set the motor speed
-    # Motor A:
-    GPIO.output(pins.PWMA, GPIO.HIGH)
-    # Motor B:
-    GPIO.output(pins.PWMB, GPIO.HIGH)
-
-    # Disable STBY (standby)
-    GPIO.output(pins.STBY, GPIO.HIGH)
-
-    # Wait 5 seconds
-    sleep(5)"""
