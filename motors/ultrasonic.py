@@ -74,7 +74,7 @@ def get_dimensions(turn_speed):
     turn_right(turn_speed)
     height = _get_distance()
 
-    while height < 50:
+    while height > 50:
         # 50 cm limit on tracking distance
         height = _get_distance()
 
@@ -89,7 +89,7 @@ def get_dimensions(turn_speed):
     turn_left(turn_speed)
     width = _get_distance()
 
-    while width < 50:
+    while width > 50:
         width = _get_distance()
 
     stop()
@@ -228,7 +228,7 @@ pins = Pin()
 # Assign Trigger and Echo to GPIO status
 GPIO.setup(pins.Trigger, GPIO.OUT)
 GPIO.setup(pins.Echo, GPIO.IN)
-get_distance() # uncomment if debugging the sensors
+#get_distance() # uncomment if debugging the sensors
 
 # Run the following continuously until we interrupt
 """while True:
