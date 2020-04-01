@@ -73,7 +73,7 @@ class PrintActivity : AppCompatActivity() {
             session.disconnect()
         } catch (ex: JSchException) {
             ex.printStackTrace()
-            uiPrint("Could not connect to $serverHost")
+            uiPrint("Couldn't connect to $serverHost")
         }
     }
 
