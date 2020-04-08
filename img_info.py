@@ -7,6 +7,7 @@ from math import sqrt
 from webcolors import name_to_rgb, rgb_to_name
 from motors.main import move_forward, turn_left, turn_right, stop
 from motors.ultrasonic import get_distance, get_dimensions, get_obstacle_detected, get_count
+from motors.servo import lift_marker, drop_marker
 from signal import signal, SIGINT
 from time import time
 from threading import Thread
@@ -49,7 +50,7 @@ def check_next_pixel(x, y, width, height, pix, rgb_arr, prev_color):
 
 		if prev_color != color:
 			#print(f"Switching to {color}...")
-			pass
+			lift_marker() if color == "white" else drop_marker()
 		prev_color = color
 
 def check_progress(progress):

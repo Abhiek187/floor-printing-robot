@@ -42,26 +42,7 @@ try:
 		servo.ChangeDutyCycle(angle/18 + 2)
 		sleep(0.3)
 		servo.ChangeDutyCycle(0) # by the time user inputs, a second has gone by
-		"""dc = 2
 
-		while dc <= 12:
-			servo.ChangeDutyCycle(dc)
-			sleep(0.3) # reduce jitter
-			servo.ChangeDutyCycle(0)
-			sleep(0.7)
-			dc += 1
-
-		# Go back to 90 degrees
-		servo.ChangeDutyCycle(7)
-		sleep(0.5)
-		servo.ChangeDutyCycle(0)
-		sleep(1.5)
-
-		# Return to 0 degrees
-		servo.ChangeDutyCycle(2)
-		sleep(0.5)
-		servo.ChangeDutyCycle(0)
-		sleep(1.5)"""
 except KeyboardInterrupt:
 	print("Stopping the servo...")
 	servo.stop()
