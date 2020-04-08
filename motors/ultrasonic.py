@@ -3,7 +3,7 @@
 # Import required modules
 from time import sleep, time
 import RPi.GPIO as GPIO
-from main import stop, turn_right, turn_left
+#from main import stop, turn_right, turn_left
 from atexit import register
 from sys import exit
 
@@ -21,7 +21,7 @@ class Pin():
 def stop_ultrasonic_sensor():
 	# Stop the bot and clean up the pins
 	print("Cleaning up the pins...")
-	stop()
+	#stop()
 	GPIO.cleanup()
 
 def _get_distance():
@@ -38,7 +38,7 @@ def _get_distance():
 	GPIO.output(pins.Trigger, GPIO.LOW)
 
 	# Condition to set start/stop time based on echo (timeout if taking too long)
-	print("Echo = 0")
+	#print("Echo = 0")
 	pulse_start = time()
 	max_time = pulse_start + timeout
 	while GPIO.input(pins.Echo) == 0 and pulse_start < max_time:
@@ -47,7 +47,7 @@ def _get_distance():
 	if GPIO.input(pins.Echo) == 0:
 		return -1 # device is broken
 
-	print("Echo = 1")
+	#print("Echo = 1")
 	pulse_end = time()
 	max_time = pulse_end + timeout
 	while GPIO.input(pins.Echo) == 1 and pulse_end < max_time:
@@ -75,7 +75,7 @@ def get_dimensions(turn_speed):
 	right_time = time() - start_time
 
 	if height == -1:
-		raise RuntimeError("The ultrasonic sensors are not working.")
+		raise OSError("The ultrasonic sensors are not working.")
 
 	# Then turn left and look for the other marker
 	start_time = time()
@@ -89,7 +89,7 @@ def get_dimensions(turn_speed):
 	left_time = time() - start_time
 
 	if width == -1:
-		raise RuntimeError("The ultrasonic sensors are not working.")
+		raise OSError("The ultrasonic sensors are not working.")
 
 	return (right_time, left_time, width, height)
 
@@ -97,8 +97,8 @@ def get_distance():
 	global count, obstacle_detected
 
 	while count >= 0:
-		while obstacle_detected:
-			pass # wait until printing can continue
+		"""while obstacle_detected:
+			pass # wait until printing can continue"""
 
 		# Set Trigger to Low
 		GPIO.output(pins.Trigger, GPIO.LOW)
@@ -112,7 +112,7 @@ def get_distance():
 		GPIO.output(pins.Trigger, GPIO.LOW)
 
 		# Condition to set start/stop time based on echo (timeout if taking too long)
-		print("Echo = 0")
+		#print("Echo = 0")
 		pulse_start = time()
 		max_time = pulse_start + timeout
 		while GPIO.input(pins.Echo) == 0 and pulse_start < max_time:
@@ -127,7 +127,7 @@ def get_distance():
 				count -= 1
 				continue # try again
 
-		print("Echo = 1")
+		#print("Echo = 1")
 		pulse_end = time()
 		max_time = pulse_end + timeout
 		while GPIO.input(pins.Echo) == 1 and pulse_end < max_time:
