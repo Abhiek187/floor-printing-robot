@@ -3,7 +3,7 @@ from time import sleep
 
 class Pin():
 	def __init__(self):
-		self.PWM = 6 # or 26 for PWM0
+		self.PWM = 25 # or 26 for PWM0
 
 def drop_marker():
 	servo.ChangeDutyCycle(12)
