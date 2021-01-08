@@ -1,4 +1,9 @@
 # Floor Printing Robot
+
+<figure class="video_container">
+	<iframe src="https://www.youtube.com/embed/GSI4W3XvddA" frameborder="0" allowfullscreen="true"></iframe>
+</figure>
+
 ### Background
 
 It’s the 21st century and spray painting the ground for commercial purposes such as drawing parking lots can be tedious. Automating that process will reduce the burden of road workers and allow for more complex designs in a short amount of time. This would lessen the load on the road companies to hire workers and would allow for more complex parking lot configurations to be implemented. Previous work has dealt with robots drawing on walls. Scribit is a robot that can take an image sent from an app and draw it on the wall. We want to do something similar but focus on drawing on the ground.
