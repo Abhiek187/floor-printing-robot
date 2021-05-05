@@ -2,6 +2,7 @@ package com.example.linuxtest.activities
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         val buttonLoad = binding.buttonLoad
         val buttonPrint = binding.buttonPrint
         val buttonSettings = binding.setting
+        val buttonClear = binding.clear
         val line1 = binding.line1
         val line2 = binding.line2
         val spin1 = binding.brushWidth
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         // Add canvas and constrain it in between the two lines
         pageLayout.addView(drawView)
-        pageLayout.foreground = getDrawable(R.drawable.shape_window_dim)
+        pageLayout.foreground = ContextCompat.getDrawable(this, R.drawable.shape_window_dim)
         pageLayout.foreground.alpha = 0 // have dim foreground there, but not in preview
 
         drawView.id = View.generateViewId()
@@ -105,30 +107,35 @@ class MainActivity : AppCompatActivity() {
         val pictureAdapter = ImageAdapter(this, imageArray)
         spin1.adapter = pictureAdapter
 
-        spin1.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
+        spin1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                curWidth=widths[pos]
-                drawView.updatePaint(curWidth,curColor)
+                curWidth = widths[pos]
+                drawView.updatePaint(curWidth, curColor)
             }
         }
 
         val infoColors = ArrayAdapter(this,android.R.layout.simple_list_item_1,colNames)
         infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spin2.adapter=infoColors
+        spin2.adapter = infoColors
 
-        spin2.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+        spin2.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                curColor=colors[pos]
-                drawView.updatePaint(curWidth,curColor)
+                curColor = colors[pos]
+                drawView.updatePaint(curWidth, curColor)
             }
         }
 
-        buttonSettings.setOnClickListener{
+        buttonSettings.setOnClickListener {
             startActivity(Intent(this, Settings::class.java))
+        }
+
+        buttonClear.setOnClickListener {
+            drawView.clearDrawing()
+            newDrawing()
         }
 
         buttonUpload.setOnClickListener {
@@ -146,12 +153,14 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "image/*" // access gallery or photos
 
-                intent.resolveActivity(packageManager)?.let {
+                try {
                     startActivityForResult(intent, 0)
+                } catch (ex: ActivityNotFoundException) {
+                    Toast.makeText(
+                        this, "You must give permission to access photos.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            } else {
-                Toast.makeText(this, "You must give permission to access photos.",
-                    Toast.LENGTH_SHORT).show()
             }
         }
 

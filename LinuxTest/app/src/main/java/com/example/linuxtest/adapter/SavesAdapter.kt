@@ -3,33 +3,31 @@ package com.example.linuxtest.adapter
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.linuxtest.image.Image
-import com.example.linuxtest.R
 import com.example.linuxtest.activities.SavesActivity
-import kotlinx.android.synthetic.main.adapter_saves.view.*
+import com.example.linuxtest.databinding.AdapterSavesBinding
 
 class SavesAdapter(private var context: Context, private var saves: ArrayList<Image>):
-    RecyclerView.Adapter<ViewHolder>() {
+    RecyclerView.Adapter<SavesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context).inflate(
-            R.layout.adapter_saves, parent,
-            false)
+        val inflater = AdapterSavesBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
 
         return ViewHolder(inflater)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textViewName.text = saves[position].name
+        holder.binding.textViewName.text = saves[position].name
         val path = "${context.filesDir.path}/${saves[position].image}"
         val bitmap = BitmapFactory.decodeFile(path)
-        holder.textViewImage.setImageBitmap(bitmap)
-        holder.textViewImage.contentDescription = "Image of ${saves[position].name}"
+        holder.binding.textViewImage.setImageBitmap(bitmap)
+        holder.binding.textViewImage.contentDescription = "Image of ${saves[position].name}"
 
         holder.itemView.setOnClickListener {
             (context as SavesActivity).finishActivity(saves[position].name)
@@ -43,10 +41,8 @@ class SavesAdapter(private var context: Context, private var saves: ArrayList<Im
     override fun getItemViewType(position: Int): Int {
         return position
     }
-}
 
-class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    // Get all properties from adapter_saves
-    val textViewName: TextView = view.textViewName
-    val textViewImage: ImageView = view.textViewImage
+    inner class ViewHolder(val binding: AdapterSavesBinding): RecyclerView.ViewHolder(binding.root) {
+        // Get all properties from adapter_saves
+    }
 }

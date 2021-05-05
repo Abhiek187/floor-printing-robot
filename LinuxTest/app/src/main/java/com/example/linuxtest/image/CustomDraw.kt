@@ -5,13 +5,12 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import com.example.linuxtest.activities.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
-class CustomDraw (context: Context) : View(context) {
+class CustomDraw(context: Context) : View(context) {
     private val access = context as MainActivity
     private var xCoord = 0f
     private var yCoord = 0f
@@ -22,7 +21,10 @@ class CustomDraw (context: Context) : View(context) {
     private var sizePaint = -1
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        when(event.action and MotionEvent.ACTION_MASK){
+        // Don't draw until the spinners have loaded
+        if (sizePaint < 0) return false
+
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN,MotionEvent.ACTION_POINTER_DOWN -> {
                 val ids = event.actionIndex
                 if (ids > 4) return false
@@ -60,15 +62,6 @@ class CustomDraw (context: Context) : View(context) {
                 canvas.drawPath(path, paints[k])
             }
         }
-        access.clear.setOnClickListener {
-            mBitmap = null
-            finalPath.clear()
-            paints.clear()
-            sizePaint = -1
-            updatePaint(access.curWidth,access.curColor)
-            invalidate()
-            access.newDrawing()
-        }
     }
 
     fun saveDrawing(image: String, scale: Boolean) {
@@ -96,34 +89,35 @@ class CustomDraw (context: Context) : View(context) {
         }
     }
 
-    fun loadDrawing(path: String) {
-        // Clear the previous drawing and load the image as a bitmap
+    fun clearDrawing() {
+        mBitmap = null
         finalPath.clear()
         paints.clear()
         sizePaint = -1
-        updatePaint(access.curWidth,access.curColor)
-        mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
+        updatePaint(access.curWidth, access.curColor)
         invalidate()
     }
 
-    fun updatePaint(width: Float, color: Int){
+    fun loadDrawing(path: String) {
+        // Clear the previous drawing and load the image as a bitmap
+        clearDrawing()
+        mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
+    }
+
+    fun updatePaint(width: Float, color: Int) {
         val painted = Paint(Paint.ANTI_ALIAS_FLAG)
-        painted.style=Paint.Style.STROKE
-        painted.strokeWidth=width
-        painted.color=color
+        painted.style = Paint.Style.STROKE
+        painted.strokeWidth = width
+        painted.color = color
         paints.add(painted)
         sizePaint += 1
         val paths = Array(5) { Path() }
         finalPath.add(paths)
     }
 
-    fun loadPicture(temp: Bitmap){
-        //Retrieve picture from Photo Gallery
-        finalPath.clear()
-        paints.clear()
-        sizePaint = -1
-        updatePaint(access.curWidth,access.curColor)
+    fun loadPicture(temp: Bitmap) {
+        // Retrieve picture from the Photo Gallery
+        clearDrawing()
         mBitmap = Bitmap.createBitmap(temp)
-        invalidate()
     }
 }

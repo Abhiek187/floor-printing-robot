@@ -15,7 +15,7 @@ class Page3 : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         return FragmentPage3Binding.inflate(inflater, container, false).root
     }
