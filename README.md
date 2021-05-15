@@ -1,6 +1,6 @@
 # Floor Printing Robot
 
-<a href="https://www.youtube.com/watch?v=GSI4W3XvddA 'ECE 2020 Capstone Project S20-05 Demo Video: Floor Printing Robot'" target="_blank" rel="noopener"><img src="https://res.cloudinary.com/marcomontalbano/image/upload/v1610133191/video_to_markdown/images/youtube--GSI4W3XvddA-c05b58ac6eb4c4700831b2b3070cd403.jpg" alt="ECE 2020 Capstone Project S20-05 Demo Video: Floor Printing Robot" width="600"></a>
+https://user-images.githubusercontent.com/29958092/118373347-59b0c680-b584-11eb-8392-073c15a60d51.mp4
 
 ### Background
 
