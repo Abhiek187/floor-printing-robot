@@ -16,6 +16,7 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
@@ -138,6 +139,25 @@ class MainActivity : AppCompatActivity() {
             newDrawing()
         }
 
+        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val info = result.data?.data // image URI (not to be confused with URL)
+
+                info?.let {
+                    val parcelFileDescriptor = contentResolver.openFileDescriptor(info, "r")
+
+                    val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+
+                    fileDescriptor?.let {
+                        val image2 = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                        drawView.loadPicture(image2)
+
+                        parcelFileDescriptor.close()
+                    }
+                }
+            }
+        }
+
         buttonUpload.setOnClickListener {
             // Get photo from gallery
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -154,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 intent.type = "image/*" // access gallery or photos
 
                 try {
-                    startActivityForResult(intent, 0)
+                    resultLauncher.launch(intent)
                 } catch (ex: ActivityNotFoundException) {
                     Toast.makeText(
                         this, "You must give permission to access photos.",
@@ -265,6 +285,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == 0) {
             // If request is cancelled, the result array is empty
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -273,21 +295,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            val info = data?.data ?: return // image URI (not to be confused with URL)
-            val parcelFileDescriptor = contentResolver.openFileDescriptor(info, "r")
-
-            val fileDescriptor = parcelFileDescriptor?.fileDescriptor ?: return
-            val image2 = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-            drawView.loadPicture(image2)
-
-            parcelFileDescriptor.close()
-        }
-    }
-
-    fun newDrawing() {
+    private fun newDrawing() {
         // Clear = create new drawing (so can save new images on the same session)
         currentImgName = null
         title = "Untitled"
