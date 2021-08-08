@@ -9,7 +9,7 @@ import com.example.linuxtest.image.Image
 import com.example.linuxtest.activities.SavesActivity
 import com.example.linuxtest.databinding.AdapterSavesBinding
 
-class SavesAdapter(private var context: Context, private var saves: ArrayList<Image>):
+class SavesAdapter(private var context: Context, private var saves: List<Image>):
     RecyclerView.Adapter<SavesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

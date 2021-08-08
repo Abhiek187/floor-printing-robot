@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.linuxtest.adapter.SavesAdapter
 import com.example.linuxtest.databinding.ActivitySavesBinding
-import com.example.linuxtest.storage.ImagesDBHelper
+import com.example.linuxtest.storage.ImageDatabase
 
 class SavesActivity : AppCompatActivity() {
 
@@ -17,12 +17,15 @@ class SavesActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val recyclerViewSaves = binding.recyclerViewSaves
-        val imagesDB = ImagesDBHelper(this)
-        val saves = imagesDB.getSaves()
+        val imagesDB = ImageDatabase.getInstance(this).imageDao()
+
+        // Retrieve all the saves in the background and populate the recycler view
+        imagesDB.getSaves().observe(this, { saves ->
+            val savesAdapter = SavesAdapter(this, saves)
+            recyclerViewSaves.adapter = savesAdapter
+        })
 
         recyclerViewSaves.layoutManager = LinearLayoutManager(this)
-        val savesAdapter = SavesAdapter(this, saves)
-        recyclerViewSaves.adapter = savesAdapter
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         recyclerViewSaves.addItemDecoration(divider)
     }

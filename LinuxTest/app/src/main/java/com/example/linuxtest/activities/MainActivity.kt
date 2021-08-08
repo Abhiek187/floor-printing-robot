@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -21,14 +22,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.linuxtest.R
 import com.example.linuxtest.adapter.ImageAdapter
 import com.example.linuxtest.databinding.ActivityMainBinding
 import com.example.linuxtest.databinding.PopupSaveBinding
 import com.example.linuxtest.databinding.StrokeImagesBinding
 import com.example.linuxtest.image.CustomDraw
-import com.example.linuxtest.storage.ImagesDBHelper
+import com.example.linuxtest.image.Image
+import com.example.linuxtest.storage.ImageDatabase
 import com.example.linuxtest.storage.Prefs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
@@ -77,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         val spin1 = binding.brushWidth
         val spin2 = binding.colors
 
-        val imagesDB = ImagesDBHelper(this)
+        val imagesDB = ImageDatabase.getInstance(this).imageDao()
         drawView = CustomDraw(this)
         currentImgName = intent.getStringExtra("imageName") // current saved image
         title = currentImgName ?: "Untitled" // show which file is being edited at the top
@@ -218,32 +224,41 @@ class MainActivity : AppCompatActivity() {
 
             buttonSaveName.setOnClickListener inner@{
                 val name = editTextName.text.toString()
+                val imageName = "$name.png"
 
-                if (name.isEmpty()) {
-                    Toast.makeText(this, "A name is required.", Toast.LENGTH_SHORT)
-                        .show()
-                    return@inner
-                } else if (name.indexOfAny(illegalChars) >= 0) {
-                    Toast.makeText(this, "Invalid file name", Toast.LENGTH_SHORT)
-                        .show()
-                    return@inner
-                } else {
-                    val copies = imagesDB.getSaves().filter { save -> save.name == name }
-
-                    if (copies.isNotEmpty()) {
-                        Toast.makeText(this, "Name already taken", Toast.LENGTH_SHORT)
+                when {
+                    name.isEmpty() -> {
+                        Toast.makeText(this, "A name is required.", Toast.LENGTH_SHORT)
+                            .show()
+                        return@inner
+                    }
+                    name.indexOfAny(illegalChars) >= 0 -> {
+                        Toast.makeText(this, "Invalid file name", Toast.LENGTH_SHORT)
                             .show()
                         return@inner
                     }
                 }
 
-                currentImgName = name
-                this.title = name
-                val image = "$name.png"
-                imagesDB.addImage(name, image)
-                drawView.saveDrawing(image, false)
-                Toast.makeText(this, "Saved new image!", Toast.LENGTH_SHORT).show()
-                popupWindow.dismiss()
+                // Add image to the database in the background
+                lifecycleScope.launch {
+                    try {
+                        imagesDB.addImage(Image(name, imageName))
+
+                        withContext(Dispatchers.Main) {
+                            currentImgName = name
+                            supportActionBar?.title = name
+                            drawView.saveDrawing(imageName, false)
+                            Toast.makeText(applicationContext, "Saved new image!", Toast.LENGTH_SHORT).show()
+                            popupWindow.dismiss()
+                        }
+                    } catch (ex: SQLiteConstraintException) {
+                        // A conflict occurred when inserting the new image
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(applicationContext, "Name already taken", Toast.LENGTH_SHORT).show()
+                            return@withContext
+                        }
+                    }
+                }
             }
         }
 
