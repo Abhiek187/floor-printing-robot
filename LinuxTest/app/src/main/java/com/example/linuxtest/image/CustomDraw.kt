@@ -1,12 +1,18 @@
 package com.example.linuxtest.image
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.*
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
+import androidx.core.net.toUri
 import com.example.linuxtest.activities.MainActivity
 import java.io.File
-import java.io.FileOutputStream
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
@@ -64,7 +70,7 @@ class CustomDraw(context: Context) : View(context) {
         }
     }
 
-    fun saveDrawing(image: String, scale: Boolean) {
+    fun saveDrawing(imageName: String, scale: Boolean): Uri? {
         // Save drawing as a bitmap and convert it to a PNG file
         var bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -72,21 +78,41 @@ class CustomDraw(context: Context) : View(context) {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         draw(canvas)
 
-        val file = if (scale) {
+        if (scale) {
             bitmap = Bitmap.createScaledBitmap(bitmap, (this.width / 3f).roundToInt(),
                 (this.height / 3f).roundToInt(), true)
-            File("${access.filesDir.path}/scaled_$image")
-        } else {
-            File("${access.filesDir.path}/$image")
         }
 
-        try {
-            thread {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val cv = ContentValues()
+        val fileName = if (scale) "scaled_$imageName.png" else "$imageName.png"
+        cv.put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+        cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+
+        // Enforce scoped storage for Android 10+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            cv.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            cv.put(MediaStore.MediaColumns.IS_PENDING, 1)
+        } else {
+            val directory =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val file = File(directory, fileName)
+            cv.put(MediaStore.MediaColumns.DATA, file.absolutePath)
         }
+
+        val uri = access.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
+
+        if (uri != null) {
+            thread {
+                access.contentResolver.openOutputStream(uri).use { output ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                }
+            }
+        } else {
+            Toast.makeText(access.applicationContext,
+                "Unable to save drawing, no content resolver found.", Toast.LENGTH_SHORT).show()
+        }
+
+        return uri
     }
 
     fun clearDrawing() {
@@ -98,10 +124,41 @@ class CustomDraw(context: Context) : View(context) {
         invalidate()
     }
 
-    fun loadDrawing(path: String) {
+    fun loadDrawing(uriStr: String): Bitmap {
         // Clear the previous drawing and load the image as a bitmap
         clearDrawing()
-        mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
+        //mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
+        val uri = uriStr.toUri()
+        mBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val src = ImageDecoder.createSource(access.contentResolver, uri)
+            ImageDecoder.decodeBitmap(src)
+        } else {
+            MediaStore.Images.Media.getBitmap(access.contentResolver, uri)
+        }
+
+//        access.contentResolver.openFileDescriptor(uri, "r").use { pfd ->
+//            val fileDescriptor = pfd?.fileDescriptor
+//
+//            fileDescriptor?.let { fd ->
+//                mBitmap = BitmapFactory.decodeFileDescriptor(fd)
+//            }
+//        }
+//        access.contentResolver.query(
+//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            arrayOf(MediaStore.Images.Media._ID,
+//                MediaStore.Images.Media.DISPLAY_NAME),
+//            null,
+//            null,
+//            null
+//        )?.use { cursor ->
+//            println("loadDrawing() query:")
+//            while (cursor.moveToNext()) {
+//                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+//                val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
+//                println("id = $id, name = $name")
+//            }
+//        }
+        return mBitmap!!
     }
 
     fun updatePaint(width: Float, color: Int) {

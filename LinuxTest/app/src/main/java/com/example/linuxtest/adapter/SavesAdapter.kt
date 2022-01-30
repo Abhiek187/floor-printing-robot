@@ -1,9 +1,12 @@
 package com.example.linuxtest.adapter
 
 import android.content.Context
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.linuxtest.image.Image
 import com.example.linuxtest.activities.SavesActivity
@@ -24,8 +27,15 @@ class SavesAdapter(private var context: Context, private var saves: List<Image>)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.textViewName.text = saves[position].name
-        val path = "${context.filesDir.path}/${saves[position].image}"
-        val bitmap = BitmapFactory.decodeFile(path)
+        val uri = saves[position].uri.toUri()
+
+        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val src = ImageDecoder.createSource(context.contentResolver, uri)
+            ImageDecoder.decodeBitmap(src)
+        } else {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+        }
+
         holder.binding.textViewImage.setImageBitmap(bitmap)
         holder.binding.textViewImage.contentDescription = "Image of ${saves[position].name}"
 

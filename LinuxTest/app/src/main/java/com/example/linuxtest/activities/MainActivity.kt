@@ -89,7 +89,10 @@ class MainActivity : AppCompatActivity() {
         title = currentImgName ?: "Untitled" // show which file is being edited at the top
 
         currentImgName?.let {
-            drawView.loadDrawing("${this.filesDir.path}/$it.png")
+            lifecycleScope.launch(Dispatchers.IO) {
+                val uriStr = imagesDB.getUri(it)
+                drawView.loadDrawing(uriStr)
+            }
         }
 
         // Add canvas and constrain it in between the two lines
@@ -150,15 +153,13 @@ class MainActivity : AppCompatActivity() {
                 val info = result.data?.data // image URI (not to be confused with URL)
 
                 info?.let {
-                    val parcelFileDescriptor = contentResolver.openFileDescriptor(info, "r")
+                    contentResolver.openFileDescriptor(info, "r").use { parcelFileDescriptor ->
+                        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
 
-                    val fileDescriptor = parcelFileDescriptor?.fileDescriptor
-
-                    fileDescriptor?.let {
-                        val image2 = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-                        drawView.loadPicture(image2)
-
-                        parcelFileDescriptor.close()
+                        fileDescriptor?.let { fd ->
+                            val image2 = BitmapFactory.decodeFileDescriptor(fd)
+                            drawView.loadPicture(image2)
+                        }
                     }
                 }
             }
@@ -194,8 +195,8 @@ class MainActivity : AppCompatActivity() {
             // Save image to database
             currentImgName?.let {
                 // Image already saved before, don't ask for name
-                drawView.saveDrawing("$it.png", false)
-                Toast.makeText(this, "Saved $it", Toast.LENGTH_SHORT).show()
+                drawView.saveDrawing(it, false)
+                Toast.makeText(this, "Saved $it.png", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -211,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             val editTextName = popupView.editTextName
             val buttonSaveName = popupView.buttonSaveName
 
-            editTextName.setOnKeyListener{_, keyCode, keyEvent ->
+            editTextName.setOnKeyListener{ _, keyCode, keyEvent ->
                 if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     buttonSaveName.performClick()
                     return@setOnKeyListener true
@@ -224,7 +225,6 @@ class MainActivity : AppCompatActivity() {
 
             buttonSaveName.setOnClickListener inner@{
                 val name = editTextName.text.toString()
-                val imageName = "$name.png"
 
                 when {
                     name.isEmpty() -> {
@@ -239,23 +239,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                // Add image to the database in the background
-                lifecycleScope.launch {
-                    try {
-                        imagesDB.addImage(Image(name, imageName))
+                drawView.saveDrawing(name, false)?.let { uri ->
+                    // Add image to the database in the background
+                    lifecycleScope.launch {
+                        try {
+                            imagesDB.addImage(Image(name, uri.toString()))
 
-                        withContext(Dispatchers.Main) {
-                            currentImgName = name
-                            supportActionBar?.title = name
-                            drawView.saveDrawing(imageName, false)
-                            Toast.makeText(applicationContext, "Saved new image!", Toast.LENGTH_SHORT).show()
-                            popupWindow.dismiss()
-                        }
-                    } catch (ex: SQLiteConstraintException) {
-                        // A conflict occurred when inserting the new image
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(applicationContext, "Name already taken", Toast.LENGTH_SHORT).show()
-                            return@withContext
+                            withContext(Dispatchers.Main) {
+                                currentImgName = name
+                                supportActionBar?.title = name
+                                Toast.makeText(applicationContext, "Saved new image!", Toast.LENGTH_SHORT).show()
+                                popupWindow.dismiss()
+                            }
+                        } catch (ex: SQLiteConstraintException) {
+                            // A conflict occurred when inserting the new image
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(applicationContext, "Name already taken", Toast.LENGTH_SHORT).show()
+                                return@withContext
+                            }
                         }
                     }
                 }
@@ -289,8 +290,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Save & scale before printing
-            drawView.saveDrawing("$currentImgName.png", true)
-            Toast.makeText(this, "Saved $currentImgName", Toast.LENGTH_SHORT).show()
+            drawView.saveDrawing(currentImgName!!, true)
+            Toast.makeText(this, "Saved $currentImgName.png", Toast.LENGTH_SHORT).show()
             // Show print log
             val intent = Intent(this, PrintActivity::class.java)
             intent.putExtra("imageName", currentImgName)

@@ -9,6 +9,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/achau/Documents/GitHub/floor-printing-robot/LinuxTest/app/src/main/res/layout/activity_intro_screen.xml" value="0.13949275362318841" />
+        <entry key="..\:/Users/achau/Documents/GitHub/floor-printing-robot/LinuxTest/app/src/main/res/layout/activity_main.xml" value="0.12952898550724637" />
+        <entry key="..\:/Users/achau/Documents/GitHub/floor-printing-robot/LinuxTest/app/src/main/res/layout/fragment_page1.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/achau/Documents/GitHub/floor-printing-robot/LinuxTest/app/src/main/res/layout/fragment_page2.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/achau/Documents/GitHub/floor-printing-robot/LinuxTest/app/src/main/res/layout/fragment_page3.xml" value="0.1" />
       </map>
     </option>
   </component>

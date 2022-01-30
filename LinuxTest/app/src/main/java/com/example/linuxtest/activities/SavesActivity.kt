@@ -20,10 +20,10 @@ class SavesActivity : AppCompatActivity() {
         val imagesDB = ImageDatabase.getInstance(this).imageDao()
 
         // Retrieve all the saves in the background and populate the recycler view
-        imagesDB.getSaves().observe(this, { saves ->
+        imagesDB.getSaves().observe(this) { saves ->
             val savesAdapter = SavesAdapter(this, saves)
             recyclerViewSaves.adapter = savesAdapter
-        })
+        }
 
         recyclerViewSaves.layoutManager = LinearLayoutManager(this)
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
