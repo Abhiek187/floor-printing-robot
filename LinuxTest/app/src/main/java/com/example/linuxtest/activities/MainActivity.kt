@@ -152,7 +152,9 @@ class MainActivity : AppCompatActivity() {
             newDrawing()
         }
 
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val photoResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val info = result.data?.data // image URI (not to be confused with URL)
 
@@ -185,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                 intent.type = "image/*" // access gallery or photos
 
                 try {
-                    resultLauncher.launch(intent)
+                    photoResultLauncher.launch(intent)
                 } catch (ex: ActivityNotFoundException) {
                     Toast.makeText(
                         this, "You must give permission to access photos.",
@@ -267,10 +269,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val drawingResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Load the image and change the title if an image was selected
+                result.data?.getStringExtra("imageName")?.let { imgName ->
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val uriStr = imagesDB.getUri(imgName)
+
+                        withContext(Dispatchers.Main) {
+                            drawView.loadDrawing(uriStr)
+                            this@MainActivity.title = imgName
+                        }
+                    }
+                }
+            }
+        }
+
         buttonLoad.setOnClickListener {
             // Select saved image, then load it when activity is recreated
             val intent = Intent(this, SavesActivity::class.java)
-            startActivity(intent)
+            drawingResultLauncher.launch(intent)
         }
 
         buttonPrint.setOnClickListener {
