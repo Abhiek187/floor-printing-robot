@@ -248,7 +248,7 @@ class MainActivity : AppCompatActivity() {
 
                             withContext(Dispatchers.Main) {
                                 currentImgName = name
-                                supportActionBar?.title = name
+                                this@MainActivity.title = name
                                 Toast.makeText(applicationContext, "Saved new image!", Toast.LENGTH_SHORT).show()
                                 popupWindow.dismiss()
                             }
