@@ -127,8 +127,8 @@ class CustomDraw(context: Context) : View(context) {
     fun loadDrawing(uriStr: String): Bitmap {
         // Clear the previous drawing and load the image as a bitmap
         clearDrawing()
-        //mBitmap = BitmapFactory.decodeFile(path) // immutable bitmap
         val uri = uriStr.toUri()
+
         mBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val src = ImageDecoder.createSource(access.contentResolver, uri)
             ImageDecoder.decodeBitmap(src)
@@ -136,28 +136,6 @@ class CustomDraw(context: Context) : View(context) {
             MediaStore.Images.Media.getBitmap(access.contentResolver, uri)
         }
 
-//        access.contentResolver.openFileDescriptor(uri, "r").use { pfd ->
-//            val fileDescriptor = pfd?.fileDescriptor
-//
-//            fileDescriptor?.let { fd ->
-//                mBitmap = BitmapFactory.decodeFileDescriptor(fd)
-//            }
-//        }
-//        access.contentResolver.query(
-//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//            arrayOf(MediaStore.Images.Media._ID,
-//                MediaStore.Images.Media.DISPLAY_NAME),
-//            null,
-//            null,
-//            null
-//        )?.use { cursor ->
-//            println("loadDrawing() query:")
-//            while (cursor.moveToNext()) {
-//                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-//                val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
-//                println("id = $id, name = $name")
-//            }
-//        }
         return mBitmap!!
     }
 
