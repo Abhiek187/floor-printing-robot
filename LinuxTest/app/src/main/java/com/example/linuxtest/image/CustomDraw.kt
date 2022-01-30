@@ -60,10 +60,15 @@ class CustomDraw(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         mBitmap?.let {
+            // Hardware bitmaps don't support software rendering
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && it.config == Bitmap.Config.HARDWARE) {
+                mBitmap = it.copy(Bitmap.Config.ARGB_8888, true)
+            }
+
             canvas.drawBitmap(it, 0f, 0f, null)
         }
 
-        for(k in 0 until finalPath.size) {
+        for (k in 0 until finalPath.size) {
             for (path in finalPath[k]) {
                 canvas.drawPath(path, paints[k])
             }
