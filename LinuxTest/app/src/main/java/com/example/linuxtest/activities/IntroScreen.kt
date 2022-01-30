@@ -4,12 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.*
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.linuxtest.adapter.FragmentAdapter
 import com.example.linuxtest.databinding.ActivityIntroScreenBinding
-import com.example.linuxtest.fragments.Page1
-import com.example.linuxtest.fragments.Page2
-import com.example.linuxtest.fragments.Page3
 import com.example.linuxtest.storage.Prefs
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -24,7 +21,7 @@ class IntroScreen : FragmentActivity() {
         val skipBtn = binding.skip
         val nextBtn = binding.next
         val left = binding.indicator
-        val adapter = MyAdapter(this)
+        val adapter = FragmentAdapter(this)
 
         page.adapter = adapter
         TabLayoutMediator(left, page) { _, _ -> run {} }.attach()
@@ -52,17 +49,5 @@ class IntroScreen : FragmentActivity() {
         val sharedPref = Prefs(this)
         sharedPref.isFirst = false
         startActivity(Intent(this, MainActivity::class.java))
-    }
-}
-
-class MyAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount(): Int = 3
-
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> Page1()
-            1 -> Page2()
-            else -> Page3()
-        }
     }
 }
