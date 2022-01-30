@@ -7,12 +7,12 @@
     tools:context=".fragments.Page3">
 
     <Button
-        android:id="@+id/upLoad"
+        android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="30dp"
-        android:text="@string/upLoad"
+        android:text="@string/upload"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,8 +23,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/arrow1"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/upLoad"
-        app:layout_constraintStart_toEndOf="@id/upLoad" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/upload"
+        app:layout_constraintStart_toEndOf="@id/upload" />
 
     <TextView
         android:id="@+id/explainUpload"
@@ -41,14 +41,14 @@
         app:layout_constraintWidth_percent="0.6" />
 
     <Button
-        android:id="@+id/Load"
+        android:id="@+id/load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="@string/load"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/upLoad" />
+        app:layout_constraintTop_toBottomOf="@id/upload" />
 
     <TextView
         android:id="@+id/arrow4"
@@ -57,8 +57,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/arrow1"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/Load"
-        app:layout_constraintStart_toEndOf="@id/Load" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/load"
+        app:layout_constraintStart_toEndOf="@id/load" />
 
     <TextView
         android:id="@+id/explainLoad"
@@ -75,14 +75,14 @@
         app:layout_constraintWidth_percent="0.6" />
 
     <Button
-        android:id="@+id/Print"
+        android:id="@+id/print"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
-        android:text="@string/Print"
+        android:text="@string/print"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Load" />
+        app:layout_constraintTop_toBottomOf="@id/load" />
 
     <TextView
         android:id="@+id/arrow5"
@@ -91,8 +91,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/arrow1"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/Print"
-        app:layout_constraintStart_toEndOf="@id/Print" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/print"
+        app:layout_constraintStart_toEndOf="@id/print" />
 
     <TextView
         android:id="@+id/explainPrint"
@@ -111,15 +111,15 @@
     <ImageButton
         android:id="@+id/settingBtn"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginTop="20dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/setting"
+        android:foreground="?android:attr/selectableItemBackground"
         android:src="@drawable/baseline_settings_black_18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Print" />
+        app:layout_constraintTop_toBottomOf="@id/print" />
 
     <TextView
         android:id="@+id/arrow6"
@@ -130,7 +130,7 @@
         android:text="@string/arrow1"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/settingBtn"
-        app:layout_constraintTop_toBottomOf="@+id/Print" />
+        app:layout_constraintTop_toBottomOf="@+id/print" />
 
     <TextView
         android:id="@+id/explainSetting"

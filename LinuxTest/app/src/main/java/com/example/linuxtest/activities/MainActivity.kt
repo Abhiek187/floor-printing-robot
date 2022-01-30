@@ -54,8 +54,7 @@ class MainActivity : AppCompatActivity() {
         Color.rgb(165,42,42), // brown*/
         Color.WHITE
     )
-    private val colNames = arrayListOf("Black",/*"Red","Orange","Yellow","Green","Blue","Purple",
-        "Brown",*/"White") // must be in the same order as above
+
     var curWidth = 8f
     var curColor = Color.BLACK
     private lateinit var drawView: CustomDraw
@@ -126,7 +125,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val infoColors = ArrayAdapter(this,android.R.layout.simple_list_item_1,colNames)
+        // Must be in the same order as colors above
+        val colNames = resources.getStringArray(R.array.colors)
+        val infoColors = ArrayAdapter(this, android.R.layout.simple_list_item_1, colNames)
         infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spin2.adapter = infoColors
 

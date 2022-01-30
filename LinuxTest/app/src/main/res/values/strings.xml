@@ -1,17 +1,32 @@
 <resources>
+    <!-- App -->
     <string name="app_name">Linux Test</string>
+
+    <string-array name="colors">
+        <item>Black</item>
+<!--        <item>Red</item>-->
+<!--        <item>Orange</item>-->
+<!--        <item>Yellow</item>-->
+<!--        <item>Green</item>-->
+<!--        <item>Blue</item>-->
+<!--        <item>Purple</item>-->
+<!--        <item>Brown</item>-->
+        <item>White</item>
+    </string-array>
+
+    <!-- MainActivity -->
     <string name="clear">Clear</string>
     <string name="upload">Upload</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
     <string name="print">Print</string>
     <string name="save_as">Save image as:</string>
-    <string name="skip">Skip</string>
-    <string name="next">Next</string>
+
+    <!-- Settings -->
     <string name="setting">Settings</string>
-    <string name="userName">Username</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="hostName">Hostname</string>
+    <string name="hostname">Hostname</string>
     <string name="sample_username">pi</string>
     <string name="sample_password">raspberry</string>
     <string name="sample_hostname">192.168.1.128</string>
@@ -20,6 +35,10 @@
     <string name="sample_server">name@server.net</string>
     <string name="serverHostname">Server Hostname</string>
     <string name="serverPassword">Server Password</string>
+
+    <!-- Tutorial fragments -->
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
     <string name="arrow1">\u2190</string>
 
     <string name="explainColors">This drop down menu is used to change the
@@ -32,15 +51,11 @@
     canvas in the middle of the screen between the two boundaries and
     start drawing.</string>
 
-    <string name="upLoad">Upload</string>
-
     <string name="explainUpload">The Upload Button is used to upload an image
     from the gallery app.</string>
 
     <string name="explainLoad">The Load Button can be used to upload an image
     from the database.</string>
-
-    <string name="Print">Print</string>
 
     <string name="explainPrint">The Print Button is used to print the
     image using the mobile printer.</string>

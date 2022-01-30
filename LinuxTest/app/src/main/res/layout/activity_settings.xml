@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:paddingTop="10dp"
-        android:text="@string/userName"
+        android:text="@string/username"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewServerHostName" />
@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:paddingTop="10dp"
-        android:text="@string/hostName"
+        android:text="@string/hostname"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewPassword" />
