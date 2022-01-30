@@ -90,7 +90,10 @@ class MainActivity : AppCompatActivity() {
         currentImgName?.let {
             lifecycleScope.launch(Dispatchers.IO) {
                 val uriStr = imagesDB.getUri(it)
-                drawView.loadDrawing(uriStr)
+
+                withContext(Dispatchers.Main) {
+                    drawView.loadDrawing(uriStr)
+                }
             }
         }
 
