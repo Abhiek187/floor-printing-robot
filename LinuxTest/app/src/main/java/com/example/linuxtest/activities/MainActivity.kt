@@ -275,6 +275,8 @@ class MainActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 // Load the image and change the title if an image was selected
                 result.data?.getStringExtra("imageName")?.let { imgName ->
+                    currentImgName = imgName
+
                     lifecycleScope.launch(Dispatchers.IO) {
                         val uriStr = imagesDB.getUri(imgName)
 
