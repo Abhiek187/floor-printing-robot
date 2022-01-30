@@ -50,7 +50,7 @@ class IntroScreen : FragmentActivity() {
 
     private fun endTutorial(){
         val sharedPref = Prefs(this)
-        sharedPref.isFirst=false
+        sharedPref.isFirst = false
         startActivity(Intent(this, MainActivity::class.java))
     }
 }
@@ -60,10 +60,9 @@ class MyAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragm
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> Page2()
-            1 -> Page1()
-            2 -> Page3()
-            else -> Page1()
+            0 -> Page1()
+            1 -> Page2()
+            else -> Page3()
         }
     }
 }

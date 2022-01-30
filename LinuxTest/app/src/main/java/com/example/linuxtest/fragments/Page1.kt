@@ -1,29 +1,23 @@
 package com.example.linuxtest.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import com.example.linuxtest.adapter.ImageAdapter
+import androidx.fragment.app.Fragment
 import com.example.linuxtest.databinding.FragmentPage1Binding
-import com.example.linuxtest.databinding.StrokeImagesBinding
 
 /**
  * A simple [Fragment] subclass.
  */
 class Page1 : Fragment() {
     private lateinit var mContext: Context
-
-    private val colNames = arrayListOf("Black",/*"Red","Orange","Yellow","Green","Blue","Purple",
-        "Brown",*/"White")
-
-    private lateinit var spinColors: Spinner
-    private lateinit var spinWidth: Spinner
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -36,22 +30,94 @@ class Page1 : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         val binding = FragmentPage1Binding.inflate(inflater, container, false)
-        spinColors = binding.demoColors
-        spinWidth = binding.demoBrushWidth
 
-        val strokeBinding = StrokeImagesBinding.inflate(layoutInflater)
-        val views = arrayOf(strokeBinding.view1, strokeBinding.view2, strokeBinding.view3,
-            strokeBinding.view4, strokeBinding.view5, strokeBinding.view6, strokeBinding.view7)
-        val imageArray = views.map { view -> Bitmap.createBitmap(view.layoutParams.width,
-            view.layoutParams.height, Bitmap.Config.RGB_565) }
+        val constraintLayout = binding.page1
+        val boundary1 = binding.boundary1
+        val boundary2 = binding.boundary2
 
-        val pictureAdapter = ImageAdapter(mContext, imageArray)
-        spinWidth.adapter = pictureAdapter
-
-        val infoColors = ArrayAdapter(mContext,android.R.layout.simple_list_item_1,colNames)
-        infoColors.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinColors.adapter=infoColors
+        boundary2.post {
+            // Add animation dynamically (assuming both boundaries are posted)
+            constraintLayout.addView(Demo(mContext, boundary1, boundary2))
+        }
 
         return binding.root
+    }
+}
+
+@SuppressLint("ViewConstructor")
+class Demo(context: Context, boundary1: View, boundary2: View) : View(context) {
+    // Paths: the horizontal lines + the vertical line (a parking lot)
+    private var paths = Array(6) { Path() }
+    private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val framePerSec = 15
+    private var startTime = System.currentTimeMillis()
+    // Our "canvas" (x, y) boundaries
+    private val xMin = 0f
+    private val xMax = this.resources.displayMetrics.widthPixels.toFloat()
+    private val xDelta = xMax - xMin
+    private val yMin = boundary1.y
+    private val yMax = boundary2.y
+    private val yDelta = yMax - yMin
+    private var num = 0
+
+    init {
+        paint.color = Color.BLACK
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 14f
+        invalidate() // start drawing the animation
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        paths[0].moveTo(xMin, yMin + 0.1f*yDelta)
+        paths[1].moveTo(xMin, yMin + 0.3f*yDelta)
+        paths[2].moveTo(xMin, yMin + 0.5f*yDelta)
+        paths[3].moveTo(xMin, yMin + 0.7f*yDelta)
+        paths[4].moveTo(xMin, yMin + 0.9f*yDelta)
+        paths[5].moveTo(xMin + 0.5f*xDelta, yMin)
+        
+        if (num < paths.lastIndex) {
+            // Draw all horizontal lines
+            if (num > 0) {
+                for (i in 0 until num) {
+                    // Redraw all previous paths
+                    canvas.drawPath(paths[i], paint)
+                }
+            }
+            val currentTime = System.currentTimeMillis() - startTime
+            val xDest = 2f * currentTime
+            if (xMin + xDest < xMax) {
+                // Keep calling onDraw until lines reach the boundaries
+                paths[num].lineTo(xMin + xDest, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                postInvalidateDelayed(1000L / framePerSec)
+            } else {
+                // Stop the line at the boundary
+                paths[num].lineTo(xMax, yMin + 0.1f * (num * 2 + 1) * yDelta)
+                canvas.drawPath(paths[num], paint)
+                num += 1
+                startTime = System.currentTimeMillis()
+                invalidate()
+            }
+        }
+
+        if (num == paths.size - 1) {
+            // Draw the last vertical path
+            for (i in 0 until num){
+                // Redraw all previous paths
+                canvas.drawPath(paths[i],paint)
+            }
+            val currentTime = System.currentTimeMillis() - startTime
+            val yDest = 2f * currentTime
+            if (yMin + yDest < yMax) {
+                paths[num].lineTo(xMin + 0.5f*xDelta, yMin + yDest)
+                canvas.drawPath(paths[num], paint)
+                postInvalidateDelayed(1000L / framePerSec)
+            } else {
+                paths[num].lineTo(xMin + 0.5f*xDelta, yMax)
+                canvas.drawPath(paths[num], paint)
+            }
+        }
     }
 }
