@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.example.linuxtest.databinding.ActivityPrintBinding
+import com.example.linuxtest.image.Image
 import com.example.linuxtest.storage.Prefs
 import com.jcraft.jsch.*
 import java.io.ByteArrayOutputStream
@@ -16,7 +18,7 @@ import kotlin.concurrent.thread
 class PrintActivity : AppCompatActivity() {
     private lateinit var textViewLog: TextView
     private lateinit var imageViewPrint: ImageView
-    private lateinit var currentImgName: String
+    private lateinit var currentImage: Image
     private var didFinish = true
     private var prevOutput = ""
 
@@ -38,7 +40,7 @@ class PrintActivity : AppCompatActivity() {
         val password = sharedPref.password
         val hostname = sharedPref.hostname*/
 
-        currentImgName = intent.getStringExtra("imageName")!!
+        currentImage = intent.getParcelableExtra("image")!!
 
         thread {
             serverConnect(serverName, serverHost, serverPassword)
@@ -92,20 +94,22 @@ class PrintActivity : AppCompatActivity() {
             uiPrint("Connecting to $hostname...")
             session.connect(3000) // timeout after 3 seconds
 
-            val image = "scaled_$currentImgName.png" // 60.3 KB = 13:11 (~76 bytes/s)
-            sftpPut(session, src = "${this.filesDir.path}/$image", dest = "./floor*")
-            execute(session, command = "cd floor*; python3 img_info.py '$image' &> out.log")
-            sftpGet(session, src = "./floor-printing-robot/new_$image", dest = this.filesDir.path)
+            val imagePath = currentImage.uri.toUri().path // 60.3 KB = 13:11 (~76 bytes/s)
+            println("image URI = ${currentImage.uri}")
+            println("image path = $imagePath")
+            sftpPut(session, src = "${this.filesDir.path}/${currentImage.name}", dest = "./floor*")
+            execute(session, command = "cd floor*; python3 img_info.py '${currentImage.name}' &> out.log")
+            sftpGet(session, src = "./floor-printing-robot/new_scaled_${currentImage.name}", dest = this.filesDir.path)
 
             uiPrint("Disconnecting from $hostname...")
             session.disconnect()
 
             // Show printed image
-            val filePath = "${this.filesDir.path}/new_scaled_$currentImgName.png"
+            val filePath = "${this.filesDir.path}/new_scaled_${currentImage.name}.png"
             val bitmap = BitmapFactory.decodeFile(filePath)
             runOnUiThread {
                 imageViewPrint.setImageBitmap(bitmap)
-                imageViewPrint.contentDescription = "A print of $currentImgName"
+                imageViewPrint.contentDescription = "A print of ${currentImage.name}"
             }
         } catch (ex: JSchException) {
             ex.printStackTrace()

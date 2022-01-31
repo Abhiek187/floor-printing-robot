@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
 
         val imagesDB = ImageDatabase.getInstance(this).imageDao()
         drawView = CustomDraw(this)
+        title = "Untitled"
 
         // Add canvas and constrain it in between the two lines
         pageLayout.addView(drawView)
@@ -300,11 +301,21 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Save & scale before printing
-            drawView.saveDrawing(currentImage!!.name, true)
-            Toast.makeText(this, "Saved ${currentImage!!.name}.png", Toast.LENGTH_SHORT).show()
+//            drawView.saveDrawing(currentImage!!.name, true)?.let { uri ->
+//                val scaledImage = Image(currentImage!!.name, uri.toString())
+//                Toast.makeText(this, "Saved ${currentImage!!.name}.png",
+//                    Toast.LENGTH_SHORT).show()
+//                // Show print log
+//                val intent = Intent(this, PrintActivity::class.java)
+//                intent.putExtra("image", scaledImage)
+//                startActivity(intent)
+//            }
+            drawView.updateDrawing(currentImage!!)
+            Toast.makeText(this, "Saved ${currentImage!!.name}.png",
+                Toast.LENGTH_SHORT).show()
             // Show print log
             val intent = Intent(this, PrintActivity::class.java)
-            intent.putExtra("imageName", currentImage!!.name)
+            intent.putExtra("image", currentImage)
             startActivity(intent)
         }
     }
