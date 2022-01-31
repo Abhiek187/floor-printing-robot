@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.linuxtest.adapter.SavesAdapter
 import com.example.linuxtest.databinding.ActivitySavesBinding
+import com.example.linuxtest.image.Image
 import com.example.linuxtest.storage.ImageDatabase
 
 class SavesActivity : AppCompatActivity() {
@@ -31,9 +32,9 @@ class SavesActivity : AppCompatActivity() {
         recyclerViewSaves.addItemDecoration(divider)
     }
 
-    fun finishActivity(name: String) {
+    fun finishActivity(image: Image) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("imageName", name)
+        intent.putExtra("image", image)
         setResult(Activity.RESULT_OK, intent)
         finish() // can only finish() inside activity
     }

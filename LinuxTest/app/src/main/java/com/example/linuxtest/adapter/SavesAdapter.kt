@@ -40,7 +40,7 @@ class SavesAdapter(private var context: Context, private var saves: List<Image>)
         holder.binding.textViewImage.contentDescription = "Image of ${saves[position].name}"
 
         holder.itemView.setOnClickListener {
-            (context as SavesActivity).finishActivity(saves[position].name)
+            (context as SavesActivity).finishActivity(saves[position])
         }
     }
 

@@ -25,7 +25,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".activities.Settings"
+            android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.IntroScreen"

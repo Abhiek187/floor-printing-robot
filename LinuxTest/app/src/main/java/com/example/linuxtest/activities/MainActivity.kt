@@ -39,7 +39,12 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     private val illegalChars = charArrayOf('/', '\n', '\r', '\t', '\u0000', '`', '?', '*', '\\',
         '<', '>', '|', '\"', ':') // illegal file name characters
-    private var currentImgName: String? = null
+    private var currentImage: Image? = null
+    set(value) {
+        field = value
+        title = value?.name ?: "Untitled" // show which file is being edited at the top
+    }
+
     private var readStorageAllowed = false
     private val widths = arrayListOf(8f, 12f, 16f, 20f, 24f, 28f, 32f) // actual stroke widths
 
@@ -84,18 +89,6 @@ class MainActivity : AppCompatActivity() {
 
         val imagesDB = ImageDatabase.getInstance(this).imageDao()
         drawView = CustomDraw(this)
-        currentImgName = intent.getStringExtra("imageName") // current saved image
-        title = currentImgName ?: "Untitled" // show which file is being edited at the top
-
-        currentImgName?.let {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val uriStr = imagesDB.getUri(it)
-
-                withContext(Dispatchers.Main) {
-                    drawView.loadDrawing(uriStr)
-                }
-            }
-        }
 
         // Add canvas and constrain it in between the two lines
         pageLayout.addView(drawView)
@@ -144,12 +137,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonSettings.setOnClickListener {
-            startActivity(Intent(this, Settings::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         buttonClear.setOnClickListener {
+            // Clear = create new drawing (so new images can be saved on the same session)
             drawView.clearDrawing()
-            newDrawing()
+            currentImage = null
         }
 
         val photoResultLauncher = registerForActivityResult(
@@ -195,10 +189,10 @@ class MainActivity : AppCompatActivity() {
             checkReadExternalStoragePermission()
             if (!readStorageAllowed) return@setOnClickListener
 
-            currentImgName?.let {
+            currentImage?.let { image ->
                 // Image already saved before, don't ask for name
-                drawView.saveDrawing(it, false)
-                Toast.makeText(this, "Saved $it.png", Toast.LENGTH_SHORT).show()
+                drawView.updateDrawing(image)
+                Toast.makeText(this, "Saved ${image.name}.png", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -215,7 +209,7 @@ class MainActivity : AppCompatActivity() {
             val buttonSaveName = popupView.buttonSaveName
 
             editTextName.setOnKeyListener{ _, keyCode, keyEvent ->
-                if(keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     buttonSaveName.performClick()
                     return@setOnKeyListener true
                 }
@@ -245,18 +239,20 @@ class MainActivity : AppCompatActivity() {
                     // Add image to the database in the background
                     lifecycleScope.launch {
                         try {
-                            imagesDB.addImage(Image(name, uri.toString()))
+                            val newImage = Image(name, uri.toString())
+                            imagesDB.addImage(newImage)
 
                             withContext(Dispatchers.Main) {
-                                currentImgName = name
-                                this@MainActivity.title = name
-                                Toast.makeText(applicationContext, "Saved new image!", Toast.LENGTH_SHORT).show()
+                                currentImage = newImage
+                                Toast.makeText(applicationContext, "Saved new image!",
+                                    Toast.LENGTH_SHORT).show()
                                 popupWindow.dismiss()
                             }
                         } catch (ex: SQLiteConstraintException) {
                             // A conflict occurred when inserting the new image
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(applicationContext, "Name already taken", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "Name already taken",
+                                    Toast.LENGTH_SHORT).show()
                                 return@withContext
                             }
                         }
@@ -270,17 +266,9 @@ class MainActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // Load the image and change the title if an image was selected
-                result.data?.getStringExtra("imageName")?.let { imgName ->
-                    currentImgName = imgName
-
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val uriStr = imagesDB.getUri(imgName)
-
-                        withContext(Dispatchers.Main) {
-                            drawView.loadDrawing(uriStr)
-                            this@MainActivity.title = imgName
-                        }
-                    }
+                result.data?.getParcelableExtra<Image>("image")?.let { image ->
+                    currentImage = image
+                    drawView.loadDrawing(image)
                 }
             }
         }
@@ -293,7 +281,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonPrint.setOnClickListener {
             // Send image for printing on the pi
-            if (currentImgName == null) {
+            if (currentImage == null) {
                 Toast.makeText(this, "Please save before printing.", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
@@ -312,11 +300,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Save & scale before printing
-            drawView.saveDrawing(currentImgName!!, true)
-            Toast.makeText(this, "Saved $currentImgName.png", Toast.LENGTH_SHORT).show()
+            drawView.saveDrawing(currentImage!!.name, true)
+            Toast.makeText(this, "Saved ${currentImage!!.name}.png", Toast.LENGTH_SHORT).show()
             // Show print log
             val intent = Intent(this, PrintActivity::class.java)
-            intent.putExtra("imageName", currentImgName)
+            intent.putExtra("imageName", currentImage!!.name)
             startActivity(intent)
         }
     }
@@ -342,12 +330,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             readStorageAllowed = true
         }
-    }
-
-    private fun newDrawing() {
-        // Clear = create new drawing (so can save new images on the same session)
-        currentImgName = null
-        title = "Untitled"
     }
 
     private fun isOnline(): Boolean {

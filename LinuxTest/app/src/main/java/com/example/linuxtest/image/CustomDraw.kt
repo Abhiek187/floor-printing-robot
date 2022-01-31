@@ -75,6 +75,15 @@ class CustomDraw(context: Context) : View(context) {
         }
     }
 
+    fun clearDrawing() {
+        mBitmap = null
+        finalPath.clear()
+        paints.clear()
+        sizePaint = -1
+        updatePaint(access.curWidth, access.curColor)
+        invalidate()
+    }
+
     fun saveDrawing(imageName: String, scale: Boolean): Uri? {
         // Save drawing as a bitmap and convert it to a PNG file
         var bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
@@ -120,19 +129,25 @@ class CustomDraw(context: Context) : View(context) {
         return uri
     }
 
-    fun clearDrawing() {
-        mBitmap = null
-        finalPath.clear()
-        paints.clear()
-        sizePaint = -1
-        updatePaint(access.curWidth, access.curColor)
-        invalidate()
+    fun updateDrawing(image: Image) {
+        // Write a new bitmap to the image's designated URI
+        val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawColor(Color.WHITE) // make background white instead of transparent (black)
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        draw(canvas)
+
+        thread {
+            access.contentResolver.openOutputStream(image.uri.toUri()).use { output ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+            }
+        }
     }
 
-    fun loadDrawing(uriStr: String): Bitmap {
+    fun loadDrawing(image: Image) {
         // Clear the previous drawing and load the image as a bitmap
         clearDrawing()
-        val uri = uriStr.toUri()
+        val uri = image.uri.toUri()
 
         mBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val src = ImageDecoder.createSource(access.contentResolver, uri)
@@ -140,8 +155,6 @@ class CustomDraw(context: Context) : View(context) {
         } else {
             MediaStore.Images.Media.getBitmap(access.contentResolver, uri)
         }
-
-        return mBitmap!!
     }
 
     fun updatePaint(width: Float, color: Int) {

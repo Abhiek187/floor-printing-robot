@@ -6,7 +6,7 @@ import android.view.KeyEvent
 import com.example.linuxtest.databinding.ActivitySettingsBinding
 import com.example.linuxtest.storage.Prefs
 
-class Settings : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,6 @@ class Settings : AppCompatActivity() {
             sharedPref.serverPassword = serverPassword.text.toString()
             sharedPref.serverHostname = serverHostname.text.toString()
 
-            //startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
     }
