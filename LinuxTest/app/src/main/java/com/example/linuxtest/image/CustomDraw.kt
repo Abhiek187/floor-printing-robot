@@ -114,7 +114,7 @@ class CustomDraw(context: Context) : View(context) {
             }
         } else {
             Toast.makeText(access.applicationContext,
-                "Unable to save drawing, no content resolver found.", Toast.LENGTH_SHORT).show()
+                "Unable to save drawing, no content resolver found", Toast.LENGTH_SHORT).show()
         }
 
         return uri

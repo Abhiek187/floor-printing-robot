@@ -173,14 +173,7 @@ class MainActivity : AppCompatActivity() {
 
         buttonUpload.setOnClickListener {
             // Get photo from gallery
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                // Request permission to look at camera roll
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
-            } else {
-                readStorageAllowed = true
-            }
+            checkReadExternalStoragePermission()
 
             if (readStorageAllowed) {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -199,6 +192,9 @@ class MainActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             // Save image to database
+            checkReadExternalStoragePermission()
+            if (!readStorageAllowed) return@setOnClickListener
+
             currentImgName?.let {
                 // Image already saved before, don't ask for name
                 drawView.saveDrawing(it, false)
@@ -334,6 +330,17 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 readStorageAllowed = true
             }
+        }
+    }
+
+    private fun checkReadExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Request permission to look at camera roll
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+        } else {
+            readStorageAllowed = true
         }
     }
 
