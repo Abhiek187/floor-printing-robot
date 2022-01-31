@@ -13,9 +13,6 @@ interface ImageDao {
     @Query("SELECT * FROM ImagesTable")
     fun getSaves(): LiveData<List<Image>>
 
-    @Query("SELECT uri FROM ImagesTable WHERE name = :imgName")
-    fun getUri(imgName: String): String
-
     // Alert the user when they save an image with the same name
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun addImage(image: Image)
