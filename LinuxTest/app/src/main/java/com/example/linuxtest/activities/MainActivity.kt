@@ -71,7 +71,9 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPref = Prefs(this)
         if (sharedPref.isFirst) {
+            // Going back from IntroScreen or MainActivity should send users to the home screen
             startActivity(Intent(this, IntroScreen::class.java))
+            finish()
         }
 
         // UI elements

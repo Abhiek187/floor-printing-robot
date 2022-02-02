@@ -45,9 +45,10 @@ class IntroScreen : FragmentActivity() {
         }
     }
 
-    private fun endTutorial(){
+    private fun endTutorial() {
         val sharedPref = Prefs(this)
         sharedPref.isFirst = false
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }
