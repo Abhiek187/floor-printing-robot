@@ -153,6 +153,7 @@ class CustomDraw(context: Context) : View(context) {
             val src = ImageDecoder.createSource(access.contentResolver, uri)
             ImageDecoder.decodeBitmap(src)
         } else {
+            @Suppress("DEPRECATION")
             MediaStore.Images.Media.getBitmap(access.contentResolver, uri)
         }
     }

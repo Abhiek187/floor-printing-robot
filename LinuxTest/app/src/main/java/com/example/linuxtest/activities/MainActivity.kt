@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
@@ -269,9 +270,16 @@ class MainActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // Load the image and change the title if an image was selected
-                result.data?.getParcelableExtra<Image>("image")?.let { image ->
-                    currentImage = image
-                    drawView.loadDrawing(image)
+                val image = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    result.data?.getParcelableExtra("image", Image::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    result.data?.getParcelableExtra("image")
+                }
+
+                image?.let { it ->
+                    currentImage = it
+                    drawView.loadDrawing(it)
                 }
             }
         }

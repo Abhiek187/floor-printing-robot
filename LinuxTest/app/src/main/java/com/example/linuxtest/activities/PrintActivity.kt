@@ -1,6 +1,7 @@
 package com.example.linuxtest.activities
 
 import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -40,7 +41,12 @@ class PrintActivity : AppCompatActivity() {
         val password = sharedPref.password
         val hostname = sharedPref.hostname*/
 
-        currentImage = intent.getParcelableExtra("image")!!
+        currentImage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("image", Image::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra("image")!!
+        }
 
         thread {
             serverConnect(serverName, serverHost, serverPassword)

@@ -33,6 +33,7 @@ class SavesAdapter(private var context: Context, private var saves: List<Image>)
             val src = ImageDecoder.createSource(context.contentResolver, uri)
             ImageDecoder.decodeBitmap(src)
         } else {
+            @Suppress("DEPRECATION")
             MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
         }
 
