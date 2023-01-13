@@ -2,7 +2,6 @@ package com.example.linuxtest.activities
 
 import android.Manifest
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,6 +17,7 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var readStorageAllowed = false
+    private var writeStorageAllowed = false
     private val widths = arrayListOf(8f, 12f, 16f, 20f, 24f, 28f, 32f) // actual stroke widths
 
     private val colors = arrayListOf(
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity() {
     var curWidth = 8f
     var curColor = Color.BLACK
     private lateinit var drawView: CustomDraw
+
+    private enum class PermissionRequest(val code: Int) {
+        READ(0),
+        WRITE(1)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,48 +156,42 @@ class MainActivity : AppCompatActivity() {
             currentImage = null
         }
 
-        val photoResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val info = result.data?.data // image URI (not to be confused with URL)
+        // Open the photo picker on API 30+, otherwise invoke the ACTION_OPEN_DOCUMENT intent
+        val pickMedia = registerForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) { uri ->
+            // uri is null if the user closed the photo picker
+            if (uri != null) {
+                contentResolver.openFileDescriptor(uri, "r").use { parcelFileDescriptor ->
+                    val fileDescriptor = parcelFileDescriptor?.fileDescriptor
 
-                info?.let {
-                    contentResolver.openFileDescriptor(info, "r").use { parcelFileDescriptor ->
-                        val fileDescriptor = parcelFileDescriptor?.fileDescriptor
-
-                        fileDescriptor?.let { fd ->
-                            val image2 = BitmapFactory.decodeFileDescriptor(fd)
-                            drawView.loadPicture(image2)
-                        }
+                    fileDescriptor?.let { fd ->
+                        val image2 = BitmapFactory.decodeFileDescriptor(fd)
+                        drawView.loadPicture(image2)
                     }
                 }
             }
         }
 
         buttonUpload.setOnClickListener {
-            // Get photo from gallery
-            checkReadExternalStoragePermission()
-
-            if (readStorageAllowed) {
-                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                intent.type = "image/*" // access gallery or photos
-
-                try {
-                    photoResultLauncher.launch(intent)
-                } catch (ex: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this, "You must give permission to access photos.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            // External storage requires permission before Android 10
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                checkExternalStoragePermission()
+                if (!readStorageAllowed) return@setOnClickListener
             }
+
+            // Only pick images
+            pickMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
         }
 
         buttonSave.setOnClickListener {
             // Save image to database
-            checkReadExternalStoragePermission()
-            if (!readStorageAllowed) return@setOnClickListener
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                checkExternalStoragePermission()
+                if (!writeStorageAllowed) return@setOnClickListener
+            }
 
             currentImage?.let { image ->
                 // Image already saved before, don't ask for name
@@ -334,22 +334,33 @@ class MainActivity : AppCompatActivity() {
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == 0) {
-            // If request is cancelled, the result array is empty
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        // If request is cancelled, the result array is empty
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == PermissionRequest.READ.code) {
                 readStorageAllowed = true
+            } else if (requestCode == PermissionRequest.WRITE.code) {
+                writeStorageAllowed = true
             }
         }
     }
 
-    private fun checkReadExternalStoragePermission() {
+    private fun checkExternalStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
             // Request permission to look at camera roll
             ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PermissionRequest.READ.code)
         } else {
             readStorageAllowed = true
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Request permission to look at camera roll
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), PermissionRequest.WRITE.code)
+        } else {
+            writeStorageAllowed = true
         }
     }
 
