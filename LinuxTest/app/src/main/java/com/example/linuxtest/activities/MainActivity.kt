@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                     result.data?.getParcelableExtra("image")
                 }
 
-                image?.let { it ->
+                image?.let {
                     currentImage = it
                     drawView.loadDrawing(it)
                 }
