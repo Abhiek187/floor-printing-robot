@@ -118,7 +118,9 @@ class CustomDraw(context: Context) : View(context) {
         if (uri != null) {
             thread {
                 access.contentResolver.openOutputStream(uri).use { output ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                    if (output != null) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                    }
                 }
             }
         } else {
@@ -139,7 +141,9 @@ class CustomDraw(context: Context) : View(context) {
 
         thread {
             access.contentResolver.openOutputStream(image.uri.toUri()).use { output ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                if (output != null) {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+                }
             }
         }
     }

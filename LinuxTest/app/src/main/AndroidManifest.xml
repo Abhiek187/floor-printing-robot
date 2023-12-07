@@ -5,7 +5,7 @@
     <!-- Normal permissions -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <!-- Dangerous permissions (need to ask user first) -->
     <!-- WRITE_EXTERNAL_STORAGE no longer provides write access for Android 10+ -->
     <uses-permission
