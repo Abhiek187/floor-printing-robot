@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.lifecycleScope
 import com.example.linuxtest.R
 import com.example.linuxtest.adapter.ImageAdapter
@@ -134,8 +135,13 @@ class MainActivity : AppCompatActivity() {
         val strokeBinding = StrokeImagesBinding.inflate(layoutInflater)
         val views = arrayOf(strokeBinding.view1, strokeBinding.view2, strokeBinding.view3,
             strokeBinding.view4, strokeBinding.view5, strokeBinding.view6, strokeBinding.view7)
-        val imageArray = views.map { view -> Bitmap.createBitmap(view.layoutParams.width,
-            view.layoutParams.height, Bitmap.Config.RGB_565) }
+        val imageArray = views.map { view ->
+            createBitmap(
+                view.layoutParams.width,
+                view.layoutParams.height,
+                Bitmap.Config.RGB_565
+            )
+        }
         val pictureAdapter = ImageAdapter(this, imageArray)
         spin1.adapter = pictureAdapter
 

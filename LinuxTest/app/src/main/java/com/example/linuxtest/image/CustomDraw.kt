@@ -10,6 +10,8 @@ import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import androidx.core.net.toUri
 import com.example.linuxtest.activities.MainActivity
 import java.io.File
@@ -86,15 +88,17 @@ class CustomDraw(context: Context) : View(context) {
 
     fun saveDrawing(imageName: String, scale: Boolean): Uri? {
         // Save drawing as a bitmap and convert it to a PNG file
-        var bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+        var bitmap = createBitmap(this.width, this.height)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE) // make background white instead of transparent (black)
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         draw(canvas)
 
         if (scale) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, (this.width / 3f).roundToInt(),
-                (this.height / 3f).roundToInt(), true)
+            bitmap = bitmap.scale(
+                (this.width / 3f).roundToInt(),
+                (this.height / 3f).roundToInt()
+            )
         }
 
         val cv = ContentValues()
@@ -133,7 +137,7 @@ class CustomDraw(context: Context) : View(context) {
 
     fun updateDrawing(image: Image) {
         // Write a new bitmap to the image's designated URI
-        val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(this.width, this.height)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE) // make background white instead of transparent (black)
         canvas.drawBitmap(bitmap, 0f, 0f, null)

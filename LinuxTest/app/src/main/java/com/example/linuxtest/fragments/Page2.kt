@@ -3,12 +3,13 @@ package com.example.linuxtest.fragments
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.core.graphics.createBitmap
+import androidx.fragment.app.Fragment
 import com.example.linuxtest.adapter.ImageAdapter
 import com.example.linuxtest.databinding.FragmentPage2Binding
 import com.example.linuxtest.databinding.StrokeImagesBinding
@@ -42,8 +43,13 @@ class Page2 : Fragment() {
         val strokeBinding = StrokeImagesBinding.inflate(layoutInflater)
         val views = arrayOf(strokeBinding.view1, strokeBinding.view2, strokeBinding.view3,
             strokeBinding.view4, strokeBinding.view5, strokeBinding.view6, strokeBinding.view7)
-        val imageArray = views.map { view -> Bitmap.createBitmap(view.layoutParams.width,
-            view.layoutParams.height, Bitmap.Config.RGB_565) }
+        val imageArray = views.map { view ->
+            createBitmap(
+                view.layoutParams.width,
+                view.layoutParams.height,
+                Bitmap.Config.RGB_565
+            )
+        }
 
         val pictureAdapter = ImageAdapter(mContext, imageArray)
         spinWidth.adapter = pictureAdapter
