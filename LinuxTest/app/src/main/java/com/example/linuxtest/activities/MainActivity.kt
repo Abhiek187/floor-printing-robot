@@ -1,8 +1,6 @@
 package com.example.linuxtest.activities
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -275,7 +273,7 @@ class MainActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT).show()
                                 popupWindow.dismiss()
                             }
-                        } catch (ex: SQLiteConstraintException) {
+                        } catch (_: SQLiteConstraintException) {
                             // A conflict occurred when inserting the new image
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(applicationContext, "Name already taken",
@@ -291,7 +289,7 @@ class MainActivity : AppCompatActivity() {
         val drawingResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 // Load the image and change the title if an image was selected
                 val image = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     result.data?.getParcelableExtra("image", Image::class.java)
@@ -388,7 +386,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isOnline(): Boolean {
-        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = this.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val n = cm.activeNetwork
         n?.let {
             val nc = cm.getNetworkCapabilities(n)
