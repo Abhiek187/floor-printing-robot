@@ -1,6 +1,5 @@
 package com.example.linuxtest.activities
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -35,7 +34,7 @@ class SavesActivity : AppCompatActivity() {
     fun finishActivity(image: Image) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("image", image)
-        setResult(Activity.RESULT_OK, intent)
+        setResult(RESULT_OK, intent)
         finish() // can only finish() inside activity
     }
 }

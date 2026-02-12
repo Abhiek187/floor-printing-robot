@@ -1,10 +1,8 @@
 plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.plugin.parcelize'
     id 'com.google.devtools.ksp'
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdk = 36
@@ -55,7 +53,7 @@ dependencies {
     // Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
 
     testImplementation 'junit:junit:4.13.2'
 

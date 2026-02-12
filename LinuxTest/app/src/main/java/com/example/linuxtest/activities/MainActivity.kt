@@ -355,7 +355,7 @@ class MainActivity : AppCompatActivity() {
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // If request is cancelled, the result array is empty
+        // If request is canceled, the result array is empty
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == PermissionRequest.READ.code) {
                 readStorageAllowed = true
@@ -390,7 +390,7 @@ class MainActivity : AppCompatActivity() {
         val n = cm.activeNetwork
         n?.let {
             val nc = cm.getNetworkCapabilities(n)
-            // Check for both wifi and cellular network
+            // Check for both Wi-Fi and cellular network
             return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                     nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         }

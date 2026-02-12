@@ -53,7 +53,7 @@ class SavesAdapter(private var context: Context, private var saves: List<Image>)
         return position
     }
 
-    inner class ViewHolder(val binding: AdapterSavesBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: AdapterSavesBinding): RecyclerView.ViewHolder(binding.root) {
         // Get all properties from adapter_saves
     }
 }
