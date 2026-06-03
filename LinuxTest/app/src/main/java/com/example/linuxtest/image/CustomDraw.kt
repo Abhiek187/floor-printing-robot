@@ -70,8 +70,8 @@ class CustomDraw(context: Context) : View(context) {
             canvas.drawBitmap(it, 0f, 0f, null)
         }
 
-        for (k in 0 until finalPath.size) {
-            for (path in finalPath[k]) {
+        for ((k, element) in finalPath.withIndex()) {
+            for (path in element) {
                 canvas.drawPath(path, paints[k])
             }
         }
